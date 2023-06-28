@@ -1,6 +1,6 @@
+from application.s2t.services import Speech2TextService
 from domain.definitions.food_extraction import FoodExtractionService
 from domain.definitions.food_mapping import FoodMappingService
-from domain.definitions.speech_to_text import Speech2TextService
 from domain.entities.nutrition_information_request import NutritionInformationRequest
 from domain.entities.nutrition_information_response import NutritionInformationResponse
 
