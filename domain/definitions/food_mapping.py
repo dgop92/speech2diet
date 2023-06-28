@@ -1,28 +1,22 @@
-from typing import Protocol
+from typing import Callable, List, Protocol
 
+from domain.entities.food import Food
 from domain.entities.food_nutrition_request import FoodNutritionRequest
 from domain.entities.food_nutrition_response import FoodNutritionResponse
-from domain.entities.nutrition_information_request import DBLookupPreference
 
 
-class FoodMappingService(Protocol):
-    def map_food_to_nutrition_db_record(
-        self,
-        fn_req: FoodNutritionRequest,
-        user_id: str,
-        preference: DBLookupPreference,
-    ) -> FoodNutritionResponse:
+class NutritionRepository(Protocol):
+    def get_foods_by_name(name: str) -> List[Food]:
         """
-        Extract food names with its corresponding description, amount and unit from a text
-
-        Parameters
-        ----------
-        text : str
-            The text to extract the food names from
-
-        Returns
-        -------
-        List[FoodNutritionRequest]
-            A list of FoodNutritionRequest objects
+        Get a list of foods by its name or other names
         """
         ...
+
+
+MapFoodToNutritionDBRecord = Callable[
+    [FoodNutritionRequest, NutritionRepository],
+    FoodNutritionResponse,
+]
+"""
+Given the food information reported by the user, map it to a food record in the nutrition database
+"""

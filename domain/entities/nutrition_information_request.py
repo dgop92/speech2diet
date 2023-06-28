@@ -17,10 +17,10 @@ class DBLookupPreference(str, Enum):
     system_db: Look up the user's food nutrition information in the system database only
     """
 
-    user_db_system_db = "user_db_system_db"
-    system_db_user_db = "system_db_user_db"
-    user_db = "user_db"
-    system_db = "system_db"
+    user_db_system_db = "user_db-system_db"
+    system_db_user_db = "system_db-user_db"
+    user_db = "user-db"
+    system_db = "system-db"
 
 
 class NutritionInformationRequest(BaseModel):
