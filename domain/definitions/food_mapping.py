@@ -6,7 +6,7 @@ from domain.entities.food_nutrition_response import FoodNutritionResponse
 
 
 class NutritionRepository(Protocol):
-    def get_foods_by_name(name: str) -> List[Food]:
+    def get_foods_by_name(self, name: str) -> List[Food]:
         """
         Get a list of foods by its name or other names
         """

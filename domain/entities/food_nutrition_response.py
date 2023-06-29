@@ -12,8 +12,8 @@ class FoodRecord(BaseModel):
     """ The score of the food record, the higher the score the more likely the food is the correct food """
     amount: int
     """ amount in the food's portion unit. if amount is 0, then the amount could not be found because the unit was not found """
-    unit_was_found: bool
-    """ Whether the unit was found in the food's portion unit """
+    unit_was_transformed: bool
+    """ Whether the unit was transformed to the unit given by the food portion unit"""
 
 
 class FoodNutritionResponse(BaseModel):
