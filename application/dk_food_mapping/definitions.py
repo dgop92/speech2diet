@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, List
 
 from domain.entities.food import Food
 
@@ -7,7 +7,8 @@ from domain.entities.food import Food
 @dataclass
 class FoodScoreQuery:
     food: Food
-    description: str
+    user_description: List[str]
+    user_food_name: str
 
 
 @dataclass

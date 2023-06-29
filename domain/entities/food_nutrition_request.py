@@ -30,6 +30,9 @@ class FoodNutritionRequest(BaseModel):
             sriped_keywords = [keyword.strip() for keyword in keywords]
             return sriped_keywords
 
+        if isinstance(value, list):
+            return value
+
         raise ValueError("description must be a string")
 
     @validator("amount")
