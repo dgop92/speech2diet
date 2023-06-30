@@ -217,7 +217,7 @@ class DKFoodMappingTest(unittest.TestCase):
 
     def test_can_transform_user_unit_to_food_portion_unit(self):
         """
-        should raise an error if the food unit is not grams
+        should transform user unit to food portion unit
         """
         request = FoodNutritionRequest(
             food_name="arroz",
@@ -241,7 +241,7 @@ class DKFoodMappingTest(unittest.TestCase):
 
     def test_cannot_transform_user_unit_to_food_portion_unit(self):
         """
-        should raise an error if the food unit is not grams
+        should raise an error if cannot transform user unit to food portion unit
         """
         request = FoodNutritionRequest(
             food_name="arroz",

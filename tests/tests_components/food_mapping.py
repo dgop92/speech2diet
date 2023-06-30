@@ -4,7 +4,7 @@ from application.dk_food_mapping.definitions import FoodScoreQuery, FoodScoreRes
 from domain.definitions.food_mapping import NutritionRepository
 from domain.entities.food import Food
 from domain.entities.food_nutrition_request import FoodNutritionRequest
-from domain.entities.food_nutrition_response import FoodNutritionResponse
+from domain.entities.food_nutrition_response import FoodNutritionResponse, FoodRecord
 
 
 class MockNutritionRepository:
@@ -25,7 +25,7 @@ class MockNutritionRepository:
         return results
 
 
-def map_food_first_element_or_none(
+def map_food_using_first_element(
     fn_req: FoodNutritionRequest, repository: NutritionRepository
 ) -> FoodNutritionResponse:
     possible_foods = repository.get_foods_by_name(fn_req.food_name)
@@ -38,8 +38,13 @@ def map_food_first_element_or_none(
         )
 
     return FoodNutritionResponse(
-        food_record=possible_foods[0],
-        suggestions=possible_foods[1:],
+        food_record=FoodRecord(
+            food=possible_foods[0],
+            score=1,
+            amount=0,
+            unit_was_transformed=False,
+        ),
+        suggestions=[],
         user_amount=fn_req.amount,
         user_unit=fn_req.unit,
     )

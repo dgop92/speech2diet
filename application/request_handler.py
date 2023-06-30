@@ -13,7 +13,7 @@ from domain.entities.nutrition_information_request import (
 from domain.entities.nutrition_information_response import NutritionInformationResponse
 
 
-def _map_food(
+def map_food_in_repositories(
     request: FoodNutritionRequest,
     system_repository: NutritionRepository,
     user_repository: NutritionRepository,
@@ -79,7 +79,7 @@ def handle_nutrition_information_request(
     db_lookup_preference = request.db_lookup_preference
 
     for food_request in food_requests:
-        food_response = _map_food(
+        food_response = map_food_in_repositories(
             food_request,
             system_repository,
             user_repository,
