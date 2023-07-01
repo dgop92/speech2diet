@@ -1,8 +1,8 @@
 import logging
 from typing import List
 
-import spacy
 from pymongo import database
+from spacy.language import Language
 
 from infrastructure.food_mapping.clean_keyword import clean_description_keyword
 
@@ -13,11 +13,9 @@ def clean_full_description_for_mongo_collection(
     db: database.Database,
     collection_name: str,
     full_description_attr: str,
+    nlp: Language,
     disable_lemmatization: bool = True,
 ) -> None:
-    logger.info("loading spacy model for spanish")
-    nlp = spacy.load("es_core_news_sm")
-
     collection = db[collection_name]
 
     logger.info(f"retrieving all documents from collection '{collection_name}'")
