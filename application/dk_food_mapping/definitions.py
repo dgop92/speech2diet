@@ -11,6 +11,7 @@ class FoodScoreQuery:
     user_food_name: str
 
 
+# TDOO: remove food attribute
 @dataclass
 class FoodScoreResult:
     food: Food

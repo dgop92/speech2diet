@@ -6,13 +6,13 @@ logger = logging.getLogger(__name__)
 
 
 def clean_description_keyword(
-    nlp: Language, text: str, disable_lemmatization: bool = False
+    nlp: Language, text: str, disable_lemmatization: bool = True
 ):
     """
     Clean the description's keyword by removing punctuations, symbols, stop words and
     finally apply lemmatization
     """
-    logger.info(f"cleaning description keyword '{text}'")
+    logger.debug(f"cleaning description keyword '{text}'")
 
     text = text.lower()
 
@@ -31,6 +31,6 @@ def clean_description_keyword(
         tokens = [token.lemma_ for token in nlp(clean_text)]
         clean_text = " ".join(tokens)
 
-    logger.info(f"cleaned description keyword '{clean_text}'")
+    logger.debug(f"cleaned description keyword '{clean_text}'")
 
     return clean_text
