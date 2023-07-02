@@ -118,6 +118,20 @@ def test_score_food_by_exact_fuzzy_matches_multiple_words_3(nlp: Language):
     assert result.score == expected_score
 
 
+def test_score_food_by_exact_fuzzy_matches_multiple_words_4(nlp: Language):
+    """
+    Should compute a score of 4 for two exact matches found in the food name
+    """
+    query = FoodScoreQuery(
+        food=create_food({"full_description": ["carne res", "grasa"]}),
+        user_description=[""],
+        user_food_name="carne de res",
+    )
+    result = score_food_by_exact_fuzzy_matches(query, nlp)
+    expected_score = 4
+    assert result.score == expected_score
+
+
 def test_score_food_by_exact_fuzzy_matches_plurals(nlp: Language):
     """Should compute a score of 1 for one exact match with plural"""
 

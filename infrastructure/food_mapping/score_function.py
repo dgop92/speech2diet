@@ -62,9 +62,16 @@ def score_food_by_exact_fuzzy_matches(
 
     full_user_description = food_name_description + final_user_description
 
+    # TODO: make sure that each description is a simple word
+    logger.debug(f"spliting target description {target_description}")
+    final_target_description: List[str] = []
+    for td in target_description:
+        final_target_description.extend(td.split(" "))
+    logger.debug(f"splitted target description {final_target_description}")
+
     score = 0
     full_user_description_set = set(full_user_description)
-    target_description_set = set(target_description)
+    target_description_set = set(final_target_description)
     intersection = full_user_description_set.intersection(target_description_set)
     number_of_exact_matches = len(intersection)
     logger.debug(f"number of exact matches: {number_of_exact_matches}")
