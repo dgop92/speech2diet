@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from application.dk_food_mapping.definitions import FoodScoreQuery, FoodScoreResult
@@ -5,6 +6,8 @@ from domain.definitions.food_mapping import NutritionRepository
 from domain.entities.food import Food
 from domain.entities.food_nutrition_request import FoodNutritionRequest
 from domain.entities.food_nutrition_response import FoodNutritionResponse, FoodRecord
+
+logger = logging.getLogger(__name__)
 
 
 class MockNutritionRepository:
@@ -15,6 +18,7 @@ class MockNutritionRepository:
         """
         Get a list of foods by its name or other names
         """
+        logger.debug(f"searching for food with name: {name}")
         results: List[Food] = []
         for food in self.data:
             possible_names = [food.food_name] + food.other_names
@@ -22,6 +26,7 @@ class MockNutritionRepository:
             if name.lower() in lower_names:
                 results.append(food)
 
+        logger.debug(f"found {len(results)} foods")
         return results
 
 
