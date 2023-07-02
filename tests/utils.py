@@ -1,33 +1,11 @@
-import logging
-from typing import List
+import uuid
+from typing import Any, Dict, List
 
 from application.dk_food_mapping.definitions import FoodScoreQuery, FoodScoreResult
 from domain.definitions.food_mapping import NutritionRepository
 from domain.entities.food import Food
 from domain.entities.food_nutrition_request import FoodNutritionRequest
 from domain.entities.food_nutrition_response import FoodNutritionResponse, FoodRecord
-
-logger = logging.getLogger(__name__)
-
-
-class MockNutritionRepository:
-    def __init__(self, data: List[Food]):
-        self.data = data
-
-    def get_foods_by_name(self, name: str) -> List[Food]:
-        """
-        Get a list of foods by its name or other names
-        """
-        logger.debug(f"searching for food with name: {name}")
-        results: List[Food] = []
-        for food in self.data:
-            possible_names = [food.food_name] + food.other_names
-            lower_names = [n.lower() for n in possible_names]
-            if name.lower() in lower_names:
-                results.append(food)
-
-        logger.debug(f"found {len(results)} foods")
-        return results
 
 
 def map_food_using_first_element(
@@ -68,3 +46,45 @@ def score_food_by_exact_match(query: FoodScoreQuery) -> FoodScoreResult:
         food=query.food,
         score=number_of_matches,
     )
+
+
+def generate_random_uuid():
+    return str(uuid.uuid4())
+
+
+def create_food(raw_data: Dict[str, Any]) -> Food:
+    _id = raw_data.get("id", generate_random_uuid())
+    food_name = raw_data.get("food_name", "")
+    other_names = raw_data.get("other_names", [])
+    description = raw_data.get("description", [])
+    full_description = raw_data.get("full_description", [])
+    portion_reference = raw_data.get("portion_reference", 100)
+    portion_unit = raw_data.get("portion_unit", "g")
+    food_source = raw_data.get("food_source", "system_db")
+    calories = raw_data.get("calories", 0)
+    protein = raw_data.get("protein", 0)
+    fat = raw_data.get("fat", 0)
+    carbohydrates = raw_data.get("carbohydrates", 0)
+    food = Food(
+        id=_id,
+        food_name=food_name,
+        other_names=other_names,
+        description=description,
+        full_description=full_description,
+        portion_reference=portion_reference,
+        portion_unit=portion_unit,
+        food_source=food_source,
+        calories=calories,
+        protein=protein,
+        fat=fat,
+        carbohydrates=carbohydrates,
+    )
+    return food
+
+
+def create_foods(raw_data: List[Dict[str, Any]]):
+    foods = []
+    for item in raw_data:
+        food = create_food(item)
+        foods.append(food)
+    return foods

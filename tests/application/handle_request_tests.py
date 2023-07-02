@@ -9,14 +9,13 @@ from domain.entities.nutrition_information_request import (
     DBLookupPreference,
     NutritionInformationRequest,
 )
-from tests.tests_components import (
+from infrastructure.dev_components import (
     MockAudioStorage,
     MockFoodExtractionService,
     MockNutritionRepository,
     MockSpeech2TextToModel,
 )
-from tests.tests_components.food_mapping import map_food_using_first_element
-from tests.tests_components.utils import create_foods
+from tests.utils import create_foods, map_food_using_first_element
 
 logger = logging.getLogger(__name__)
 

@@ -37,7 +37,10 @@ def test_clean_description_keyword_with_stop_words(nlp: Language):
 def test_clean_description_keyword_with_lemmas(nlp: Language):
     text = "Carnes de vacuno"
     expected_output = "carne vacuno"
-    assert clean_description_keyword(nlp, text) == expected_output
+    assert (
+        clean_description_keyword(nlp, text, disable_lemmatization=False)
+        == expected_output
+    )
 
 
 def test_clean_description_keyword_empty_input(nlp: Language):

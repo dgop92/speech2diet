@@ -6,7 +6,7 @@ from spacy.language import Language
 
 from application.dk_food_mapping.definitions import FoodScoreQuery
 from infrastructure.food_mapping.score_function import score_food_by_exact_fuzzy_matches
-from tests.tests_components.utils import create_food
+from tests.utils import create_food
 
 logger = logging.getLogger(__name__)
 
