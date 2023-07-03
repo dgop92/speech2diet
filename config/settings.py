@@ -6,3 +6,5 @@ DATABASE = {
     "mongo_url": config("MONGO_URL"),
     "db_name": config("DB_NAME"),
 }
+
+RABBITMQ_URL = config("RABBITMQ_URL")

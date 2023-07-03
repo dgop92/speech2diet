@@ -1,9 +1,10 @@
 from pymongo import MongoClient
 
 from config.settings import DATABASE
+from config.utils import Singleton
 
 
-class MongoDatabase:
+class MongoDatabase(metaclass=Singleton):
     def __init__(self):
         self.client = MongoClient(DATABASE["mongo_url"])
         self.db = self.client[DATABASE["db_name"]]
