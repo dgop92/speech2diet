@@ -17,8 +17,10 @@ import {
   AppUserCreateInput,
   AppUserUpdateInput,
   AppUserSearchInput,
+  HealthDataUpdateInput,
 } from "../schema-types";
 import { SearchByIdSchema } from "../utils";
+import { HealthDataUpdateInputSchema } from "../entities/health-data";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -68,6 +70,47 @@ export class AppUserUseCase implements IAppUserUseCase {
 
     myLogger.debug("updating user", { id });
     return this.userRepository.update(appUser, data, transactionManager);
+  }
+
+  updateHealthData(input: HealthDataUpdateInput): Promise<AppUser>;
+  updateHealthData(
+    input: HealthDataUpdateInput,
+    transactionManager?: any
+  ): Promise<AppUser>;
+  async updateHealthData(
+    input: HealthDataUpdateInput,
+    transactionManager?: any
+  ): Promise<AppUser> {
+    myLogger.debug("validating app user health update data");
+    this.validateInput(HealthDataUpdateInputSchema, input);
+
+    const {
+      data,
+      searchBy: { id },
+    } = input;
+
+    myLogger.debug("trying to get app user", { id });
+    const appUser = await this.userRepository.getOneBy(
+      { searchBy: { id } },
+      transactionManager
+    );
+
+    if (!appUser) {
+      myLogger.debug("app user not found, cannot update", {
+        id: input.searchBy.id,
+      });
+      throw new ApplicationError(
+        "app user with given id was not found",
+        ErrorCode.NOT_FOUND
+      );
+    }
+
+    myLogger.debug("updating user", { id });
+    return this.userRepository.updateHealthData(
+      appUser,
+      data,
+      transactionManager
+    );
   }
 
   delete(input: AppUserLookUpField): Promise<void>;

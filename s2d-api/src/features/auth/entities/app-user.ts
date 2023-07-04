@@ -1,10 +1,13 @@
 import Joi from "joi";
 
+import { HealthData } from "./health-data";
+
 export interface AppUser {
   id: number;
   firstName: string;
   lastName: string;
   userId: string;
+  healthData: HealthData;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
