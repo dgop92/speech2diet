@@ -10,6 +10,10 @@ import { AuthUser } from "@features/auth/entities/auth-user";
 import { ErrorCode, RepositoryError } from "@common/errors";
 import { RANDOM_USER_ID } from "../test-utils/firebase-test-helpers";
 import { TEST_EMAILS } from "../test-utils/users-test-data";
+import {
+  getTestAuthFirebaseClient,
+  getTestFirebaseApp,
+} from "tests/test-firebase-app";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -21,7 +25,8 @@ describe("firebase repository", () => {
   let authUser1: AuthUser;
 
   beforeAll(async () => {
-    authFirebaseClient = getAuthFirebaseClient();
+    const app = getTestFirebaseApp();
+    authFirebaseClient = getTestAuthFirebaseClient(app);
     firebaseUserRepository = new FirebaseUserRepository(authFirebaseClient);
   });
 
