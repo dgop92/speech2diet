@@ -3,7 +3,7 @@ import Joi from "joi";
 import { HealthData } from "./health-data";
 
 export interface AppUser {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   userId: string;
@@ -15,7 +15,7 @@ export interface AppUser {
 
 export const AppUserSearchInputSchema = Joi.object({
   searchBy: Joi.object({
-    id: Joi.number().optional(),
+    id: Joi.string().optional(),
     userId: Joi.string().min(1).max(128).optional(),
   }).optional(),
 }).meta({ className: "AppUserSearchInput" });
@@ -34,6 +34,6 @@ export const AppUserUpdateInputSchema = Joi.object({
     lastName: Joi.string().max(120).optional(),
   }).required(),
   searchBy: Joi.object({
-    id: Joi.number().required(),
+    id: Joi.string().required(),
   }).required(),
 }).meta({ className: "AppUserUpdateInput" });

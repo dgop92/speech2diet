@@ -8,7 +8,7 @@ import {
 
 export type AppUserLookUpField = {
   searchBy: {
-    id: number;
+    id: string;
   };
 };
 

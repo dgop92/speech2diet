@@ -17,6 +17,6 @@ export const HealthDataUpdateInputSchema = Joi.object({
     weight: Joi.number().min(0).optional(),
   }).required(),
   searchBy: Joi.object({
-    id: Joi.number().required(),
+    id: Joi.string().required(),
   }).required(),
 }).meta({ className: "HealthDataUpdateInput" });

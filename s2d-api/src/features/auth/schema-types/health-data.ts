@@ -11,6 +11,6 @@ export interface HealthDataUpdateInput {
     weight?: number;
   };
   searchBy: {
-    id: number;
+    id: string;
   };
 }

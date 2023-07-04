@@ -13,7 +13,7 @@ export interface AppUserCreateInput {
 
 export interface AppUserSearchInput {
   searchBy?: {
-    id?: number;
+    id?: string;
     userId?: string;
   };
 }
@@ -24,6 +24,6 @@ export interface AppUserUpdateInput {
     lastName?: string;
   };
   searchBy: {
-    id: number;
+    id: string;
   };
 }
