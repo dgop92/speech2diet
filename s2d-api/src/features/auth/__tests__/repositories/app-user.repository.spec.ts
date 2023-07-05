@@ -43,7 +43,7 @@ describe("app user repository", () => {
   });
 
   afterAll(async () => {
-    // await deleteAllDocumentsFromCollection(collection);
+    await deleteAllDocumentsFromCollection(collection);
   });
 
   describe("Create", () => {

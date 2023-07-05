@@ -5,7 +5,7 @@ import Joi from "joi";
 // unknown() is for ignoring extra properties
 export const SearchByIdSchema = Joi.object({
   searchBy: Joi.object({
-    id: Joi.number().required(),
+    id: Joi.string().required(),
   }).required(),
 }).unknown();
 
