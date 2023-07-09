@@ -13,7 +13,7 @@ import { TEST_EMAILS } from "../test-utils/users-test-data";
 import {
   getTestAuthFirebaseClient,
   getTestFirebaseApp,
-} from "tests/test-firebase-app";
+} from "test/test-firebase-app";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);

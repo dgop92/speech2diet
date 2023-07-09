@@ -15,7 +15,7 @@ import {
 import {
   getTestFirebaseApp,
   getTestFirestoreClient,
-} from "tests/test-firebase-app";
+} from "test/test-firebase-app";
 import {
   createFirestoreCollection,
   FirestoreCollection,

@@ -25,7 +25,7 @@ import { FirestoreAppUser } from "@features/auth/infrastructure/firestore/entiti
 import {
   getTestFirebaseApp,
   getTestFirestoreClient,
-} from "tests/test-firebase-app";
+} from "test/test-firebase-app";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
