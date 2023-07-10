@@ -17,7 +17,10 @@ export const myAuthUserFactory = (authFirebaseClient?: FirebaseAuth) => {
 
   if (authUserRepository === undefined) {
     myLogger.info("creating authUserRepository");
-    if (APP_ENV_VARS.isTest) {
+    const isEmulatorDefined = APP_ENV_VARS.firebase.authEmulatorHost !== "";
+    // if we are in test mode and the emulator is not defined, we use the mock repository
+    if (APP_ENV_VARS.isTest && !isEmulatorDefined) {
+      myLogger.info("creating authUserRepository with mock");
       authUserRepository = new AuthUserMockedRepository();
     } else {
       if (!authFirebaseClient) {

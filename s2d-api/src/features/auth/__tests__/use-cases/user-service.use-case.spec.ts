@@ -26,6 +26,7 @@ import {
   getTestFirebaseApp,
   getTestFirestoreClient,
 } from "test/test-firebase-app";
+import { getAuthFirebaseClient } from "main/firebase-app";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -39,14 +40,13 @@ describe("user service use-case", () => {
   let collection: FirestoreCollection<FirestoreAppUser>;
 
   beforeAll(async () => {
-    // it's going to use the mock use-case
-    const authUserFactory = myAuthUserFactory();
-    authUserUseCase = authUserFactory.authUserUseCase;
-    authUserRepository = authUserFactory.authUserRepository;
-
     const app = getTestFirebaseApp();
     const firestoreClient = getTestFirestoreClient(app);
+    const authClient = getAuthFirebaseClient(app);
 
+    const authUserFactory = myAuthUserFactory(authClient);
+    authUserUseCase = authUserFactory.authUserUseCase;
+    authUserRepository = authUserFactory.authUserRepository;
     collection = createFirestoreCollection<FirestoreAppUser>(
       firestoreClient,
       "app-users"
