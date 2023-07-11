@@ -8,8 +8,9 @@
     "build": "tsc -p tsconfig.build.json",
     "schema-types": "ts-node -r tsconfig-paths/register ./scripts/create-schema-types.ts",
     "dev": "ts-node-dev -r ./scripts/dev-setup.ts --respawn src/main/index.ts",
-    "test-server": "ts-node-dev -r ./scripts/test-setup.ts --respawn src/test/test-server.ts",
-    "test-token": "ts-node-dev -r ./scripts/test-setup.ts ./scripts/generate-id-token.ts",
+    "dev:id-token": "ts-node-dev -r ./scripts/dev-setup.ts ./scripts/generate-id-token.ts",
+    "test:server": "ts-node-dev -r ./scripts/test-setup.ts --respawn src/test/test-server.ts",
+    "test:id-token": "ts-node-dev -r ./scripts/test-setup.ts ./scripts/generate-id-token.ts",
     "test": "jest -c ./jest.unit.json --verbose --runInBand",
     "nest": "nest"
   },
