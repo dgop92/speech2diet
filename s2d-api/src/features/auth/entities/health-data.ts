@@ -5,7 +5,9 @@ export type Gender = "male" | "female";
 export interface HealthData {
   gender?: Gender;
   age?: number;
+  /* height in cm */
   height?: number;
+  /* weight in kg */
   weight?: number;
 }
 

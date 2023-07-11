@@ -1,6 +1,6 @@
 import { AppLogger } from "@common/logging/logger";
 import { ErrorCode, RepositoryError } from "@common/errors";
-
+import { Timestamp } from "firebase-admin/firestore";
 import { FirestoreCollection } from "@common/firebase/utils";
 import {
   AppUserCreateRepoData,
@@ -11,6 +11,10 @@ import {
 import { FirestoreAppUser } from "../entities/app-user.firestore";
 import { AppUser } from "@features/auth/entities/app-user";
 import { AppUserSearchInput } from "@features/auth/schema-types";
+import {
+  firestoreAppUserFromDomain,
+  firestoreAppUserToDomain,
+} from "../transformers";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -38,22 +42,20 @@ export class AppUserRepository implements IAppUserRepository {
     transactionManager?: any
   ): Promise<AppUser> {
     myLogger.debug("creating app user", { userId: input.userId });
-
     shouldThrowTransactionError(transactionManager);
 
-    const appUserData: FirestoreAppUser = {
-      // just to satisfy the interface
+    const fireStoreAppUser: FirestoreAppUser = {
       id: input.userId,
       firstName: input.firstName,
       lastName: input.lastName,
       healthData: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
       deletedAt: null,
     };
 
     try {
-      await this.collection.doc(input.userId).create(appUserData);
+      await this.collection.doc(input.userId).create(fireStoreAppUser);
     } catch (error) {
       //  auth user already have an app user
       if (error.code === "already-exists") {
@@ -65,10 +67,7 @@ export class AppUserRepository implements IAppUserRepository {
     }
 
     myLogger.debug("app user created", { userId: input.userId });
-    return {
-      userId: input.userId,
-      ...appUserData,
-    };
+    return firestoreAppUserToDomain(fireStoreAppUser);
   }
 
   update(appUser: AppUser, input: AppUserUpdateRepoData): Promise<AppUser>;
@@ -86,16 +85,18 @@ export class AppUserRepository implements IAppUserRepository {
 
     shouldThrowTransactionError(transactionManager);
 
-    const { userId, ...oldData } = appUser;
+    const oldFirestoreAppUser = firestoreAppUserFromDomain(appUser);
 
-    const appUserUpdated: FirestoreAppUser = {
-      ...oldData,
+    const newFirestoreAppUser: FirestoreAppUser = {
+      ...oldFirestoreAppUser,
       ...input,
-      updatedAt: new Date(),
+      updatedAt: Timestamp.now(),
     };
 
     try {
-      await this.collection.doc(userId).update(appUserUpdated);
+      await this.collection
+        .doc(oldFirestoreAppUser.id)
+        .update(newFirestoreAppUser);
     } catch (error) {
       if (error.code === "not-found") {
         throw new RepositoryError("app user not found", ErrorCode.NOT_FOUND);
@@ -103,11 +104,7 @@ export class AppUserRepository implements IAppUserRepository {
     }
 
     myLogger.debug("app user updated", { id: appUser.id });
-    return {
-      ...appUser,
-      // this will override the old data with the new fields
-      ...appUserUpdated,
-    };
+    return firestoreAppUserToDomain(newFirestoreAppUser);
   }
 
   updateHealthData(
@@ -128,22 +125,22 @@ export class AppUserRepository implements IAppUserRepository {
 
     shouldThrowTransactionError(transactionManager);
 
-    const { userId, ...oldData } = appUser;
+    const oldFirestoreAppUser = firestoreAppUserFromDomain(appUser);
 
-    const oldHealthData = oldData.healthData ?? {};
+    const oldHealthData = oldFirestoreAppUser.healthData ?? {};
     const newHealthData = {
       ...oldHealthData,
       ...input,
     };
 
     const appUserUpdated: FirestoreAppUser = {
-      ...oldData,
+      ...oldFirestoreAppUser,
       healthData: newHealthData,
-      updatedAt: new Date(),
+      updatedAt: Timestamp.now(),
     };
 
     try {
-      await this.collection.doc(userId).update(appUserUpdated);
+      await this.collection.doc(oldFirestoreAppUser.id).update(appUserUpdated);
     } catch (error) {
       if (error.code === "not-found") {
         throw new RepositoryError("app user not found", ErrorCode.NOT_FOUND);
@@ -151,11 +148,7 @@ export class AppUserRepository implements IAppUserRepository {
     }
 
     myLogger.debug("app user health data updated", { id: appUser.id });
-    return {
-      ...appUser,
-      // this will override the old data with the new fields
-      ...appUserUpdated,
-    };
+    return firestoreAppUserToDomain(appUserUpdated);
   }
 
   delete(appUser: AppUser): Promise<void>;
@@ -206,28 +199,27 @@ export class AppUserRepository implements IAppUserRepository {
     shouldThrowTransactionError(transactionManager);
 
     if (input.searchBy?.userId) {
-      const appUser = await this.collection.doc(input.searchBy.userId).get();
+      const firestoreAppUserDoc = await this.collection
+        .doc(input.searchBy.userId)
+        .get();
 
-      if (appUser.exists) {
+      if (firestoreAppUserDoc.exists) {
         myLogger.debug("app user found", { userId: input.searchBy.userId });
-        const appUserData = appUser.data()!;
-        return {
-          userId: input.searchBy.userId,
-          ...appUserData,
-        };
+        const firestoreAppUser = firestoreAppUserDoc.data()!;
+        return firestoreAppUserToDomain(firestoreAppUser);
       }
     }
 
     if (input.searchBy?.id) {
-      const appUser = await this.collection
+      const firestoreAppUserDoc = await this.collection
         .where("id", "==", input.searchBy.id)
         .get();
 
-      if (appUser.docs.length <= 0) {
+      if (firestoreAppUserDoc.docs.length <= 0) {
         return undefined;
       }
 
-      if (appUser.docs.length > 1) {
+      if (firestoreAppUserDoc.docs.length > 1) {
         throw new RepositoryError(
           "More than one app user found",
           ErrorCode.APPLICATION_INTEGRITY_ERROR
@@ -235,13 +227,10 @@ export class AppUserRepository implements IAppUserRepository {
       }
 
       myLogger.debug("app user found", { id: input.searchBy.id });
-      const appUserData = appUser.docs[0].data();
-      const userId = appUser.docs[0].id;
+      const firestoreAppUser = firestoreAppUserDoc.docs[0].data();
+      const userId = firestoreAppUserDoc.docs[0].id;
 
-      return {
-        userId: userId,
-        ...appUserData,
-      };
+      return firestoreAppUserToDomain({ ...firestoreAppUser, id: userId });
     }
 
     return undefined;
