@@ -29,8 +29,4 @@ export interface IMealReportReviewUseCase {
     transactionManager?: any
   ): Promise<void>;
   getManyBy(input: MealReportReviewSearchInput): Promise<MealReportReview[]>;
-  getManyBy(
-    input: MealReportReviewSearchInput,
-    transactionManager?: any
-  ): Promise<MealReportReview[]>;
 }

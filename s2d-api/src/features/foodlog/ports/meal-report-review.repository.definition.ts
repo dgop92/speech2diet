@@ -8,9 +8,13 @@ export type MealReportReviewUpdateRepoData =
   MealReportReviewUpdateInput["data"];
 
 export interface IMealReportReviewRepository {
-  update(input: MealReportReviewUpdateInput): Promise<MealReportReview>;
+  update(
+    mealReportReview: MealReportReview,
+    input: MealReportReviewUpdateRepoData
+  ): Promise<MealReportReview>;
   update<T>(
-    input: MealReportReviewUpdateInput,
+    mealReportReview: MealReportReview,
+    input: MealReportReviewUpdateRepoData,
     transactionManager?: T
   ): Promise<MealReportReview>;
   getOneBy(
