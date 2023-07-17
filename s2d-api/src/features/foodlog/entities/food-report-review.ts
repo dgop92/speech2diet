@@ -25,7 +25,7 @@ export interface FoodReportReview {
 
 export const FoodReportReviewSearchInputSchema = Joi.object({
   searchBy: Joi.object({
-    id: Joi.string().optional(),
-    mealReviewReportId: Joi.string().optional(),
-  }).optional(),
+    id: Joi.string().required(),
+    mealReviewReportId: Joi.string().required(),
+  }).required(),
 }).meta({ className: "FoodReportReviewSearchInput" });

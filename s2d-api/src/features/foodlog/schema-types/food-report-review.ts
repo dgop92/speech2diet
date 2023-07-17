@@ -4,8 +4,8 @@
  */
 
 export interface FoodReportReviewSearchInput {
-  searchBy?: {
-    id?: string;
-    mealReviewReportId?: string;
+  searchBy: {
+    id: string;
+    mealReviewReportId: string;
   };
 }
