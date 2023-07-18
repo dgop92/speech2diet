@@ -16,6 +16,10 @@ export interface FoodItem {
 }
 
 export const FoodItemUpdateInputSchema = Joi.object({
+  searchBy: Joi.object({
+    mealReporReviewtId: Joi.string().required(),
+    foodReportReviewId: Joi.string().required(),
+  }).required(),
   data: Joi.object({
     amount: Joi.number().positive().required(),
   }).required(),
@@ -23,6 +27,8 @@ export const FoodItemUpdateInputSchema = Joi.object({
 
 export const FoodItemSearchInputSchema = Joi.object({
   searchBy: Joi.object({
-    id: Joi.string().optional(),
-  }).optional(),
+    id: Joi.string().required(),
+    mealReporReviewtId: Joi.string().required(),
+    foodReportReviewId: Joi.string().required(),
+  }).required(),
 }).meta({ className: "FoodItemSearchInput" });

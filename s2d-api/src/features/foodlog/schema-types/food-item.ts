@@ -4,13 +4,19 @@
  */
 
 export interface FoodItemSearchInput {
-  searchBy?: {
-    id?: string;
+  searchBy: {
+    foodReportReviewId: string;
+    id: string;
+    mealReporReviewtId: string;
   };
 }
 
 export interface FoodItemUpdateInput {
   data: {
     amount: number;
+  };
+  searchBy: {
+    foodReportReviewId: string;
+    mealReporReviewtId: string;
   };
 }
