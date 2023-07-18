@@ -1,3 +1,5 @@
+import Joi from "joi";
+
 export enum FoodSource {
   USER_DB = "user_db",
   SYSTEM_DB = "system_db",
@@ -27,3 +29,19 @@ export interface Food {
   /** The amount of carbohydrates in grams */
   carbohydrates: number;
 }
+
+export const FoodCreateInputSchema = Joi.object({
+  id: Joi.string().required(),
+  foodName: Joi.string().required(),
+  otherNames: Joi.array().items(Joi.string()).required(),
+  description: Joi.array().items(Joi.string()).required(),
+  portionReference: Joi.number().positive().required(),
+  portionUnit: Joi.string().required(),
+  calories: Joi.number().min(0).required(),
+  protein: Joi.number().min(0).required(),
+  fat: Joi.number().min(0).required(),
+  carbohydrates: Joi.number().min(0).required(),
+  foodSource: Joi.string()
+    .valid(FoodSource.USER_DB, FoodSource.SYSTEM_DB)
+    .required(),
+}).meta({ className: "FoodCreateInput" });

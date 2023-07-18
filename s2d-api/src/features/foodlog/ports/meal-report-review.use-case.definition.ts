@@ -2,6 +2,7 @@ import { MealReportReview } from "../entities/meal-report-review";
 import {
   MealReportReviewUpdateInput,
   MealReportReviewSearchInput,
+  MealReportReviewCreateInput,
 } from "../schema-types";
 
 export type MealReportReviewLookUpField = {
@@ -11,6 +12,11 @@ export type MealReportReviewLookUpField = {
 };
 
 export interface IMealReportReviewUseCase {
+  create(input: MealReportReviewCreateInput): Promise<MealReportReview>;
+  create(
+    input: MealReportReviewCreateInput,
+    transactionManager?: any
+  ): Promise<MealReportReview>;
   update(input: MealReportReviewUpdateInput): Promise<MealReportReview>;
   update(
     input: MealReportReviewUpdateInput,

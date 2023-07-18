@@ -5,4 +5,5 @@
 
 export * from './food-item';
 export * from './food-report-review';
+export * from './food';
 export * from './meal-report-review';

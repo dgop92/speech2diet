@@ -1,5 +1,6 @@
 import { Food } from "./food";
 import Joi from "joi";
+import { FoodCreateInputSchema } from "./food";
 
 export interface FoodItem {
   id: string;
@@ -14,6 +15,13 @@ export interface FoodItem {
   /** Whether the amount was given by the user */
   amountByUser: boolean;
 }
+
+export const FoodItemCreateInputSchema = Joi.object({
+  food: FoodCreateInputSchema.required(),
+  score: Joi.number().min(0).required(),
+  amount: Joi.number().min(0).required(),
+  unitWasTransformed: Joi.boolean().required(),
+}).meta({ className: "FoodItemCreateInput" });
 
 export const FoodItemUpdateInputSchema = Joi.object({
   searchBy: Joi.object({

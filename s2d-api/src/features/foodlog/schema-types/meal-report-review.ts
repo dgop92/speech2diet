@@ -3,6 +3,19 @@
  * Do not modify this file manually
  */
 
+import { FoodReportReviewCreateInput } from '.';
+
+export interface MealReportReviewCreateInput {
+  data: {
+    audioId: string;
+    dbLookupPreference: 'user_db-system_db' | 'system_db-user_db' | 'user-db' | 'system-db';
+    foodReports: FoodReportReviewCreateInput[];
+    mealRecordedAt: Date;
+    rawTranscript: string;
+    userId: string;
+  };
+}
+
 export interface MealReportReviewOptions {
   fetchFoodReports?: boolean;
 }
