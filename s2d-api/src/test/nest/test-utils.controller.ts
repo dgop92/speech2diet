@@ -9,6 +9,7 @@ import {
   Post,
 } from "@nestjs/common";
 import { setupAuthModuleData } from "test/setup-data/auth.setup-data";
+import { setupMrrData } from "test/setup-data/mrr.setup-data";
 
 // THIS CONTROLLER IS ONLY USED IN TEST OR DEV ENVIRONMENTS
 
@@ -16,6 +17,7 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 type SetupDataBody = {
   moduleToSetup: string;
+  userIds?: string[];
 };
 
 @Controller({
@@ -52,6 +54,19 @@ export class TestUtilControllerV1 {
       switch (moduleToSetup) {
         case "auth":
           result = await setupAuthModuleData();
+          break;
+        case "foodlog":
+          if (!body.userIds) {
+            throw new HttpException(
+              {
+                error: "userIds must be provided when setting up foodlog data",
+              },
+              HttpStatus.BAD_REQUEST
+            );
+          }
+          const userId1 = body.userIds[0];
+          const userId2 = body.userIds[1];
+          result = await setupMrrData(userId1, userId2);
           break;
         default:
           throw new HttpException(

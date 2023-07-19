@@ -3,6 +3,7 @@ import { AppLogger } from "@common/logging/logger";
 import { validateDataWithJoi } from "@common/validations";
 import {
   MealReportReview,
+  MealReportReviewCreateInputSchema,
   MealReportReviewSearchInputSchema,
   MealReportReviewUpdateInputSchema,
 } from "../entities/meal-report-review";
@@ -33,7 +34,7 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     input: MealReportReviewCreateInput,
     transactionManager?: any
   ): Promise<MealReportReview> {
-    this.validateInput(MealReportReviewSearchInputSchema, input);
+    this.validateInput(MealReportReviewCreateInputSchema, input);
 
     return this.repository.create(input.data, transactionManager);
   }
@@ -116,11 +117,15 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
   }
 
   getManyBy(input: MealReportReviewSearchInput): Promise<MealReportReview[]> {
-    this.validateInput(MealReportReviewSearchInputSchema, input);
-    return this.repository.getManyBy(input);
+    const newInput = this.validateInput<MealReportReviewSearchInput>(
+      MealReportReviewSearchInputSchema,
+      input
+    );
+    return this.repository.getManyBy(newInput);
   }
 
-  private validateInput(schema: Joi.ObjectSchema, input: any): void {
-    validateDataWithJoi(schema, input);
+  private validateInput<T = any>(schema: Joi.ObjectSchema<T>, input: any) {
+    const value = validateDataWithJoi(schema, input);
+    return value;
   }
 }

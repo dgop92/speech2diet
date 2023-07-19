@@ -1,3 +1,4 @@
+import { ErrorCode, PresentationError } from "@common/errors";
 import { AuthUser } from "@features/auth/entities/auth-user";
 import { GetAuthUser } from "@features/auth/infrastructure/nest/custom-decorators";
 import { AuthUserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
@@ -16,6 +17,7 @@ import {
   Delete,
   Patch,
   Body,
+  HttpCode,
 } from "@nestjs/common";
 
 type QueryParams = MealReportReviewSearchInput["searchBy"] &
@@ -60,13 +62,13 @@ export class MealReportReviewControllerV1 {
 
   @UseGuards(AuthUserGuard)
   @Get(":id")
-  getMealReportReview(
+  async getMealReportReview(
     @GetAuthUser() user: AuthUser,
     @Query() query: QueryParams,
     @Param("id") id: string
   ) {
     // TODO: Implement user id filter
-    return this.mealReportReviewUseCase.getOneBy({
+    const mrr = await this.mealReportReviewUseCase.getOneBy({
       options: {
         fetchFoodReports: query?.fetchFoodReports,
       },
@@ -74,6 +76,15 @@ export class MealReportReviewControllerV1 {
         id,
       },
     });
+
+    if (!mrr) {
+      throw new PresentationError(
+        "Meal report review not found",
+        ErrorCode.NOT_FOUND
+      );
+    }
+
+    return mrr;
   }
 
   @UseGuards(AuthUserGuard)
@@ -95,6 +106,7 @@ export class MealReportReviewControllerV1 {
   }
 
   @UseGuards(AuthUserGuard)
+  @HttpCode(204)
   @Delete(":id")
   deleteMealReportReview(
     @GetAuthUser() user: AuthUser,

@@ -191,12 +191,12 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     const fetchFoodReports = input.options?.fetchFoodReports ?? false;
     const limit = input.pagination?.limit;
     const pending = input.searchBy?.pending;
-    const sortBycreatedAt = input.sortBy?.createdAt ?? "desc";
+    const sortByMealRecordedAt = input.sortBy?.createdAt ?? "desc";
 
     myLogger.debug("getting meal report reviews", {
       pending,
       limit,
-      sortBycreatedAt,
+      sortBycreatedAt: sortByMealRecordedAt,
       fetchFoodReports,
     });
 
@@ -208,7 +208,7 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
       query = query.where("pending", "==", pending);
     }
 
-    query = query.orderBy("createdAt", sortBycreatedAt);
+    query = query.orderBy("mealRecordedAt", sortByMealRecordedAt);
 
     if (limit !== undefined) {
       query = query.limit(limit);
