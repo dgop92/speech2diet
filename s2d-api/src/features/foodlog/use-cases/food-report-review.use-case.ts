@@ -6,12 +6,19 @@ import {
   FoodReportReviewSearchInputSchema,
 } from "../entities/food-report-review";
 import { IFoodReportReviewRepository } from "../ports/food-report-review.repository.definition";
-import { IFoodReportReviewUseCase } from "../ports/food-report-review.use-case.definition";
+import {
+  FoodReportReviewManySearchInput,
+  IFoodReportReviewUseCase,
+} from "../ports/food-report-review.use-case.definition";
 import { FoodReportReviewSearchInput } from "../schema-types";
 import { IMealReportReviewUseCase } from "../ports/meal-report-review.use-case.definition";
 import { ApplicationError, ErrorCode } from "@common/errors";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
+
+const FoodReportReviewManySearchInputSchema = Joi.object({
+  searchBy: { mealReviewReportId: Joi.string().required },
+});
 
 export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
   private mealReportReviewUseCase: IMealReportReviewUseCase;
@@ -117,9 +124,9 @@ export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
   }
 
   async getManyBy(
-    input: FoodReportReviewSearchInput
+    input: FoodReportReviewManySearchInput
   ): Promise<FoodReportReview[]> {
-    this.validateInput(FoodReportReviewSearchInputSchema, input);
+    this.validateInput(FoodReportReviewManySearchInputSchema, input);
 
     myLogger.debug("getting meal report review", {
       mmrId: input.searchBy.mealReviewReportId,

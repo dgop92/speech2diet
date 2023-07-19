@@ -1,5 +1,12 @@
+import { NestedPick } from "@common/types/common-types";
 import { FoodReportReview } from "../entities/food-report-review";
 import { FoodReportReviewSearchInput } from "../schema-types";
+
+export type FoodReportReviewManySearchInput = NestedPick<
+  FoodReportReviewSearchInput,
+  "searchBy",
+  "mealReviewReportId"
+>;
 
 export interface IFoodReportReviewUseCase {
   getOneBy(
@@ -14,9 +21,7 @@ export interface IFoodReportReviewUseCase {
     input: FoodReportReviewSearchInput,
     transactionManager?: any
   ): Promise<void>;
-  getManyBy(input: FoodReportReviewSearchInput): Promise<FoodReportReview[]>;
   getManyBy(
-    input: FoodReportReviewSearchInput,
-    transactionManager?: any
+    input: FoodReportReviewManySearchInput
   ): Promise<FoodReportReview[]>;
 }
