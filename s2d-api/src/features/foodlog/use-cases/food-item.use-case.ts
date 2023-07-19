@@ -5,7 +5,11 @@ import { IFoodItemUseCase } from "../ports/food-item.use-case.definition";
 import { IMealReportReviewUseCase } from "../ports/meal-report-review.use-case.definition";
 import { IFoodItemRepository } from "../ports/food-item.repository.definition";
 import { validateDataWithJoi } from "@common/validations";
-import { FoodItem, FoodItemSearchInputSchema } from "../entities/food-item";
+import {
+  FoodItem,
+  FoodItemSearchInputSchema,
+  FoodItemUpdateInputSchema,
+} from "../entities/food-item";
 import { FoodItemSearchInput, FoodItemUpdateInput } from "../schema-types";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
@@ -71,21 +75,22 @@ export class FoodItemUseCase implements IFoodItemUseCase {
     input: FoodItemSearchInput,
     transactionManager?: any
   ): Promise<FoodItem | undefined> {
+    myLogger.debug("getting food item", {
+      mrrId: input.searchBy.mealReportReviewId,
+      frrId: input.searchBy.foodReportReviewId,
+      suggestionId: input.searchBy.id,
+    });
     this.validateInput(FoodItemSearchInputSchema, input);
     // this is the food item id inside the suggestions list
     const suggestionId = input.searchBy.id;
-    const mealReporReviewtId = input.searchBy.mealReporReviewtId;
+    const mealReportReviewId = input.searchBy.mealReportReviewId;
     const foodReportReviewId = input.searchBy.foodReportReviewId;
 
     const { mealReportReview, foodReportReview } = await getMRRRandFRR(
       this.mealReportReviewUseCase,
-      mealReporReviewtId,
+      mealReportReviewId,
       foodReportReviewId
     );
-
-    myLogger.debug("getting food item", {
-      fiId: suggestionId,
-    });
 
     const foodItem = foodReportReview.systemResult.suggestions!.find(
       (foodItem) => foodItem.id === suggestionId
@@ -117,12 +122,14 @@ export class FoodItemUseCase implements IFoodItemUseCase {
     input: FoodItemUpdateInput,
     transactionManager?: any
   ): Promise<FoodItem> {
-    const mealReporReviewtId = input.searchBy.mealReporReviewtId;
+    this.validateInput(FoodItemUpdateInputSchema, input);
+
+    const mealReportReviewId = input.searchBy.mealReportReviewId;
     const foodReportReviewId = input.searchBy.foodReportReviewId;
 
     const { mealReportReview, foodReportReview } = await getMRRRandFRR(
       this.mealReportReviewUseCase,
-      mealReporReviewtId,
+      mealReportReviewId,
       foodReportReviewId
     );
     const foundFoodItem = foodReportReview.systemResult.foundFoodItem;

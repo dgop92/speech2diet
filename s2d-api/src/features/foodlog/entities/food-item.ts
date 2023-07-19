@@ -25,7 +25,7 @@ export const FoodItemCreateInputSchema = Joi.object({
 
 export const FoodItemUpdateInputSchema = Joi.object({
   searchBy: Joi.object({
-    mealReporReviewtId: Joi.string().required(),
+    mealReportReviewId: Joi.string().required(),
     foodReportReviewId: Joi.string().required(),
   }).required(),
   data: Joi.object({
@@ -36,7 +36,7 @@ export const FoodItemUpdateInputSchema = Joi.object({
 export const FoodItemSearchInputSchema = Joi.object({
   searchBy: Joi.object({
     id: Joi.string().required(),
-    mealReporReviewtId: Joi.string().required(),
+    mealReportReviewId: Joi.string().required(),
     foodReportReviewId: Joi.string().required(),
   }).required(),
 }).meta({ className: "FoodItemSearchInput" });

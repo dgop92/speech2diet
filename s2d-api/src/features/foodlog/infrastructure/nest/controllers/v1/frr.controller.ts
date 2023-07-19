@@ -2,8 +2,11 @@ import { ErrorCode, PresentationError } from "@common/errors";
 import { AuthUser } from "@features/auth/entities/auth-user";
 import { GetAuthUser } from "@features/auth/infrastructure/nest/custom-decorators";
 import { AuthUserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory";
 import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-report-review.factory";
+import { IFoodItemUseCase } from "@features/foodlog/ports/food-item.use-case.definition";
 import { IFoodReportReviewUseCase } from "@features/foodlog/ports/food-report-review.use-case.definition";
+import { FoodItemUpdateInput } from "@features/foodlog/schema-types";
 import {
   Controller,
   Get,
@@ -12,11 +15,19 @@ import {
   Param,
   Delete,
   HttpCode,
+  Patch,
+  Body,
 } from "@nestjs/common";
 
 type QueryParams = {
   mrrId: string;
 };
+
+type FoodItemQueryParams = QueryParams & {
+  suggestionId: string;
+};
+
+type UpdateFoodItemReviewRequest = FoodItemUpdateInput["data"];
 
 @Controller({
   path: "frr",
@@ -24,8 +35,12 @@ type QueryParams = {
 })
 export class FoodReportReviewControllerV1 {
   private readonly foodReportReviewUseCase: IFoodReportReviewUseCase;
+  private readonly foodItemUseCase: IFoodItemUseCase;
   constructor() {
     const { foodReportReviewUseCase } = myFoodReportReviewFactory();
+    const { foodItemUseCase } = myFoodItemFactory();
+    this.foodItemUseCase = foodItemUseCase;
+
     this.foodReportReviewUseCase = foodReportReviewUseCase;
   }
 
@@ -78,6 +93,41 @@ export class FoodReportReviewControllerV1 {
       searchBy: {
         id,
         mealReviewReportId: query.mrrId,
+      },
+    });
+  }
+
+  @UseGuards(AuthUserGuard)
+  @Patch(":id/change-food")
+  changeFoundFoodTo(
+    @GetAuthUser() user: AuthUser,
+    @Query() query: FoodItemQueryParams,
+    @Param("id") id: string
+  ) {
+    return this.foodItemUseCase.changeFoundFoodBySuggestion({
+      searchBy: {
+        id: query.suggestionId,
+        mealReportReviewId: query.mrrId,
+        foodReportReviewId: id,
+      },
+    });
+  }
+
+  @UseGuards(AuthUserGuard)
+  @Patch(":id/found-food")
+  updateFoundFood(
+    @GetAuthUser() user: AuthUser,
+    @Query() query: FoodItemQueryParams,
+    @Body() requestData: UpdateFoodItemReviewRequest,
+    @Param("id") id: string
+  ) {
+    return this.foodItemUseCase.updateFoundFood({
+      searchBy: {
+        mealReportReviewId: query.mrrId,
+        foodReportReviewId: id,
+      },
+      data: {
+        amount: requestData.amount,
       },
     });
   }

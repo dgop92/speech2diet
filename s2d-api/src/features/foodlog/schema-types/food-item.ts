@@ -3,7 +3,7 @@
  * Do not modify this file manually
  */
 
-import { FoodCreateInput } from '.';
+import { FoodCreateInput } from ".";
 
 export interface FoodItemCreateInput {
   amount: number;
@@ -16,7 +16,7 @@ export interface FoodItemSearchInput {
   searchBy: {
     foodReportReviewId: string;
     id: string;
-    mealReporReviewtId: string;
+    mealReportReviewId: string;
   };
 }
 
@@ -26,6 +26,6 @@ export interface FoodItemUpdateInput {
   };
   searchBy: {
     foodReportReviewId: string;
-    mealReporReviewtId: string;
+    mealReportReviewId: string;
   };
 }
