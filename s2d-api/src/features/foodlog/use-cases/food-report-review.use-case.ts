@@ -17,7 +17,9 @@ import { ApplicationError, ErrorCode } from "@common/errors";
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 const FoodReportReviewManySearchInputSchema = Joi.object({
-  searchBy: { mealReviewReportId: Joi.string().required },
+  searchBy: Joi.object({
+    mealReviewReportId: Joi.string().required(),
+  }),
 });
 
 export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {

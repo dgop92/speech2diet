@@ -1,3 +1,4 @@
+import { ErrorCode, PresentationError } from "@common/errors";
 import { AuthUser } from "@features/auth/entities/auth-user";
 import { GetAuthUser } from "@features/auth/infrastructure/nest/custom-decorators";
 import { AuthUserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
@@ -10,6 +11,7 @@ import {
   Query,
   Param,
   Delete,
+  HttpCode,
 } from "@nestjs/common";
 
 type QueryParams = {
@@ -42,20 +44,30 @@ export class FoodReportReviewControllerV1 {
 
   @UseGuards(AuthUserGuard)
   @Get(":id")
-  getFoodReportReview(
+  async getFoodReportReview(
     @GetAuthUser() user: AuthUser,
     @Query() query: QueryParams,
     @Param("id") id: string
   ) {
-    return this.foodReportReviewUseCase.getOneBy({
+    const frr = await this.foodReportReviewUseCase.getOneBy({
       searchBy: {
         id,
         mealReviewReportId: query.mrrId,
       },
     });
+
+    if (!frr) {
+      throw new PresentationError(
+        "food Report Review not found",
+        ErrorCode.NOT_FOUND
+      );
+    }
+
+    return frr;
   }
 
   @UseGuards(AuthUserGuard)
+  @HttpCode(204)
   @Delete(":id")
   deleteFoodReportReview(
     @GetAuthUser() user: AuthUser,
