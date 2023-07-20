@@ -1,0 +1,21 @@
+@startuml speech2diet-api-high-level-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+
+
+!includesub definitions.puml!MOBILE_APPLICATION
+!includesub definitions.puml!SPEECH_2_DIET_API
+
+
+!includesub definitions.puml!FIREBASE_AUTH
+!includesub definitions.puml!FIRESTORE_DB
+!includesub definitions.puml!AUDIO_STORAGE
+
+
+Speech2DietAPI --> FirestoreDB : manages app data \n [http]
+Speech2DietAPI --> AudioStorage : saves audio files \n [http]
+
+MobileApplication --> Speech2DietAPI : makes requests to \n [http]
+MobileApplication --> FirebaseAuth : authenticates users \n [http]
+
+@enduml

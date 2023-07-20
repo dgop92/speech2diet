@@ -143,6 +143,7 @@ export class FoodItemUseCase implements IFoodItemUseCase {
 
     // update the found food item amount
     foundFoodItem.amount = input.data.amount;
+    foundFoodItem.amountByUser = true;
 
     const updatedFoodItem = await this.repository.updateFoundFood(
       foundFoodItem,
