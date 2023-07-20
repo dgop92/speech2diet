@@ -1,0 +1,35 @@
+@startuml speech2nutrition-simplified-component-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+left to right direction
+
+() "NutritionInformationRequest" as NutritionInformationRequest
+Speech2Nutrition -l-( NutritionInformationRequest
+
+rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
+    !includesub definitions.puml!SPEECH_TO_TEXT
+    !includesub definitions.puml!FOOD_FEATURE_EXTRACTION
+    !includesub definitions.puml!FOOD_MAPPING
+
+    () "Audio ID" as AudioID
+    SpeechToText --( AudioID
+    () "Audio Transcription" as AudioTranscription
+    SpeechToText -- AudioTranscription
+
+    FoodFeatureExtraction --( AudioTranscription
+    () "Food Requests" as FoodRequests
+    FoodFeatureExtraction -- FoodRequests
+
+    FoodMapping --( FoodRequests
+    () "Food Responses" as FoodResponses
+    FoodMapping -- FoodResponses
+
+}
+
+() "NutritionInformationResponse" as NutritionInformationResponse
+Speech2Nutrition -- NutritionInformationResponse
+
+' position helper
+' NutritionInformationRequest -- 
+
+@enduml

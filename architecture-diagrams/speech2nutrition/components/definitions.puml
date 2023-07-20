@@ -1,0 +1,15 @@
+@startuml speech2nutrition-component-diagram-definitions
+
+!startsub SPEECH_TO_TEXT
+component [Speech To Text] as SpeechToText
+!endsub
+
+!startsub FOOD_FEATURE_EXTRACTION
+component [Food Feature Extraction] as FoodFeatureExtraction
+!endsub
+
+!startsub FOOD_MAPPING
+component [Food Mapping] as FoodMapping
+!endsub
+
+@enduml

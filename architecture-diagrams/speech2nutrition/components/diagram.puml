@@ -1,0 +1,50 @@
+@startuml speech2nutrition-component-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+' left to right direction
+top to bottom direction
+
+!includesub high-level-diagram/definitions.puml!CHAT_GPT
+!includesub high-level-diagram/definitions.puml!WHISPER
+!includesub high-level-diagram/definitions.puml!AUDIO_STORAGE
+
+/' () "NutritionInformationRequest" as NutritionInformationRequest
+Speech2Nutrition --( NutritionInformationRequest '/
+
+() "Audio File" as AudioFile
+AudioStorage -- AudioFile
+
+() "Audio" as Audio
+Whisper -( Audio
+
+() "Prompt" as Prompt
+ChatGPT --( Prompt
+
+rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
+    !includesub definitions.puml!SPEECH_TO_TEXT
+    !includesub definitions.puml!FOOD_FEATURE_EXTRACTION
+    !includesub definitions.puml!FOOD_MAPPING
+
+    () "Audio ID" as AudioID
+    SpeechToText --( AudioID
+    SpeechToText --( AudioFile
+    () "Audio Transcription" as AudioTranscription
+    SpeechToText -- AudioTranscription
+    SpeechToText -u- Audio
+
+    FoodFeatureExtraction --( AudioTranscription
+    () "Food Requests" as FoodRequests
+    FoodFeatureExtraction -- FoodRequests
+    FoodFeatureExtraction -u- Prompt
+
+    FoodMapping --( FoodRequests
+    () "Food Responses" as FoodResponses
+    FoodMapping -- FoodResponses
+
+}
+
+/' () "NutritionInformationResponse" as NutritionInformationResponse
+Speech2Nutrition -- NutritionInformationResponse '/
+
+
+@enduml
