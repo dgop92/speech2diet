@@ -1,0 +1,23 @@
+@startuml main-component-definitions
+
+!startsub MOBILE_APPLICATION
+component [Mobile Application] as MobileApplication
+!endsub
+
+!startsub SPEECH_2_DIET_API
+component [Speech2Diet API] as Speech2DietAPI
+!endsub
+
+!startsub RABBIT_MQ
+component "RabbitMQ" as RabbitMQ
+!endsub
+
+!startsub SPEECH_2_NUTRITION
+component "Speech2Nutrition" as Speech2Nutrition
+!endsub
+
+!startsub NUTRITION_DB
+database "Nutrition DB" as NutritionDB
+!endsub
+
+@enduml

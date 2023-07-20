@@ -1,4 +1,4 @@
-@startuml speech2nutrition-component-diagram-definitions
+@startuml speech2nutrition-components-definitions
 
 !startsub SPEECH_TO_TEXT
 component [Speech To Text] as SpeechToText

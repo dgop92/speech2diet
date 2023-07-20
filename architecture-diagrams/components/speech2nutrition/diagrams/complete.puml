@@ -4,12 +4,9 @@ skinparam defaultTextAlignment center
 ' left to right direction
 top to bottom direction
 
-!includesub high-level-diagram/definitions.puml!CHAT_GPT
-!includesub high-level-diagram/definitions.puml!WHISPER
-!includesub high-level-diagram/definitions.puml!AUDIO_STORAGE
-
-/' () "NutritionInformationRequest" as NutritionInformationRequest
-Speech2Nutrition --( NutritionInformationRequest '/
+!includesub components/external-services.puml!CHAT_GPT
+!includesub components/external-services.puml!WHISPER
+!includesub components/external-services.puml!AUDIO_STORAGE
 
 () "Audio File" as AudioFile
 AudioStorage -- AudioFile
@@ -21,9 +18,9 @@ Whisper -( Audio
 ChatGPT --( Prompt
 
 rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
-    !includesub definitions.puml!SPEECH_TO_TEXT
-    !includesub definitions.puml!FOOD_FEATURE_EXTRACTION
-    !includesub definitions.puml!FOOD_MAPPING
+    !includesub components/speech2nutrition/definitions.puml!SPEECH_TO_TEXT
+    !includesub components/speech2nutrition/definitions.puml!FOOD_FEATURE_EXTRACTION
+    !includesub components/speech2nutrition/definitions.puml!FOOD_MAPPING
 
     () "Audio ID" as AudioID
     SpeechToText --( AudioID
@@ -42,9 +39,5 @@ rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
     FoodMapping -- FoodResponses
 
 }
-
-/' () "NutritionInformationResponse" as NutritionInformationResponse
-Speech2Nutrition -- NutritionInformationResponse '/
-
 
 @enduml

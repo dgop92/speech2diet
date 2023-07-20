@@ -1,15 +1,7 @@
-@startuml high-level-diagram-definitions
+@startuml external-services-definitions
 
 !startsub FIREBASE_AUTH
 node "<<external-service>> \nFirebase Auth" as FirebaseAuth
-!endsub
-
-!startsub MOBILE_APPLICATION
-component [Mobile Application] as MobileApplication
-!endsub
-
-!startsub SPEECH_2_DIET_API
-component [Speech2Diet API] as Speech2DietAPI
 !endsub
 
 !startsub FIRESTORE_DB
@@ -18,18 +10,6 @@ database "<<external-service>> \nFirestore DB" as FirestoreDB
 
 !startsub AUDIO_STORAGE
 node "<<external-service>> \nAudio Storage" as AudioStorage
-!endsub
-
-!startsub RABBIT_MQ
-component "RabbitMQ" as RabbitMQ
-!endsub
-
-!startsub SPEECH_2_NUTRITION
-component "Speech2Nutrition" as Speech2Nutrition
-!endsub
-
-!startsub NUTRITION_DB
-database "Nutrition DB" as NutritionDB
 !endsub
 
 !startsub CHAT_GPT

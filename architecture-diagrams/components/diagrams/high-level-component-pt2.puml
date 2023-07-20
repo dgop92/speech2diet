@@ -1,0 +1,18 @@
+@startuml high-level-component-pt2-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+
+!includesub components/main-components.puml!SPEECH_2_NUTRITION
+!includesub components/main-components.puml!NUTRITION_DB
+
+!includesub components/external-services.puml!CHAT_GPT
+!includesub components/external-services.puml!WHISPER
+
+!includesub components/external-services.puml!AUDIO_STORAGE
+
+Speech2Nutrition --> NutritionDB : query nutrition information
+Speech2Nutrition --> ChatGPT : parses text using
+Speech2Nutrition --> Whisper : transcribes audios using
+Speech2Nutrition --> AudioStorage : reads audio files \n [http]
+
+@enduml

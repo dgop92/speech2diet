@@ -1,0 +1,32 @@
+@startuml high-level-component-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+
+!includesub components/external-services.puml!FIREBASE_AUTH
+!includesub components/external-services.puml!FIRESTORE_DB
+!includesub components/external-services.puml!AUDIO_STORAGE
+
+!includesub components/main-components.puml!MOBILE_APPLICATION
+!includesub components/main-components.puml!SPEECH_2_DIET_API
+!includesub components/main-components.puml!RABBIT_MQ
+!includesub components/main-components.puml!SPEECH_2_NUTRITION
+!includesub components/main-components.puml!NUTRITION_DB
+
+!includesub components/external-services.puml!CHAT_GPT
+!includesub components/external-services.puml!WHISPER
+
+
+Speech2DietAPI --> FirestoreDB : manages app data \n [http]
+Speech2DietAPI --> AudioStorage : saves audio files \n [http]
+Speech2DietAPI -- RabbitMQ
+
+Speech2Nutrition --> NutritionDB : queries nutrition information
+Speech2Nutrition --> ChatGPT : parses text using
+Speech2Nutrition --> Whisper : transcribes audios using
+Speech2Nutrition -u- RabbitMQ
+Speech2Nutrition --> AudioStorage : reads audio files \n [http]
+
+MobileApplication --> Speech2DietAPI : makes requests to \n [http]
+MobileApplication --> FirebaseAuth : authenticates users \n [http]
+
+@enduml
