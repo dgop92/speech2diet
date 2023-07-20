@@ -1,0 +1,23 @@
+@startuml speech2diet-api-conceptual-model-definitions
+
+!startsub FOOD
+class Food {}
+!endsub
+
+!startsub DB_LOOKUP_PREFERENCE
+enum DBLookupPreference {}
+!endsub
+
+!startsub FOOD_ITEM
+class FoodItem {}
+!endsub
+
+!startsub MEAL_REPORT_REVIEW
+class MealReportReview {}
+!endsub
+
+!startsub FOOD_REPORT_REVIEW
+class FoodReportReview {}
+!endsub
+
+@enduml

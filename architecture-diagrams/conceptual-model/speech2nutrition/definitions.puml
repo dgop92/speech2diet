@@ -1,0 +1,31 @@
+@startuml speech2nutrition-conceptual-model-definitions
+
+!startsub FOOD
+class Food {}
+!endsub
+
+!startsub FOOD_NUTRITION_REQUEST
+class FoodNutritionRequest {}
+!endsub
+
+!startsub FOOD_NUTRITION_RESPONSE
+class FoodNutritionResponse {}
+!endsub
+
+!startsub NUTRITION_INFORMATION_REQUEST
+class NutritionInformationRequest {}
+!endsub
+
+!startsub NUTRITION_INFORMATION_RESPONSE
+class NutritionInformationResponse {}
+!endsub
+
+!startsub DB_LOOKUP_PREFERENCE
+enum DBLookupPreference {}
+!endsub
+
+!startsub FOOD_RECORD
+class FoodRecord {}
+!endsub
+
+@enduml

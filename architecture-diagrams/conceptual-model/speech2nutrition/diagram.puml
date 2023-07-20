@@ -1,0 +1,27 @@
+@startuml speech2nutrition-conceptual-model-diagram
+skinparam padding 3
+skinparam defaultTextAlignment center
+
+!includesub conceptual-model/speech2nutrition/definitions.puml!FOOD
+!includesub conceptual-model/speech2nutrition/definitions.puml!FOOD_NUTRITION_REQUEST
+!includesub conceptual-model/speech2nutrition/definitions.puml!FOOD_NUTRITION_RESPONSE
+!includesub conceptual-model/speech2nutrition/definitions.puml!NUTRITION_INFORMATION_REQUEST
+!includesub conceptual-model/speech2nutrition/definitions.puml!NUTRITION_INFORMATION_RESPONSE
+!includesub conceptual-model/speech2nutrition/definitions.puml!DB_LOOKUP_PREFERENCE
+!includesub conceptual-model/speech2nutrition/definitions.puml!FOOD_RECORD
+
+NutritionInformationResponse "1" *-- "*" FoodNutritionResponse
+NutritionInformationResponse "1" *-- "*" FoodNutritionRequest
+
+NutritionInformationRequest --> DBLookupPreference : <<uses>>
+
+/' <> fniDiamond
+FoodNutritionResponse . fniDiamond
+'/
+
+FoodNutritionResponse -- "0..1" FoodRecord: found food
+FoodNutritionResponse -- "0..*" FoodRecord: suggestions
+
+FoodRecord "1" -- "1" Food
+
+@enduml

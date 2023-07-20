@@ -1,0 +1,29 @@
+@startuml speech2diet-api-conceptual-model-diagram
+skinparam padding 3
+skinparam defaultTextAlignment center
+
+/'
+FOOD
+DB_LOOKUP_PREFERENCE
+FOOD_ITEM
+MEAL_REPORT_REVIEW
+FOOD_REPORT_REVIEW
+'/
+
+!includesub conceptual-model/speech2diet-api/definitions.puml!FOOD
+!includesub conceptual-model/speech2diet-api/definitions.puml!DB_LOOKUP_PREFERENCE
+!includesub conceptual-model/speech2diet-api/definitions.puml!FOOD_ITEM
+!includesub conceptual-model/speech2diet-api/definitions.puml!MEAL_REPORT_REVIEW
+!includesub conceptual-model/speech2diet-api/definitions.puml!FOOD_REPORT_REVIEW
+
+FoodItem "1" -- "1" Food
+
+
+MealReportReview --> DBLookupPreference : <<uses>>
+MealReportReview "1" *-- "*" FoodReportReview
+
+FoodReportReview -- "0..1" FoodItem: found food
+FoodReportReview -- "0..*" FoodItem: suggestions
+
+
+@enduml
