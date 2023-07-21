@@ -1,0 +1,27 @@
+@startuml foodlog-activity-diagram
+skinparam padding 2
+
+|User|
+start
+:record meal;
+
+|Speech2Diet-API|
+:save audio to audio storage;
+:send request;
+
+|Speech2Nutrition|
+:get nutritional information;
+
+|Speech2Diet-API|
+:save results;
+
+repeat
+  |User|
+  :review results;
+repeat while (Results are good?) is (no)
+->yes;
+|Speech2Diet-API|
+:save foods in user's food log;
+stop
+
+@enduml
