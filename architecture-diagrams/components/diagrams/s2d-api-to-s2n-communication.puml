@@ -1,0 +1,39 @@
+@startuml s2d-api-to-s2n-communication-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+' skinparam linetype polyline
+
+!includesub components/main-components.puml!SPEECH_2_DIET_API
+!includesub components/main-components.puml!SPEECH_2_NUTRITION
+
+rectangle "Rabbit MQ" as RabbitMQ #line.dashed {
+    rectangle "a" as RequestRectangle #line:white;text:white {
+        queue "Request Queue" as RequestQueue
+        rectangle "Default\nExchange" as RequestDefaultExchange
+    }
+
+    rectangle "a" as ResponseRectangle #line:white;text:white {
+        queue "Response Queue" as ResponseQueue
+        rectangle "Default\nExchange" as ResponseDefaultExchange
+    }
+
+    ' only for layout structure
+    ResponseRectangle -u[hidden]- RequestRectangle
+    ' hide RequestRectangle
+    ' hide ResponseRectangle
+}
+
+' only for layout structure
+Speech2DietAPI -r[hidden]- RabbitMQ
+Speech2Nutrition -l[hidden]- RabbitMQ
+
+Speech2DietAPI -> RequestDefaultExchange: send request\nmessages
+RequestDefaultExchange -> RequestQueue
+RequestQueue <- Speech2Nutrition: consume request\nmessages
+Speech2Nutrition -> ResponseDefaultExchange: send response\nmessages
+ResponseDefaultExchange -l-> ResponseQueue
+ResponseQueue <- Speech2DietAPI: consume response\nmessages
+
+
+
+@enduml
