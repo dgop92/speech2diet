@@ -8,3 +8,5 @@ DATABASE = {
 }
 
 RABBITMQ_URL = config("RABBITMQ_URL")
+
+MOCK_SERVICES = config("MOCK_SERVICES", cast=bool, default=True)

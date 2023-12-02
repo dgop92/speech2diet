@@ -9,7 +9,7 @@ from domain.entities.nutrition_information_request import (
     DBLookupPreference,
     NutritionInformationRequest,
 )
-from infrastructure.dev_components import (
+from infrastructure.pipeline_components.fake import (
     MockAudioStorage,
     MockFoodExtractionService,
     MockNutritionRepository,

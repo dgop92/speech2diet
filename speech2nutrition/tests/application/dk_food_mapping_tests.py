@@ -5,7 +5,7 @@ from application.dk_food_mapping.core import dk_map_food_to_nutrition_db
 from domain.definitions.food_mapping import NutritionRepository
 from domain.entities.food_nutrition_request import FoodNutritionRequest
 from domain.entities.food_nutrition_response import FoodNutritionResponse
-from infrastructure.dev_components import MockNutritionRepository
+from infrastructure.pipeline_components.fake import MockNutritionRepository
 from tests.utils import create_foods, score_food_by_exact_match
 
 logger = logging.getLogger(__name__)

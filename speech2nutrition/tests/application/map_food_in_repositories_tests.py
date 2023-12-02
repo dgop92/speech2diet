@@ -6,7 +6,7 @@ from application.request_handler import map_food_in_repositories
 from domain.definitions.food_mapping import NutritionRepository
 from domain.entities.food_nutrition_request import FoodNutritionRequest
 from domain.entities.nutrition_information_request import DBLookupPreference
-from infrastructure.dev_components import MockNutritionRepository
+from infrastructure.pipeline_components.fake import MockNutritionRepository
 from tests.utils import create_foods, map_food_using_first_element
 
 logger = logging.getLogger(__name__)
