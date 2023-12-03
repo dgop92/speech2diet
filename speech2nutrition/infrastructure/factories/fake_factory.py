@@ -31,7 +31,7 @@ def fake_factory() -> PipelineComponents:
     user_repository = system_repository
 
     logger.info("initializating audio storage")
-    audio_storage = MockAudioStorage("audio-tests")
+    audio_storage = MockAudioStorage("tests/audio-tests")
     logger.info("initializating speech2text model")
     speech2text_model = MockSpeech2TextToModel()
     logger.info("initializating food extraction service")

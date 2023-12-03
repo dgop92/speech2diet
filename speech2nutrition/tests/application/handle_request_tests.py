@@ -30,7 +30,7 @@ def basic_components():
         ]
     )
     repository = MockNutritionRepository(data1)
-    audio_storage = MockAudioStorage("audio-tests")
+    audio_storage = MockAudioStorage("tests/audio-tests")
     speech2text_model = MockSpeech2TextToModel()
     food_extraction = MockFoodExtractionService()
     s2t = Speech2TextService(audio_storage, speech2text_model)
