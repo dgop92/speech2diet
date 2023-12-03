@@ -11,6 +11,10 @@ def clean_description_keyword(
     """
     Clean the description's keyword by removing punctuations, symbols, stop words and
     finally apply lemmatization
+
+    Lemmatization is disabled by default because depending on the model the accuracy of
+    the lemmatization can contain errors such as 'carne de res' -> 'carne r' using
+    the model es_core_news_sm.
     """
     logger.debug(f"cleaning description keyword '{text}'")
 
