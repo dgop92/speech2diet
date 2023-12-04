@@ -8,8 +8,8 @@ component [Mobile Application] as MobileApplication
 component [Speech2Diet API] as Speech2DietAPI
 !endsub
 
-!startsub RABBIT_MQ
-component "RabbitMQ" as RabbitMQ
+!startsub MESSAGE_QUEUE
+component "MessageQueue" as MessageQueue
 !endsub
 
 !startsub SPEECH_2_NUTRITION

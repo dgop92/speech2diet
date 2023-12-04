@@ -5,15 +5,15 @@ skinparam defaultTextAlignment center
 !includesub components/main-components.puml!MOBILE_APPLICATION
 !includesub components/main-components.puml!SPEECH_2_DIET_API
 
-!includesub components/external-services.puml!FIREBASE_AUTH
-!includesub components/external-services.puml!FIRESTORE_DB
+!includesub components/external-services.puml!AUTH_SERVICE
+!includesub components/external-services.puml!CORE_DB
 !includesub components/external-services.puml!AUDIO_STORAGE
 
 
-Speech2DietAPI --> FirestoreDB : manages app data \n [http]
+Speech2DietAPI --> CoreDB : manages app data \n [http]
 Speech2DietAPI --> AudioStorage : saves audio files \n [http]
 
 MobileApplication --> Speech2DietAPI : makes requests to \n [http]
-MobileApplication --> FirebaseAuth : authenticates users \n [http]
+MobileApplication --> AuthService : authenticates users \n [http]
 
 @enduml

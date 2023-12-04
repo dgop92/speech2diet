@@ -4,26 +4,24 @@ skinparam defaultTextAlignment center
 ' left to right direction
 top to bottom direction
 
-!includesub components/external-services.puml!CHAT_GPT
-!includesub components/external-services.puml!WHISPER
+!includesub components/external-services.puml!LLM_SERVICE
+!includesub components/external-services.puml!SPEECH_2_TEXT
 !includesub components/external-services.puml!AUDIO_STORAGE
 
 () "Audio File" as AudioFile
 AudioStorage -- AudioFile
 
 () "Audio" as Audio
-Whisper -( Audio
+Speech2TextService -( Audio
 
 () "Prompt" as Prompt
-ChatGPT --( Prompt
+LLMService --( Prompt
 
 rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
     !includesub components/speech2nutrition/definitions.puml!SPEECH_TO_TEXT
     !includesub components/speech2nutrition/definitions.puml!FOOD_FEATURE_EXTRACTION
     !includesub components/speech2nutrition/definitions.puml!FOOD_MAPPING
 
-    () "Audio ID" as AudioID
-    SpeechToText --( AudioID
     SpeechToText --( AudioFile
     () "Audio Transcription" as AudioTranscription
     SpeechToText -- AudioTranscription

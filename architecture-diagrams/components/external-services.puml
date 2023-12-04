@@ -1,23 +1,23 @@
 @startuml external-services-definitions
 
-!startsub FIREBASE_AUTH
-node "<<external-service>> \nFirebase Auth" as FirebaseAuth
+!startsub AUTH_SERVICE
+node "<<external-service>> \nAuth Service" as AuthService
 !endsub
 
-!startsub FIRESTORE_DB
-database "<<external-service>> \nFirestore DB" as FirestoreDB
+!startsub CORE_DB
+database "<<external-service>> \nCore DB" as CoreDB
 !endsub
 
 !startsub AUDIO_STORAGE
 node "<<external-service>> \nAudio Storage" as AudioStorage
 !endsub
 
-!startsub CHAT_GPT
-node "<<external-service>> \nChat GPT" as ChatGPT
+!startsub LLM_SERVICE
+node "<<external-service>> \nLLM" as LLMService
 !endsub
 
-!startsub WHISPER
-node "<<external-service>> \nWhisper" as Whisper
+!startsub SPEECH_2_TEXT
+node "<<external-service>> \nSpeechToText Service" as Speech2TextService
 !endsub
 
 @enduml

@@ -6,7 +6,7 @@ skinparam defaultTextAlignment center
 !includesub components/main-components.puml!SPEECH_2_DIET_API
 !includesub components/main-components.puml!SPEECH_2_NUTRITION
 
-rectangle "Rabbit MQ" as RabbitMQ #line.dashed {
+rectangle "Message Broker" as MessageBroker #line.dashed {
     rectangle "a" as RequestRectangle #line:white;text:white {
         queue "Request Queue" as RequestQueue
         rectangle "Default\nExchange" as RequestDefaultExchange
@@ -24,8 +24,8 @@ rectangle "Rabbit MQ" as RabbitMQ #line.dashed {
 }
 
 ' only for layout structure
-Speech2DietAPI -r[hidden]- RabbitMQ
-Speech2Nutrition -l[hidden]- RabbitMQ
+Speech2DietAPI -r[hidden]- MessageBroker
+Speech2Nutrition -l[hidden]- MessageBroker
 
 Speech2DietAPI -> RequestDefaultExchange: send request\nmessages
 RequestDefaultExchange -> RequestQueue

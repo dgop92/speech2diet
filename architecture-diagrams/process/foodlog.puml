@@ -17,7 +17,7 @@ start
 
 repeat
   |User|
-  :review results;
+  :review and modify results;
 repeat while (Results are good?) is (no)
 ->yes;
 |Speech2Diet-API|
