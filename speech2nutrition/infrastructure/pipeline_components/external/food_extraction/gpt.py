@@ -35,7 +35,7 @@ class ChatGPTFoodExtractionService:
                 temperature=0,
                 max_tokens=300,
             )
-            content = chat_completion.choices[0].message["content"]
+            content = chat_completion.choices[0].message.content
             raw_foods: List[Dict[str, Any]] = json.loads(content)
         except Exception as e:
             logger.warning(f"Error extracting food from text: {text} with error: {e}")
