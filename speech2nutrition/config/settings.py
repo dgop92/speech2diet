@@ -15,3 +15,7 @@ OPENAI_CONFIG = {
     "KEY": config("OPENAI_KEY", default=""),
     "ENGINE": config("OPENAI_ENGINE", default="gpt-3.5-turbo"),
 }
+
+DEEPGRAM_CONFIG = {
+    "KEY": config("DEEPGRAM_KEY", default=""),
+}
