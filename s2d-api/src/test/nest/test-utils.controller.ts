@@ -17,7 +17,7 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 type SetupDataBody = {
   moduleToSetup: string;
-  userIds?: string[];
+  appUserIds?: string[];
 };
 
 @Controller({
@@ -57,17 +57,18 @@ export class TestUtilControllerV1 {
           result = await setupAuthModuleData();
           break;
         case "foodlog":
-          if (!body.userIds) {
+          if (!body.appUserIds) {
             throw new HttpException(
               {
-                error: "userIds must be provided when setting up foodlog data",
+                error:
+                  "appUserIds must be provided when setting up foodlog data",
               },
               HttpStatus.BAD_REQUEST
             );
           }
-          const userId1 = body.userIds[0];
-          const userId2 = body.userIds[1];
-          result = await setupMrrData(userId1, userId2);
+          const appUserId1 = body.appUserIds[0];
+          const appUserId2 = body.appUserIds[1];
+          result = await setupMrrData(appUserId1, appUserId2);
           break;
         default:
           throw new HttpException(

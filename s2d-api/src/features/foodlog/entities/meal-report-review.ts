@@ -13,7 +13,7 @@ export enum DBLookupPreference {
 
 export interface MealReportReview {
   id: string;
-  userId: string;
+  appUserId: string;
   audioId: string;
   rawTranscript: string;
   foodReports?: FoodReportReview[];
@@ -38,7 +38,7 @@ export const MealReportReviewOptionsSchema = Joi.object({
 
 export const MealReportReviewCreateInputSchema = Joi.object({
   data: Joi.object({
-    userId: Joi.string().required(),
+    appUserId: Joi.string().required(),
     audioId: Joi.string().required(),
     rawTranscript: Joi.string().required(),
     foodReports: Joi.array()

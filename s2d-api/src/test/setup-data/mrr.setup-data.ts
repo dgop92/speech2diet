@@ -1,8 +1,5 @@
 import { FoodSource } from "@features/foodlog/entities/food";
-import {
-  DBLookupPreference,
-  MealReportReview,
-} from "@features/foodlog/entities/meal-report-review";
+import { DBLookupPreference } from "@features/foodlog/entities/meal-report-review";
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { MealReportReviewCreateInput } from "@features/foodlog/schema-types";
 
@@ -48,7 +45,7 @@ const fakeFoods = [
   },
 ];
 
-function getmmrData(userId1: string, userId2: string) {
+function getmmrData(appUserId1: string, appUserId2: string) {
   const mmrData: MealReportReviewCreateInput[] = [
     {
       data: {
@@ -57,7 +54,7 @@ function getmmrData(userId1: string, userId2: string) {
         foodReports: [],
         mealRecordedAt: new Date("2021-12-01T12:00:00.000Z"),
         rawTranscript: "hellow",
-        userId: userId1,
+        appUserId: appUserId1,
       },
     },
     {
@@ -92,7 +89,7 @@ function getmmrData(userId1: string, userId2: string) {
           },
         ],
         rawTranscript: "hellow",
-        userId: userId1,
+        appUserId: appUserId1,
       },
     },
     {
@@ -122,7 +119,7 @@ function getmmrData(userId1: string, userId2: string) {
           },
         ],
         rawTranscript: "hellow",
-        userId: userId1,
+        appUserId: appUserId1,
       },
     },
     {
@@ -145,7 +142,7 @@ function getmmrData(userId1: string, userId2: string) {
           },
         ],
         rawTranscript: "hellow",
-        userId: userId1,
+        appUserId: appUserId1,
       },
     },
     {
@@ -155,16 +152,16 @@ function getmmrData(userId1: string, userId2: string) {
         foodReports: [],
         mealRecordedAt: new Date("2021-08-01T12:00:00.000Z"),
         rawTranscript: "hellow",
-        userId: userId2,
+        appUserId: appUserId2,
       },
     },
   ];
   return mmrData;
 }
 
-export async function setupMrrData(userId1: string, userId2: string) {
+export async function setupMrrData(appUserId1: string, appUserId2: string) {
   const { mealReportReviewUseCase } = myMealReportReviewFactory();
-  const mmrData = getmmrData(userId1, userId2);
+  const mmrData = getmmrData(appUserId1, appUserId2);
   const mmrPromises = mmrData.map((mmr) => mealReportReviewUseCase.create(mmr));
   await Promise.all(mmrPromises);
 }

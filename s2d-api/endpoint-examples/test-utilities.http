@@ -22,5 +22,5 @@ content-type: {{contentType}}
 
 {
     "moduleToSetup": "foodlog",
-    "userIds": ["AnrehVZMRVQajMjBa8gxKGojOGrH", "3bbPoVQuJ0Cepn8Q0rGxwPnN2Vk6"]
+    "appUserIds": ["GvTNYsqJ6EsvXq9TNLkBH2r603eb", "Xl7XEJAi64iH09Z0SHwavXdYOwCu"]
 }

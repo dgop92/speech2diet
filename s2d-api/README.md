@@ -41,4 +41,4 @@ The test environment has the following characteristics:
 
 - Data is reset each time emulators are restarted
 - There are some especial endpoints for testing purposes, such as an endpoint to setup dummy data. http file with the requests is in `endpoint-examples/test-utilities.http`
-- You can create auth tokens using `npm run test:id-token <userId> true`
+- You can create auth tokens using `npm run test:id-token <appUserId> true`
