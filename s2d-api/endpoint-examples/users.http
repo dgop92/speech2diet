@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:8080/api/v1/auth
+@contentType = application/json
+@userToken1 = <your-token>
+
+### Create an new user
+POST {{baseUrl}}/users HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "email": "newuserwow@gmail.com",
+    "password": "secretPASS1234",
+    "firstName": "mybuguser",
+    "lastName": "quepaso"
+}
+
+### Get the authenticated user
+GET http://localhost:8080/api/v1/auth/users/me HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Update the basic data of the authenticated app-user 
+PATCH {{baseUrl}}/users/me HTTP/1.1
+Authorization: Bearer {{userToken1}}
+content-type: {{contentType}}
+
+{
+    "firstName": "Juan Carlos",
+    "lastName": "Perez"
+}
+
+### Update the health data of the authenticated app-user 
+PATCH {{baseUrl}}/users/me/health-data HTTP/1.1
+Authorization: Bearer {{userToken1}}
+content-type: {{contentType}}
+
+{
+    "age": 25
+}

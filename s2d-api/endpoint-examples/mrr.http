@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:8080/api/v1/foodlog
+@userToken1 = <your-token>
+@contentType = application/json
+
+### Get all the meal report review of the authenticated app-user
+GET {{baseUrl}}/mrr/ HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Filter by pending
+GET {{baseUrl}}/mrr/?pending=true HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Get an a specific meal report review by id
+GET {{baseUrl}}/mrr/ecfbb9ed-25dd-4f99-8416-fa8a36e059b5 HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Get an a specific meal report review by id fetching its food reports
+GET {{baseUrl}}/mrr/ecfbb9ed-25dd-4f99-8416-fa8a36e059b5?fetchFoodReports=true HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Delete a meal report review by id
+DELETE {{baseUrl}}/mrr/ecfbb9ed-25dd-4f99-8416-fa8a36e059b5 HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Update a meal report review by id
+PATCH  {{baseUrl}}/mrr/ecfbb9ed-25dd-4f99-8416-fa8a36e059b5 HTTP/1.1
+Authorization: Bearer {{userToken1}}
+content-type: {{contentType}}
+
+{
+    "pending": false
+}
+
+###

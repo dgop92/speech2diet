@@ -29,6 +29,7 @@ export class TestUtilControllerV1 {
   async clearDatabaseAndServices() {
     if (!APP_ENV_VARS.isProduction) {
       myLogger.debug("deleting database");
+      // TODO: add support for clearing firestore
       // await TestDBHelper.instance.clear();
       myLogger.debug("database deleted");
       myLogger.debug("deleting auth users");

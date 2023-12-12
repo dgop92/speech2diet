@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:8080/api/v1/foodlog
+@userToken1 = <your-token>
+@contentType = application/json
+
+### List all food report reviews of a meal report review
+GET {{baseUrl}}/frr/?mrrId=bc4026cc-a605-4e44-ad59-15130923943f HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Get an a specific food report review of a meal report review
+GET {{baseUrl}}/frr/03e60fdb-7deb-40d5-896e-7b4fb72a788b/?mrrId=1fc67f13-7cae-4a98-a004-4b4fe964018d HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Update the amount of a food report review of a meal report review
+PATCH {{baseUrl}}/frr/03e60fdb-7deb-40d5-896e-7b4fb72a788b/found-food?mrrId=1fc67f13-7cae-4a98-a004-4b4fe964018d HTTP/1.1
+Authorization: Bearer {{userToken1}}
+content-type: {{contentType}}
+
+{
+    "amount": 123
+}
+
+### Change the found food by one of the suggestions
+PATCH {{baseUrl}}/frr/03e60fdb-7deb-40d5-896e-7b4fb72a788b/change-food?mrrId=1fc67f13-7cae-4a98-a004-4b4fe964018d&suggestionId=32145818-03e5-410d-b19a-b9011c6fcec8 HTTP/1.1
+Authorization: Bearer {{userToken1}}
+
+### Delete a food report review of a meal report review
+DELETE {{baseUrl}}/frr/447ace7d-519d-40e0-9b0b-59a608443a7c/?mrrId=5e83ef73-4564-4e54-a3db-9e7a0f1fcd40 HTTP/1.1
+Authorization: Bearer {{userToken1}}

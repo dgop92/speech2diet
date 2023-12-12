@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:8080/api/v1/test-util
+@contentType = application/json
+
+
+### Clear the users in firebase auth and delete all collections in firestore
+### So far it only clears the users in the firestore
+POST {{baseUrl}}/clear-all HTTP/1.1
+content-type: {{contentType}}
+
+
+### Create dummy users in firebase auth and firestore
+POST {{baseUrl}}/setup-data HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "moduleToSetup": "auth"
+}
+
+### Setup meal report review and food report review data
+POST {{baseUrl}}/setup-data HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "moduleToSetup": "foodlog",
+    "userIds": ["AnrehVZMRVQajMjBa8gxKGojOGrH", "3bbPoVQuJ0Cepn8Q0rGxwPnN2Vk6"]
+}
