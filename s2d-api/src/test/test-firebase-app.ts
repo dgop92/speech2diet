@@ -2,7 +2,8 @@ import { AppLogger } from "@common/logging/logger";
 import { getAuth, Auth } from "firebase-admin/auth";
 import { getFirestore, Firestore } from "firebase-admin/firestore";
 import { App } from "firebase-admin/app";
-import { initializeApp, applicationDefault } from "firebase-admin/app";
+import { initializeApp, cert } from "firebase-admin/app";
+import { APP_ENV_VARS } from "@common/config/app-env-vars";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -14,7 +15,7 @@ export function getTestFirebaseApp() {
   myLogger.info("trying to get firebase app");
   if (!firebaseApp) {
     firebaseApp = initializeApp({
-      credential: applicationDefault(),
+      credential: cert(JSON.parse(APP_ENV_VARS.firebase.credentialsContent)),
     });
     myLogger.info("firebase app created");
   }

@@ -12,7 +12,7 @@ export const APP_ENV_VARS = {
   isTest: getOsEnv("NODE_ENV") === "test",
   port: parseIntOrThrow(process.env.PORT || getOsEnv("APP_PORT")),
   firebase: {
-    credentialsPath: getOsPath("GOOGLE_APPLICATION_CREDENTIALS"),
+    credentialsContent: getOsEnv("GOOGLE_APPLICATION_CREDENTIALS_CONTENT"),
     authEmulatorHost: getOsEnvOrDefault("FIREBASE_AUTH_EMULATOR_HOST", ""),
     firestoreEmulatorHost: getOsEnvOrDefault(
       "FIREBASE_FIRESTORE_EMULATOR_HOST",

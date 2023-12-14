@@ -1,5 +1,5 @@
 import { getAuth } from "firebase-admin/auth";
-import { initializeApp, applicationDefault } from "firebase-admin/app";
+import { initializeApp, cert } from "firebase-admin/app";
 import axios from "axios";
 
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || "";
@@ -35,7 +35,9 @@ const createIdTokenfromCustomToken = async (
 async function genAuthToken(): Promise<void> {
   console.log("initializing firebase app");
   const firebaseApp = initializeApp({
-    credential: applicationDefault(),
+    credential: cert(
+      JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_CONTENT || "{}")
+    ),
   });
   const authFirebaseClient = getAuth(firebaseApp);
 
