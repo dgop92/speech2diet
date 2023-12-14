@@ -3,7 +3,7 @@
  * Do not modify this file manually
  */
 
-import { FoodCreateInput } from ".";
+import { FoodCreateInput } from '.';
 
 export interface FoodItemCreateInput {
   amount: number;

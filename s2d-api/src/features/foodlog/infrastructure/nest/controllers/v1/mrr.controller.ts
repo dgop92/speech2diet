@@ -1,7 +1,7 @@
 import { ErrorCode, PresentationError } from "@common/errors";
-import { AuthUser } from "@features/auth/entities/auth-user";
-import { GetAuthUser } from "@features/auth/infrastructure/nest/custom-decorators";
-import { AuthUserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import { User } from "@features/auth/entities/user";
+import { GetUser } from "@features/auth/infrastructure/nest/custom-decorators";
+import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-review.use-case.definition";
 import {
@@ -39,43 +39,49 @@ export class MealReportReviewControllerV1 {
     this.mealReportReviewUseCase = mealReportReviewUseCase;
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Get()
   getMealReportReviews(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: QueryParamsWithPagination
   ) {
     // TODO: Implement user id filter
-    return this.mealReportReviewUseCase.getManyBy({
-      options: {
-        fetchFoodReports: query?.fetchFoodReports,
+    return this.mealReportReviewUseCase.getManyBy(
+      {
+        options: {
+          fetchFoodReports: query?.fetchFoodReports,
+        },
+        pagination: {
+          limit: query?.limit,
+        },
+        searchBy: {
+          id: query?.id,
+          pending: query?.pending,
+        },
       },
-      pagination: {
-        limit: query?.limit,
-      },
-      searchBy: {
-        id: query?.id,
-        pending: query?.pending,
-      },
-    });
+      user.appUser
+    );
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Get(":id")
   async getMealReportReview(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: QueryParams,
     @Param("id") id: string
   ) {
     // TODO: Implement user id filter
-    const mrr = await this.mealReportReviewUseCase.getOneBy({
-      options: {
-        fetchFoodReports: query?.fetchFoodReports,
+    const mrr = await this.mealReportReviewUseCase.getOneBy(
+      {
+        options: {
+          fetchFoodReports: query?.fetchFoodReports,
+        },
+        searchBy: {
+          id,
+        },
       },
-      searchBy: {
-        id,
-      },
-    });
+      user.appUser
+    );
 
     if (!mrr) {
       throw new PresentationError(
@@ -87,37 +93,39 @@ export class MealReportReviewControllerV1 {
     return mrr;
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Patch(":id")
   updateMealReportReview(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Body() requestData: UpdateMealReportReviewRequest,
     @Param("id") id: string
   ) {
     // TODO: Implement user id filter
-    return this.mealReportReviewUseCase.update({
-      searchBy: {
-        id,
+    return this.mealReportReviewUseCase.update(
+      {
+        searchBy: {
+          id,
+        },
+        data: {
+          ...requestData,
+        },
       },
-      data: {
-        ...requestData,
-      },
-    });
+      user.appUser
+    );
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @HttpCode(204)
   @Delete(":id")
-  deleteMealReportReview(
-    @GetAuthUser() user: AuthUser,
-    @Query() query: QueryParams,
-    @Param("id") id: string
-  ) {
+  deleteMealReportReview(@GetUser() user: User, @Param("id") id: string) {
     // TODO: Implement user id filter
-    return this.mealReportReviewUseCase.delete({
-      searchBy: {
-        id,
+    return this.mealReportReviewUseCase.delete(
+      {
+        searchBy: {
+          id,
+        },
       },
-    });
+      user.appUser
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { ErrorCode, PresentationError } from "@common/errors";
-import { AuthUser } from "@features/auth/entities/auth-user";
-import { GetAuthUser } from "@features/auth/infrastructure/nest/custom-decorators";
-import { AuthUserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import { User } from "@features/auth/entities/user";
+import { GetUser } from "@features/auth/infrastructure/nest/custom-decorators";
+import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
 import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory";
 import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-report-review.factory";
 import { IFoodItemUseCase } from "@features/foodlog/ports/food-item.use-case.definition";
@@ -44,32 +44,35 @@ export class FoodReportReviewControllerV1 {
     this.foodReportReviewUseCase = foodReportReviewUseCase;
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Get()
-  getFoodReportReviews(
-    @GetAuthUser() user: AuthUser,
-    @Query() query: QueryParams
-  ) {
-    return this.foodReportReviewUseCase.getManyBy({
-      searchBy: {
-        mealReviewReportId: query.mrrId,
+  getFoodReportReviews(@GetUser() user: User, @Query() query: QueryParams) {
+    return this.foodReportReviewUseCase.getManyBy(
+      {
+        searchBy: {
+          mealReviewReportId: query.mrrId,
+        },
       },
-    });
+      user.appUser
+    );
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Get(":id")
   async getFoodReportReview(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: QueryParams,
     @Param("id") id: string
   ) {
-    const frr = await this.foodReportReviewUseCase.getOneBy({
-      searchBy: {
-        id,
-        mealReviewReportId: query.mrrId,
+    const frr = await this.foodReportReviewUseCase.getOneBy(
+      {
+        searchBy: {
+          id,
+          mealReviewReportId: query.mrrId,
+        },
       },
-    });
+      user.appUser
+    );
 
     if (!frr) {
       throw new PresentationError(
@@ -81,54 +84,63 @@ export class FoodReportReviewControllerV1 {
     return frr;
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @HttpCode(204)
   @Delete(":id")
   deleteFoodReportReview(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: QueryParams,
     @Param("id") id: string
   ) {
-    return this.foodReportReviewUseCase.delete({
-      searchBy: {
-        id,
-        mealReviewReportId: query.mrrId,
+    return this.foodReportReviewUseCase.delete(
+      {
+        searchBy: {
+          id,
+          mealReviewReportId: query.mrrId,
+        },
       },
-    });
+      user.appUser
+    );
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Patch(":id/change-food")
   changeFoundFoodTo(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: FoodItemQueryParams,
     @Param("id") id: string
   ) {
-    return this.foodItemUseCase.changeFoundFoodBySuggestion({
-      searchBy: {
-        id: query.suggestionId,
-        mealReportReviewId: query.mrrId,
-        foodReportReviewId: id,
+    return this.foodItemUseCase.changeFoundFoodBySuggestion(
+      {
+        searchBy: {
+          id: query.suggestionId,
+          mealReportReviewId: query.mrrId,
+          foodReportReviewId: id,
+        },
       },
-    });
+      user.appUser
+    );
   }
 
-  @UseGuards(AuthUserGuard)
+  @UseGuards(UserGuard)
   @Patch(":id/found-food")
   updateFoundFood(
-    @GetAuthUser() user: AuthUser,
+    @GetUser() user: User,
     @Query() query: FoodItemQueryParams,
     @Body() requestData: UpdateFoodItemReviewRequest,
     @Param("id") id: string
   ) {
-    return this.foodItemUseCase.updateFoundFood({
-      searchBy: {
-        mealReportReviewId: query.mrrId,
-        foodReportReviewId: id,
+    return this.foodItemUseCase.updateFoundFood(
+      {
+        searchBy: {
+          mealReportReviewId: query.mrrId,
+          foodReportReviewId: id,
+        },
+        data: {
+          amount: requestData.amount,
+        },
       },
-      data: {
-        amount: requestData.amount,
-      },
-    });
+      user.appUser
+    );
   }
 }

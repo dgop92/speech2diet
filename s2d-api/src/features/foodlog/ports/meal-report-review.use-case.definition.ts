@@ -1,3 +1,4 @@
+import { AppUser } from "@features/auth/entities/app-user";
 import { MealReportReview } from "../entities/meal-report-review";
 import {
   MealReportReviewUpdateInput,
@@ -17,22 +18,32 @@ export interface IMealReportReviewUseCase {
     input: MealReportReviewCreateInput,
     transactionManager?: any
   ): Promise<MealReportReview>;
-  update(input: MealReportReviewUpdateInput): Promise<MealReportReview>;
   update(
     input: MealReportReviewUpdateInput,
+    appUser: AppUser
+  ): Promise<MealReportReview>;
+  update(
+    input: MealReportReviewUpdateInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<MealReportReview>;
   getOneBy(
-    input: MealReportReviewSearchInput
+    input: MealReportReviewSearchInput,
+    appUser: AppUser
   ): Promise<MealReportReview | undefined>;
   getOneBy(
     input: MealReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<MealReportReview | undefined>;
-  delete(input: MealReportReviewLookUpField): Promise<void>;
+  delete(input: MealReportReviewLookUpField, appUser: AppUser): Promise<void>;
   delete(
     input: MealReportReviewLookUpField,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<void>;
-  getManyBy(input: MealReportReviewSearchInput): Promise<MealReportReview[]>;
+  getManyBy(
+    input: MealReportReviewSearchInput,
+    appUser: AppUser
+  ): Promise<MealReportReview[]>;
 }

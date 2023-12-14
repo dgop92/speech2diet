@@ -11,25 +11,30 @@ import {
   FoodItemUpdateInputSchema,
 } from "../entities/food-item";
 import { FoodItemSearchInput, FoodItemUpdateInput } from "../schema-types";
+import { AppUser } from "@features/auth/entities/app-user";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 async function getMRRRandFRR(
   mealReportReviewUseCase: IMealReportReviewUseCase,
   mrrId: string,
-  frrId: string
+  frrId: string,
+  appUser: AppUser
 ) {
   myLogger.debug("getting meal report review", {
     mmrId: mrrId,
   });
-  const mealReportReview = await mealReportReviewUseCase.getOneBy({
-    searchBy: {
-      id: mrrId,
+  const mealReportReview = await mealReportReviewUseCase.getOneBy(
+    {
+      searchBy: {
+        id: mrrId,
+      },
+      options: {
+        fetchFoodReports: true,
+      },
     },
-    options: {
-      fetchFoodReports: true,
-    },
-  });
+    appUser
+  );
 
   if (!mealReportReview) {
     throw new ApplicationError(
@@ -65,14 +70,17 @@ export class FoodItemUseCase implements IFoodItemUseCase {
   }
 
   changeFoundFoodBySuggestion(
-    input: FoodItemSearchInput
+    input: FoodItemSearchInput,
+    appUser: AppUser
   ): Promise<FoodItem | undefined>;
   changeFoundFoodBySuggestion(
     input: FoodItemSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<FoodItem | undefined>;
   async changeFoundFoodBySuggestion(
     input: FoodItemSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<FoodItem | undefined> {
     myLogger.debug("getting food item", {
@@ -89,7 +97,8 @@ export class FoodItemUseCase implements IFoodItemUseCase {
     const { mealReportReview, foodReportReview } = await getMRRRandFRR(
       this.mealReportReviewUseCase,
       mealReportReviewId,
-      foodReportReviewId
+      foodReportReviewId,
+      appUser
     );
 
     const foodItem = foodReportReview.systemResult.suggestions!.find(
@@ -113,13 +122,18 @@ export class FoodItemUseCase implements IFoodItemUseCase {
     return foodItem;
   }
 
-  updateFoundFood(input: FoodItemUpdateInput): Promise<FoodItem>;
   updateFoundFood(
     input: FoodItemUpdateInput,
+    appUser: AppUser
+  ): Promise<FoodItem>;
+  updateFoundFood(
+    input: FoodItemUpdateInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<FoodItem>;
   async updateFoundFood(
     input: FoodItemUpdateInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<FoodItem> {
     this.validateInput(FoodItemUpdateInputSchema, input);
@@ -130,7 +144,8 @@ export class FoodItemUseCase implements IFoodItemUseCase {
     const { mealReportReview, foodReportReview } = await getMRRRandFRR(
       this.mealReportReviewUseCase,
       mealReportReviewId,
-      foodReportReviewId
+      foodReportReviewId,
+      appUser
     );
     const foundFoodItem = foodReportReview.systemResult.foundFoodItem;
 

@@ -121,21 +121,26 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     input: MealReportReviewSearchInput,
     transactionManager?: Transaction
   ): Promise<MealReportReview | undefined> {
+    shouldThrowTransactionError(transactionManager);
+
     const fetchFoodReports = input.options?.fetchFoodReports ?? false;
+    const appUserId = input.searchBy?.appUserId;
     const id = input.searchBy?.id;
 
-    if (!id) {
+    if (id === undefined || appUserId === undefined) {
       throw new RepositoryError(
-        "meal report review id is required",
+        "meal report review id and app user id are required",
         ErrorCode.INVALID_INPUT
       );
     }
 
-    myLogger.debug("getting meal report review", { id });
-    shouldThrowTransactionError(transactionManager);
+    myLogger.debug("getting meal report review", {
+      mealReportReviewId: id,
+    });
 
     const mealReportReviewDocRef = this.collection.doc(id);
     const mealReportReviewDoc = await mealReportReviewDocRef.get();
+
     if (!mealReportReviewDoc.exists) {
       myLogger.debug("meal report review not found", { id });
       return undefined;
@@ -146,6 +151,14 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
       fireStoreMealReportReview,
       fetchFoodReports
     );
+
+    // TODO: move to query to firestore
+    if (appUserId !== mealReportReview.appUserId) {
+      throw new RepositoryError(
+        "meal report review not found",
+        ErrorCode.NOT_FOUND
+      );
+    }
 
     myLogger.debug("meal report review found", { id });
     return firestoreMealReportReviewToDomain(mealReportReview);
@@ -191,6 +204,7 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     const fetchFoodReports = input.options?.fetchFoodReports ?? false;
     const limit = input.pagination?.limit;
     const pending = input.searchBy?.pending;
+    const appUserId = input.searchBy?.appUserId;
     const sortByMealRecordedAt = input.sortBy?.createdAt ?? "desc";
 
     myLogger.debug("getting meal report reviews", {
@@ -206,6 +220,10 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
 
     if (pending !== undefined) {
       query = query.where("pending", "==", pending);
+    }
+
+    if (appUserId !== undefined) {
+      query = query.where("appUserId", "==", appUserId);
     }
 
     query = query.orderBy("mealRecordedAt", sortByMealRecordedAt);

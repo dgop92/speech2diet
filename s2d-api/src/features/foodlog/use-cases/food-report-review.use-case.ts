@@ -13,6 +13,7 @@ import {
 import { FoodReportReviewSearchInput } from "../schema-types";
 import { IMealReportReviewUseCase } from "../ports/meal-report-review.use-case.definition";
 import { ApplicationError, ErrorCode } from "@common/errors";
+import { AppUser } from "@features/auth/entities/app-user";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -31,27 +32,33 @@ export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
     this.mealReportReviewUseCase = mealReportReviewUseCase;
   }
 
-  delete(input: FoodReportReviewSearchInput): Promise<void>;
+  delete(input: FoodReportReviewSearchInput, appUser: AppUser): Promise<void>;
   delete(
     input: FoodReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager: any
   ): Promise<void>;
   async delete(
     input: FoodReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<void> {
     this.validateInput(FoodReportReviewSearchInputSchema, input);
     myLogger.debug("getting meal report review", {
       mmrId: input.searchBy.mealReviewReportId,
     });
-    const mealReportReview = await this.mealReportReviewUseCase.getOneBy({
-      searchBy: {
-        id: input.searchBy.mealReviewReportId,
+    const mealReportReview = await this.mealReportReviewUseCase.getOneBy(
+      {
+        searchBy: {
+          id: input.searchBy.mealReviewReportId,
+        },
+        options: {
+          fetchFoodReports: true,
+        },
       },
-      options: {
-        fetchFoodReports: true,
-      },
-    });
+      appUser,
+      transactionManager
+    );
 
     if (!mealReportReview) {
       throw new ApplicationError(
@@ -82,14 +89,17 @@ export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
   }
 
   getOneBy(
-    input: FoodReportReviewSearchInput
+    input: FoodReportReviewSearchInput,
+    appUser: AppUser
   ): Promise<FoodReportReview | undefined>;
   getOneBy(
     input: FoodReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager: any
   ): Promise<FoodReportReview | undefined>;
   async getOneBy(
     input: FoodReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<FoodReportReview | undefined> {
     this.validateInput(FoodReportReviewSearchInputSchema, input);
@@ -105,6 +115,7 @@ export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
           fetchFoodReports: true,
         },
       },
+      appUser,
       transactionManager
     );
 
@@ -126,21 +137,25 @@ export class FoodReportReviewUseCase implements IFoodReportReviewUseCase {
   }
 
   async getManyBy(
-    input: FoodReportReviewManySearchInput
+    input: FoodReportReviewManySearchInput,
+    appUser: AppUser
   ): Promise<FoodReportReview[]> {
     this.validateInput(FoodReportReviewManySearchInputSchema, input);
 
     myLogger.debug("getting meal report review", {
       mmrId: input.searchBy.mealReviewReportId,
     });
-    const mealReportReview = await this.mealReportReviewUseCase.getOneBy({
-      searchBy: {
-        id: input.searchBy.mealReviewReportId,
+    const mealReportReview = await this.mealReportReviewUseCase.getOneBy(
+      {
+        searchBy: {
+          id: input.searchBy.mealReviewReportId,
+        },
+        options: {
+          fetchFoodReports: true,
+        },
       },
-      options: {
-        fetchFoodReports: true,
-      },
-    });
+      appUser
+    );
 
     if (!mealReportReview) {
       throw new ApplicationError(

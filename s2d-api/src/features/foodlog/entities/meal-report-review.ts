@@ -69,6 +69,7 @@ export const MealReportReviewSearchInputSchema = Joi.object({
   searchBy: Joi.object({
     id: Joi.string().optional(),
     pending: Joi.boolean().optional(),
+    appUserId: Joi.string().optional(),
   }).optional(),
   sortBy: Joi.object({
     createdAt: Joi.string().valid("asc", "desc").optional(),

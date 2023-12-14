@@ -31,6 +31,7 @@ export interface MealReportReviewSearchInput {
   options?: MealReportReviewOptions;
   pagination?: MealReportReviewPagination;
   searchBy?: {
+    appUserId?: string;
     id?: string;
     pending?: boolean;
   };

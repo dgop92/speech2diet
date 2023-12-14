@@ -19,6 +19,7 @@ import {
 } from "../schema-types";
 import { ApplicationError, ErrorCode } from "@common/errors";
 import { SearchByUidSchema } from "@common/schemas/idValidations";
+import { AppUser } from "@features/auth/entities/app-user";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -39,20 +40,25 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     return this.repository.create(input.data, transactionManager);
   }
 
-  update(input: MealReportReviewUpdateInput): Promise<MealReportReview>;
   update(
     input: MealReportReviewUpdateInput,
+    appUser: AppUser
+  ): Promise<MealReportReview>;
+  update(
+    input: MealReportReviewUpdateInput,
+    appUser: AppUser,
     transactionManager: any
   ): Promise<MealReportReview>;
   async update(
     input: MealReportReviewUpdateInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<MealReportReview> {
     this.validateInput(MealReportReviewUpdateInputSchema, input);
     myLogger.debug("getting mealReportReview by", { id: input.searchBy.id });
     const mealReportReview = await this.repository.getOneBy(
       {
-        searchBy: { id: input.searchBy.id },
+        searchBy: { id: input.searchBy.id, appUserId: appUser.id },
       },
       transactionManager
     );
@@ -72,20 +78,22 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     );
   }
 
-  delete(input: MealReportReviewLookUpField): Promise<void>;
+  delete(input: MealReportReviewLookUpField, appUser: AppUser): Promise<void>;
   delete(
     input: MealReportReviewLookUpField,
+    appUser: AppUser,
     transactionManager: any
   ): Promise<void>;
   async delete(
     input: MealReportReviewLookUpField,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<void> {
     this.validateInput(SearchByUidSchema, input);
     myLogger.debug("getting mealReportReview by", { id: input.searchBy.id });
     const mealReportReview = await this.repository.getOneBy(
       {
-        searchBy: { id: input.searchBy.id },
+        searchBy: { id: input.searchBy.id, appUserId: appUser.id },
       },
       transactionManager
     );
@@ -102,26 +110,38 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
   }
 
   getOneBy(
-    input: MealReportReviewSearchInput
+    input: MealReportReviewSearchInput,
+    appUser: AppUser
   ): Promise<MealReportReview | undefined>;
   getOneBy(
     input: MealReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager: any
   ): Promise<MealReportReview | undefined>;
   getOneBy(
     input: MealReportReviewSearchInput,
+    appUser: AppUser,
     transactionManager?: any
   ): Promise<MealReportReview | undefined> {
     this.validateInput(MealReportReviewSearchInputSchema, input);
-    return this.repository.getOneBy(input, transactionManager);
+    return this.repository.getOneBy(
+      { ...input, searchBy: { ...input.searchBy, appUserId: appUser.id } },
+      transactionManager
+    );
   }
 
-  getManyBy(input: MealReportReviewSearchInput): Promise<MealReportReview[]> {
+  getManyBy(
+    input: MealReportReviewSearchInput,
+    appUser: AppUser
+  ): Promise<MealReportReview[]> {
     const newInput = this.validateInput<MealReportReviewSearchInput>(
       MealReportReviewSearchInputSchema,
       input
     );
-    return this.repository.getManyBy(newInput);
+    return this.repository.getManyBy({
+      ...newInput,
+      searchBy: { ...newInput.searchBy, appUserId: appUser.id },
+    });
   }
 
   private validateInput<T = any>(schema: Joi.ObjectSchema<T>, input: any) {
