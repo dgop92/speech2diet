@@ -19,3 +19,10 @@ OPENAI_CONFIG = {
 DEEPGRAM_CONFIG = {
     "KEY": config("DEEPGRAM_KEY", default=""),
 }
+
+AWS = {
+    "AWS_S3_REGION": config("AWS_S3_REGION", default="eu-east-1"),
+    "AWS_S3_BUCKET": config("AWS_S3_BUCKET"),
+    "AWS_ACCESS_KEY_ID": config("AWS_ACCESS_KEY_ID"),
+    "AWS_SECRET_ACCESS_KEY": config("AWS_SECRET_ACCESS_KEY"),
+}
