@@ -1,7 +1,7 @@
-from factories.common import PipelineComponents
-from factories.fake_factory import fake_factory
-
 from config.settings import MOCK_SERVICES
+from infrastructure.factories.common import PipelineComponents
+from infrastructure.factories.fake_factory import fake_factory
+from infrastructure.factories.real_factory import real_factory
 
 
 def pipeline_factory() -> PipelineComponents:
@@ -14,4 +14,4 @@ def pipeline_factory() -> PipelineComponents:
     if MOCK_SERVICES:
         return fake_factory()
     else:
-        raise NotImplementedError("Not implemented yet")
+        return real_factory()

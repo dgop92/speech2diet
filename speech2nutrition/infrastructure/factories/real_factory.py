@@ -3,39 +3,41 @@ import logging
 import spacy
 
 from application.s2t.services import Speech2TextService
+from config.database import MongoDatabase
+from infrastructure.factories.common import PipelineComponents
 from infrastructure.food_mapping.factory import build_map_food_to_nutrition
-from infrastructure.pipeline_components.fake import (
-    MockAudioStorage,
-    MockFoodExtractionService,
-    MockNutritionRepository,
-    MockSpeech2TextToModel,
+from infrastructure.pipeline_components.external import (
+    ChatGPTFoodExtractionService,
+    DeepgramWhisperSpeech2TextToModel,
+    S3AudioStorage,
+    SystemNutritionRepository,
 )
 
 logger = logging.getLogger(__name__)
 
-from infrastructure.factories.common import PipelineComponents
 
-
-def fake_factory() -> PipelineComponents:
+def real_factory() -> PipelineComponents:
     """
-    Create a fake factory for testing purposes using fake components
-    for external services
+    Create a real factory using the external services
     """
 
     logger.info("loading spanish model for spacy")
     spacy_language = spacy.load("es_core_news_sm")
 
     logger.info("creating repositories")
-    system_repository = MockNutritionRepository(data=[])
+    logger.info("connecting to mongo database")
+    mongo_db = MongoDatabase()
+
+    system_repository = SystemNutritionRepository(mongo_db)
     # TODO: add user repository
     user_repository = system_repository
 
     logger.info("initializating audio storage")
-    audio_storage = MockAudioStorage("tests/audio-tests")
+    audio_storage = S3AudioStorage()
     logger.info("initializating speech2text model")
-    speech2text_model = MockSpeech2TextToModel()
+    speech2text_model = DeepgramWhisperSpeech2TextToModel()
     logger.info("initializating food extraction service")
-    food_extraction = MockFoodExtractionService()
+    food_extraction = ChatGPTFoodExtractionService()
 
     logger.info("initializating speech2text service")
     s2t = Speech2TextService(audio_storage, speech2text_model)
