@@ -12,9 +12,6 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadService } from "../../upload.service";
-import { AppLogger } from "@common/logging/logger";
-
-const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 @Controller({
   path: "report",
@@ -36,8 +33,7 @@ export class AudioControllerV1 {
     file: Express.Multer.File,
     @GetUser() user: User
   ) {
-    myLogger.debug("uploading audio file");
-    await this.uploadService.upload(file.buffer);
-    myLogger.debug("audio file uploaded");
+    const mimeType = file.mimetype;
+    await this.uploadService.upload(file.buffer, mimeType);
   }
 }
