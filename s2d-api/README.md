@@ -21,6 +21,9 @@ Then follow the firebase documentation to login and initialize the project to be
 - Firestore emulator
 - Authentication emulator
 
+Remember to create the necessary environment variables located in the folder `env-vars/`
+You can use the .example files as a template.
+
 ## How to run
 
 ### Test Environment
@@ -42,3 +45,19 @@ The test environment has the following characteristics:
 - Data is reset each time emulators are restarted
 - There are some especial endpoints for testing purposes, such as an endpoint to setup dummy data. http file with the requests is in `endpoint-examples/test-utilities.http`
 - You can create auth tokens using `npm run test:id-token <appUserId> true`
+
+## Optional - Doppler for secrets management
+
+This project can use Doppler for secrets management. First, setup the project and environment using the following command:
+
+```bash
+doppler setup --project <project-name> --config dev
+```
+
+And finally we recommended the mounting or download methods to retrieve the secrets.
+
+For example:
+
+```bash
+doppler secrets download --no-file --format env > env-vars/.dev.env
+```
