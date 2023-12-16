@@ -1,0 +1,21 @@
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+.git
+.gitignore
+.git/
+
+node_modules
+dist
+build
+
+.idea
+.vscode
+
+# project
+firebase-credentials
+http_tests
+endpoint-examples
+src/test
+*.env
