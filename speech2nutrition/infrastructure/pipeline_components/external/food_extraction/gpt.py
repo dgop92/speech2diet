@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 class ChatGPTFoodExtractionService:
     def __init__(self) -> None:
-        logger.info("initializing ChatGPTFoodExtractionService")
         self.client = OpenAI(api_key=OPENAI_CONFIG["KEY"], timeout=10)
 
     def extract_foods_from_text(self, text: str) -> List[FoodNutritionRequest]:
@@ -39,7 +38,7 @@ class ChatGPTFoodExtractionService:
             raw_foods: List[Dict[str, Any]] = json.loads(content)
         except Exception as e:
             logger.warning(
-                f"Error extracting food from text: {text} with error: {e}",
+                f"error extracting food from text: {text}",
                 exc_info=True,
             )
             return []

@@ -25,22 +25,23 @@ def fake_factory() -> PipelineComponents:
     logger.info("loading spanish model for spacy")
     spacy_language = spacy.load("es_core_news_sm")
 
-    logger.info("creating repositories")
+    logger.info("creating mock system repository")
     system_repository = MockNutritionRepository(data=[])
     # TODO: add user repository
+    logger.info("creating mock user repository")
     user_repository = system_repository
 
-    logger.info("initializating audio storage")
+    logger.info("creating mock audio storage")
     audio_storage = MockAudioStorage("tests/audio-tests")
-    logger.info("initializating speech2text model")
+    logger.info("creating mock speech2text model")
     speech2text_model = MockSpeech2TextToModel()
-    logger.info("initializating food extraction service")
+    logger.info("creating mock food extraction service")
     food_extraction = MockFoodExtractionService()
 
-    logger.info("initializating speech2text service")
+    logger.info("creating speech2text service")
     s2t = Speech2TextService(audio_storage, speech2text_model)
 
-    logger.info("building map food to nutrition db function")
+    logger.info("creating 'map food to nutrition db' function")
     map_food_func = build_map_food_to_nutrition(spacy_language)
 
     return PipelineComponents(

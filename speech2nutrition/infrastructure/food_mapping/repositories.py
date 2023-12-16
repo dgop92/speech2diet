@@ -45,6 +45,7 @@ class SystemNutritionRepository:
         Get a list of foods by its name or other names
         """
         collection = self.mongo_db.get_collection("usda_nutrition_db")
+        logger.info(f"searching for food with name: {name}")
         result = collection.aggregate(
             [
                 {
@@ -57,7 +58,7 @@ class SystemNutritionRepository:
         )
         # TODO: limit the number of results in the query
         result = list(result)
-        logger.debug(f"number of results with name: {name} are equal to {len(result)}")
+        logger.info(f"number of results with name: {name} are equal to {len(result)}")
         foods = [usda_data_to_food(usda_data) for usda_data in result]
 
         return foods

@@ -32,11 +32,12 @@ class S3AudioStorage:
             The audio and metadata associated with the audio, such as mime type
         """
         try:
+            logger.info(f"reading audio from storage with id {audio_id}")
             response = self.s3.get_object(Bucket=AWS["AWS_S3_BUCKET"], Key=audio_id)
             content = response["Body"].read()
             metadata = {"mime_type": response["ContentType"]}
-            print(metadata)
+            logger.info(f"metadata for audio {audio_id} is {metadata}")
             return content, metadata
         except Exception as e:
-            logger.error(f"Failed to read audio from storage: {e}", exc_info=True)
+            logger.exception(f"Failed to read audio from storage: {e}")
             raise ServiceException("Failed to read audio from storage", "S3")

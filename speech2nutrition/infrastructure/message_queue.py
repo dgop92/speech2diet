@@ -22,7 +22,7 @@ class NutritionRequestCallback:
         properties: BasicProperties,
         body: Any,
     ):
-        logger.debug("received message: %s", body)
+        logger.info("received message: %s", body)
 
         s2t_service = self.pipeline_components.s2t_service
         food_extraction_service = self.pipeline_components.food_extraction_service

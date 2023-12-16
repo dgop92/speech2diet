@@ -36,7 +36,9 @@ class DeepgramWhisperSpeech2TextToModel:
         if "mime_type" not in metadata:
             raise ServiceException("metadata must contain mime_type", "deepgram")
 
-        logger.debug("transcribing audio")
+        logger.info(
+            f"transcribing audio with deepgram using mime type {metadata['mime_type']}"
+        )
         source = {"buffer": audio, "mimetype": metadata["mime_type"]}
         # timeout is set to 15 seconds because description of meals are short
         try:
@@ -45,5 +47,4 @@ class DeepgramWhisperSpeech2TextToModel:
             )
             return response["results"]["channels"][0]["alternatives"][0]["transcript"]
         except Exception as e:
-            logger.error("could not transcribe audio", exc_info=True)
             raise ServiceException("could not transcribe audio", "deepgram") from e

@@ -40,13 +40,12 @@ def score_food_by_exact_fuzzy_matches(
     user_description = query.user_description
     user_food_name = query.user_food_name
 
-    logger.debug(f"cleaning user food name '{user_food_name}'")
+    logger.debug(f"scoring {query.user_food_name}")
+
     # is possible that a food name is composed of multiple words, e.g. "carne de res"
     cleaned_user_food_name = clean_description_keyword(nlp, user_food_name)
     food_name_description = cleaned_user_food_name.split(" ")
-    logger.debug(f"cleaned user food name {food_name_description}")
 
-    logger.debug(f"cleaning user description {user_description}")
     cleaned_user_description = [
         clean_description_keyword(
             nlp,
@@ -58,23 +57,19 @@ def score_food_by_exact_fuzzy_matches(
     final_user_description: List[str] = []
     for ud in cleaned_user_description:
         final_user_description.extend(ud.split(" "))
-    logger.debug(f"cleaned user description {final_user_description}")
 
     full_user_description = food_name_description + final_user_description
 
     # TODO: make sure that each description is a simple word
-    logger.debug(f"spliting target description {target_description}")
     final_target_description: List[str] = []
     for td in target_description:
         final_target_description.extend(td.split(" "))
-    logger.debug(f"splitted target description {final_target_description}")
 
     score = 0
     full_user_description_set = set(full_user_description)
     target_description_set = set(final_target_description)
     intersection = full_user_description_set.intersection(target_description_set)
     number_of_exact_matches = len(intersection)
-    logger.debug(f"number of exact matches: {number_of_exact_matches}")
 
     score += number_of_exact_matches * 2
 
@@ -86,7 +81,6 @@ def score_food_by_exact_fuzzy_matches(
         for td in target_description:
             if lev.ratio(ud, td) > LEVENSHTIEN_THRESHOLD:
                 score += 1
-                logger.debug(f"found fuzzy match: {ud} - {td}")
 
-    logger.debug(f"final score: {score}")
+    logger.debug(f"final score: {score} for {query.user_food_name}")
     return FoodScoreResult(food=query.food, score=score)

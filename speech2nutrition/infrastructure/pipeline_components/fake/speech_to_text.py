@@ -24,7 +24,7 @@ class MockAudioStorage:
             The audio and metadata associated with the audio, such as mime type
         """
         audio_path = os.path.join(self.audio_folder_path, f"{audio_id}")
-        logger.debug(f"reading audio from {audio_path}")
+        logger.info(f"reading audio from {audio_path}")
         with open(audio_path, "rb") as audio_file:
             audio = audio_file.read()
         return audio, {}
@@ -46,5 +46,5 @@ class MockSpeech2TextToModel:
         str
             The transcription of the audio
         """
-        logger.debug("transcribing audio")
+        logger.info("transcribing audio")
         return audio.decode("utf-8")

@@ -48,7 +48,7 @@ def main() -> None:
             disable_lemmatization=args.disable_lemmatization,
         )
     except Exception as e:
-        logger.error(e)
+        logger.exception("error cleaning full description for mongo collection")
     finally:
         mongo_db.close()
 

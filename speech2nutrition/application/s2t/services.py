@@ -26,7 +26,7 @@ class Speech2TextService:
         str
             The transcription of the audio
         """
-        logger.debug(f"dowloading audio with id: {audio_id}")
+        logger.info(f"dowloading audio with id: {audio_id}")
         audio, audio_metadata = self.audio_storage.read_file(audio_id)
-        logger.debug(f"transcribing audio with id: {audio_id}")
+        logger.info(f"transcribing audio with id: {audio_id}")
         return self.speech2text_model.transcribe(audio, audio_metadata)

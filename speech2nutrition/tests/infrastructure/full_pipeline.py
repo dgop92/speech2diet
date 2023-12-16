@@ -36,6 +36,6 @@ if __name__ == "__main__":
             user_repository,
             map_food_to_nutrition_db,
         )
-        logger.info(f"response: {response}")
+        logger.info(f"response: {response.json(ensure_ascii=False)}")
     except Exception as e:
-        logger.error(f"error occurred: {e}", exc_info=True)
+        logger.exception(f"error handling nutrition request: {e}")

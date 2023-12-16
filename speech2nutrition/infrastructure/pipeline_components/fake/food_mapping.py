@@ -14,7 +14,7 @@ class MockNutritionRepository:
         """
         Get a list of foods by its name or other names
         """
-        logger.debug(f"searching for food with name: {name}")
+        logger.info(f"searching for food with name: {name}")
         results: List[Food] = []
         for food in self.data:
             possible_names = [food.food_name] + food.other_names
@@ -22,5 +22,5 @@ class MockNutritionRepository:
             if name.lower() in lower_names:
                 results.append(food)
 
-        logger.debug(f"found {len(results)} foods")
+        logger.info(f"found {len(results)} foods")
         return results
