@@ -19,6 +19,11 @@ if __name__ == "__main__":
 
             logger.info("starting rabbitmq app")
             start_rabbit_app(pipeline_components)
+        elif MESSAGE_QUEUE_SERVICE == "sqs":
+            from infrastructure.message_queue.sqs.start_sqs_service import start_sqs_app
+
+            logger.info("starting sqs app")
+            start_sqs_app(pipeline_components)
     except KeyboardInterrupt:
         logger.info("app stopped")
         try:

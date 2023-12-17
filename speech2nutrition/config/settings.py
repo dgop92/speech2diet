@@ -26,6 +26,10 @@ DEEPGRAM_CONFIG = {
 AWS = {
     "AWS_REGION": config("AWS_REGION", default="eu-east-1"),
     "AWS_NUTRITION_REQUEST_QUEUE_URL": config("AWS_NUTRITION_REQUEST_QUEUE_URL"),
+    # in milliseconds
+    "NUTRITION_REQUEST_QUEUE_POLLING_TIME": config(
+        "NUTRITION_REQUEST_QUEUE_POLLING_TIME", cast=int, default=60000
+    ),
     "AWS_S3_BUCKET": config("AWS_S3_BUCKET"),
     "AWS_ACCESS_KEY_ID": config("AWS_ACCESS_KEY_ID"),
     "AWS_SECRET_ACCESS_KEY": config("AWS_SECRET_ACCESS_KEY"),

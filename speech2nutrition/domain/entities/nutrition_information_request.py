@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class DBLookupPreference(str, Enum):
@@ -24,7 +24,10 @@ class DBLookupPreference(str, Enum):
 
 
 class NutritionInformationRequest(BaseModel):
-    user_id: str
-    audio_id: str
-    db_lookup_preference: DBLookupPreference
-    meal_recorded_at: datetime
+    user_id: str = Field(alias="appUserId")
+    audio_id: str = Field(alias="audioId")
+    db_lookup_preference: DBLookupPreference = Field(alias="dbLookupPreference")
+    meal_recorded_at: datetime = Field(alias="mealRecordedAt")
+
+    class Config:
+        allow_population_by_field_name = True
