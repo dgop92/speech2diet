@@ -23,7 +23,7 @@ class SQSConsumer:
     def __init__(
         self,
         queue_url,
-        sqs_client=None,
+        sqs_client,
         attribute_names=[],
         message_attribute_names=[],
         batch_size=1,
@@ -44,7 +44,7 @@ class SQSConsumer:
         self.polling_wait_time_ms = polling_wait_time_ms
         if sqs_client is None:
             raise ValueError("SQS client is required")
-        self._sqs_client = sqs_client
+        self.sqs_client = sqs_client
         self._running = False
 
     def handle_message(self, message: SQSMessage):
@@ -105,7 +105,7 @@ class SQSConsumer:
         self._running = True
         while self._running:
             logger.debug("polling for messages")
-            response = self._sqs_client.receive_message(**self._sqs_client_params)
+            response = self.sqs_client.receive_message(**self._sqs_client_params)
 
             if not response.get("Messages", []):
                 logger.debug("no messages received")
@@ -148,7 +148,7 @@ class SQSConsumer:
 
     def _delete_message(self, message: SQSMessage):
         try:
-            self._sqs_client.delete_message(
+            self.sqs_client.delete_message(
                 QueueUrl=self.queue_url, ReceiptHandle=message.ReceiptHandle
             )
         except Exception:
@@ -156,7 +156,7 @@ class SQSConsumer:
 
     def _delete_message_batch(self, messages: List[SQSMessage]):
         try:
-            self._sqs_client.delete_message_batch(
+            self.sqs_client.delete_message_batch(
                 QueueUrl=self.queue_url,
                 Entries=[
                     {"Id": message.MessageId, "ReceiptHandle": message.ReceiptHandle}

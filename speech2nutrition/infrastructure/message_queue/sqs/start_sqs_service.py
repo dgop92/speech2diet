@@ -36,7 +36,13 @@ class SimpleConsumer(SQSConsumer):
             map_food_to_nutrition_db,
         )
         logger.info(f"successfully processed request: {request}")
-        print(response.json())
+        response_as_json = response.json()
+        logger.info("sending response to nutrition response queue")
+        self.sqs_client.send_message(
+            QueueUrl=AWS["AWS_NUTRITION_RESPONSE_QUEUE_URL"],
+            MessageBody=response_as_json,
+        )
+        logger.info("response sent to nutrition response queue")
 
     def handle_processing_exception(self, message: SQSMessage, exception: Exception):
         # delete message from queue even if processing fails
@@ -49,13 +55,14 @@ class SimpleConsumer(SQSConsumer):
 
 
 def start_sqs_app(pipeline_components: PipelineComponents):
+    sqs_client = boto3.client(
+        "sqs",
+        region_name=AWS["AWS_REGION"],
+        aws_access_key_id=AWS["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=AWS["AWS_SECRET_ACCESS_KEY"],
+    )
     consumer = SimpleConsumer(
-        sqs_client=boto3.client(
-            "sqs",
-            region_name=AWS["AWS_REGION"],
-            aws_access_key_id=AWS["AWS_ACCESS_KEY_ID"],
-            aws_secret_access_key=AWS["AWS_SECRET_ACCESS_KEY"],
-        ),
+        sqs_client=sqs_client,
         queue_url=AWS["AWS_NUTRITION_REQUEST_QUEUE_URL"],
         polling_wait_time_ms=AWS["NUTRITION_REQUEST_QUEUE_POLLING_TIME"],
         batch_size=1,
