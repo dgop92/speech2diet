@@ -4,11 +4,13 @@ import { myFoodReportReviewFactory } from "./food-report-review.factory";
 import { myFoodItemFactory } from "./food-item.factory";
 import { FoodItemUseCase } from "../use-cases/food-item.use-case";
 import { FoodReportReviewUseCase } from "../use-cases/food-report-review.use-case";
+import { myNutritionRequestPublisherFactory } from "./nutrition-request-publisher.factory";
 
 export function foodlogFactory(fireStoreClient?: Firestore) {
   const mealReportReviewFactory = myMealReportReviewFactory(fireStoreClient);
   const foodReportReviewFactory = myFoodReportReviewFactory(fireStoreClient);
   const foodItemFactory = myFoodItemFactory(fireStoreClient);
+  const nutritionRequestPublisherFactory = myNutritionRequestPublisherFactory();
 
   const { mealReportReviewUseCase } = mealReportReviewFactory;
   const { foodReportReviewUseCase } = foodReportReviewFactory;
@@ -23,5 +25,6 @@ export function foodlogFactory(fireStoreClient?: Firestore) {
     mealReportReviewFactory,
     foodReportReviewFactory,
     foodItemFactory,
+    nutritionRequestPublisherFactory,
   };
 }

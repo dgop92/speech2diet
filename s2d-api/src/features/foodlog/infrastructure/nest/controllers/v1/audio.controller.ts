@@ -12,13 +12,20 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadService } from "../../upload.service";
+import { myNutritionRequestPublisherFactory } from "@features/foodlog/factories/nutrition-request-publisher.factory";
+import { INutritionRequestPublisher } from "@features/foodlog/ports/nutrition-request-publisher.definition";
 
 @Controller({
   path: "report",
   version: "1",
 })
 export class AudioControllerV1 {
-  constructor(private readonly uploadService: UploadService) {}
+  private readonly nutritionRequestPublisher: INutritionRequestPublisher;
+
+  constructor(private readonly uploadService: UploadService) {
+    const { nutritionRequestPublisher } = myNutritionRequestPublisherFactory();
+    this.nutritionRequestPublisher = nutritionRequestPublisher;
+  }
 
   @UseGuards(UserGuard)
   @Post("/upload")
@@ -34,6 +41,11 @@ export class AudioControllerV1 {
     @GetUser() user: User
   ) {
     const mimeType = file.mimetype;
-    await this.uploadService.upload(file.buffer, mimeType);
+    const audioId = await this.uploadService.upload(file.buffer, mimeType);
+    const nir = await this.nutritionRequestPublisher.publish(
+      { data: { audioId } },
+      user.appUser
+    );
+    return { message: "success", body: nir };
   }
 }

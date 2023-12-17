@@ -12,9 +12,12 @@ export const APP_ENV_VARS = {
   port: parseIntOrThrow(process.env.PORT || getOsEnv("APP_PORT")),
   aws: {
     s3: {
-      region: getOsEnv("AWS_S3_REGION"),
       bucket: getOsEnv("AWS_S3_BUCKET"),
     },
+    sqs: {
+      nutritionRequestQueueUrl: getOsEnv("AWS_NUTRITION_REQUEST_QUEUE_URL"),
+    },
+    region: getOsEnv("AWS_REGION"),
     accessKeyId: getOsEnv("AWS_ACCESS_KEY_ID"),
     secretAccessKey: getOsEnv("AWS_SECRET_ACCESS_KEY"),
   },

@@ -9,7 +9,7 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 @Injectable()
 export class UploadService {
   private readonly s3Client = new S3Client({
-    region: APP_ENV_VARS.aws.s3.region,
+    region: APP_ENV_VARS.aws.region,
     credentials: {
       accessKeyId: APP_ENV_VARS.aws.accessKeyId,
       secretAccessKey: APP_ENV_VARS.aws.secretAccessKey,
@@ -20,7 +20,7 @@ export class UploadService {
     const prefix = "audio-meals";
     const fileName = `${prefix}/${uuidv4()}`;
 
-    myLogger.debug("uploading audio file", { fileName, mimeType });
+    myLogger.info("uploading audio file", { fileName, mimeType });
 
     await this.s3Client.send(
       new PutObjectCommand({
@@ -31,7 +31,7 @@ export class UploadService {
       })
     );
 
-    myLogger.debug("audio file uploaded", { fileName, mimeType });
+    myLogger.info("audio file uploaded", { fileName, mimeType });
 
     return fileName;
   }
