@@ -13,7 +13,7 @@ class S3AudioStorage:
     def __init__(self) -> None:
         self.s3 = boto3.client(
             "s3",
-            region_name=AWS["AWS_S3_REGION"],
+            region_name=AWS["AWS_REGION"],
             aws_access_key_id=AWS["AWS_ACCESS_KEY_ID"],
             aws_secret_access_key=AWS["AWS_SECRET_ACCESS_KEY"],
         )

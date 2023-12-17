@@ -3,8 +3,8 @@ import logging
 import pika
 
 from config.settings import RABBITMQ_URL
-from infrastructure.factories.factory import pipeline_factory
-from infrastructure.message_queue import NutritionRequestCallback
+from infrastructure.factories.common import PipelineComponents
+from infrastructure.message_queue.rabbitmq.nr_callback import NutritionRequestCallback
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,6 @@ def start_rabbitmq(callback: NutritionRequestCallback):
     channel.start_consuming()
 
 
-def start_app():
-    pipeline_components = pipeline_factory()
+def start_rabbit_app(pipeline_components: PipelineComponents):
     callback = NutritionRequestCallback(pipeline_components)
     start_rabbitmq(callback)

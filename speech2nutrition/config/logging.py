@@ -12,6 +12,7 @@ def config_logger():
     logging.getLogger("httpcore.connection").setLevel(logging.WARNING)
     logging.getLogger("openai._base_client").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.WARNING)
+    logging.getLogger("pika").setLevel(logging.WARNING)
     logging.config.fileConfig(fname=LOGGING_CONFIG_FILE, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
     logger.info("logger configured")

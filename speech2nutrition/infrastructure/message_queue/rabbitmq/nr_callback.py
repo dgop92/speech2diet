@@ -5,7 +5,8 @@ from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Basic, BasicProperties
 
 from application.request_handler import handle_nutrition_information_request
-from domain.entities.nutrition_information_request import NutritionInformationRequest
+from domain.entities.nutrition_information_request import \
+    NutritionInformationRequest
 from infrastructure.factories.common import PipelineComponents
 
 logger = logging.getLogger(__name__)
