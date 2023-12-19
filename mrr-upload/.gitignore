@@ -1,0 +1,13 @@
+node_modules
+build/
+dist/
+.idea
+*.env
+
+http_tests
+generated-oapi
+firebase-credentials
+
+*-debug.log
+
+.firebaserc
