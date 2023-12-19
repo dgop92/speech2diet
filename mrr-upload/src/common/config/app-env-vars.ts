@@ -1,15 +1,9 @@
-import {
-  getOsEnv,
-  getOsEnvOrDefault,
-  parseIntOrThrow,
-  parseListOrDefault,
-} from "./env-utils";
+import { getOsEnv, getOsEnvOrDefault, parseListOrDefault } from "./env-utils";
 
 export const APP_ENV_VARS = {
   NODE_ENV: getOsEnv("NODE_ENV"),
   isProduction: getOsEnv("NODE_ENV") === "prod",
   isTest: getOsEnv("NODE_ENV") === "test",
-  port: parseIntOrThrow(process.env.PORT || getOsEnv("APP_PORT")),
   aws: {
     sqs: {
       nutritionResponseQueueUrl: getOsEnv("AWS_NUTRITION_RESPONSE_QUEUE_URL"),

@@ -1,20 +1,20 @@
 import { AppLogger } from "@common/logging/logger";
 import { WinstonLogger, createDevLogger } from "@common/logging/winston-logger";
-import { setupFactories } from "./setup-factories";
+import { setupFactories } from "main/setup-factories";
 import {
-  getAuthFirebaseClient,
-  getFirebaseApp,
-  getFirestoreClient,
-} from "./firebase-app";
+  getTestFirebaseApp,
+  getTestAuthFirebaseClient,
+  getTestFirestoreClient,
+} from "./test-firebase-app";
 
 export async function startApp() {
-  const firebaseApp = getFirebaseApp();
-  const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
-  const firestoreClient = getFirestoreClient(firebaseApp);
+  const firebaseApp = getTestFirebaseApp();
+  const authFirebaseClient = getTestAuthFirebaseClient(firebaseApp);
+  const firestoreClient = getTestFirestoreClient(firebaseApp);
 
   setupFactories(authFirebaseClient, firestoreClient);
 
-  myLogger.info("consumer started");
+  myLogger.info("test consumer started");
 }
 
 const logger = createDevLogger();
