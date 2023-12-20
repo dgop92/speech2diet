@@ -12,8 +12,17 @@ export async function startApp() {
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
 
-  setupFactories(authFirebaseClient, firestoreClient);
+  const { consumerAppFactory } = setupFactories(
+    authFirebaseClient,
+    firestoreClient
+  );
 
+  consumerAppFactory.consumerApp.on("error", (err) => {
+    myLogger.error("an unexpected error occurred", err);
+  });
+
+  myLogger.info("starting consumer app");
+  consumerAppFactory.consumerApp.start();
   myLogger.info("consumer started");
 }
 

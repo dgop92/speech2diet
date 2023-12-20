@@ -1,4 +1,9 @@
-import { getOsEnv, getOsEnvOrDefault, parseListOrDefault } from "./env-utils";
+import {
+  getOsEnv,
+  getOsEnvOrDefault,
+  parseListOrDefault,
+  parseIntOrThrow,
+} from "./env-utils";
 
 export const APP_ENV_VARS = {
   NODE_ENV: getOsEnv("NODE_ENV"),
@@ -7,6 +12,9 @@ export const APP_ENV_VARS = {
   aws: {
     sqs: {
       nutritionResponseQueueUrl: getOsEnv("AWS_NUTRITION_RESPONSE_QUEUE_URL"),
+      pollingTime: parseIntOrThrow(
+        getOsEnvOrDefault("NUTRITION_RESPONSE_QUEUE_POLLING_TIME", "20000")
+      ),
     },
     region: getOsEnv("AWS_REGION"),
     accessKeyId: getOsEnv("AWS_ACCESS_KEY_ID"),
