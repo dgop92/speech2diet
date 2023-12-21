@@ -1,0 +1,29 @@
+version: "3.1"
+
+services:
+  speech2nutrition:
+    container_name: speech2nutrition_container
+    build:
+      context: ./speech2nutrition
+    restart: "no"
+    env_file:
+      - ./container-files/env-vars/.speech2nutrition.env
+
+  s2d_api:
+    container_name: s2d_api_container
+    build:
+      context: ./s2d-api
+    restart: "no"
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./container-files/env-vars/.s2d_api.env
+  
+  mrr_upload:
+    container_name: mrr_upload_container
+    build:
+      context: ./mrr-upload
+    restart: "no"
+    env_file:
+      - ./container-files/env-vars/.mrr_upload.env
+

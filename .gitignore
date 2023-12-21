@@ -1,0 +1,28 @@
+# from s2d-api - mrr upload
+
+node_modules
+build/
+dist/
+.idea
+*.env
+
+http_tests
+generated-oapi
+firebase-credentials
+
+*-debug.log
+
+.firebaserc
+.vscode
+
+# from speech2nutrition 
+
+__pycache__/
+.env
+.venv
+logging.conf
+.pytest_cache
+
+zip_source.py
+source_code.zip
+.vscode
