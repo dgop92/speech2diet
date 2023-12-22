@@ -8,8 +8,12 @@ component [Mobile Application] as MobileApplication
 component [Speech2Diet API] as Speech2DietAPI
 !endsub
 
+!startsub MRR_UPLOAD
+component [MRR Upload] as MRRUpload
+!endsub
+
 !startsub MESSAGE_QUEUE
-component "MessageQueue" as MessageQueue
+component "MessageQueues" as MessageQueue
 !endsub
 
 !startsub SPEECH_2_NUTRITION

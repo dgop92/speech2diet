@@ -5,6 +5,7 @@ skinparam defaultTextAlignment center
 
 !includesub components/main-components.puml!SPEECH_2_DIET_API
 !includesub components/main-components.puml!SPEECH_2_NUTRITION
+!includesub components/main-components.puml!MRR_UPLOAD
 
 rectangle "Message Broker" as MessageBroker #line.dashed {
     rectangle "a" as RequestRectangle #line:white;text:white {
@@ -32,7 +33,7 @@ RequestDefaultExchange -> RequestQueue
 RequestQueue <- Speech2Nutrition: consume request\nmessages
 Speech2Nutrition -> ResponseDefaultExchange: send response\nmessages
 ResponseDefaultExchange -l-> ResponseQueue
-ResponseQueue <- Speech2DietAPI: consume response\nmessages
+ResponseQueue <-l- MRRUpload: consume response\nmessages
 
 
 

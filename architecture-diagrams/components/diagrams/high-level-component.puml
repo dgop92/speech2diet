@@ -8,6 +8,7 @@ skinparam defaultTextAlignment center
 
 !includesub components/main-components.puml!MOBILE_APPLICATION
 !includesub components/main-components.puml!SPEECH_2_DIET_API
+!includesub components/main-components.puml!MRR_UPLOAD
 !includesub components/main-components.puml!MESSAGE_QUEUE
 !includesub components/main-components.puml!SPEECH_2_NUTRITION
 !includesub components/main-components.puml!NUTRITION_DB
@@ -24,6 +25,7 @@ Speech2Nutrition --> NutritionDB : queries nutrition information
 Speech2Nutrition --> LLMService : parses text using
 Speech2Nutrition --> Speech2TextService : transcribes audios using
 Speech2Nutrition -u- MessageQueue
+MRRUpload -l- MessageQueue
 Speech2Nutrition --> AudioStorage : reads audio files \n [http]
 
 MobileApplication --> Speech2DietAPI : makes requests to \n [http]
