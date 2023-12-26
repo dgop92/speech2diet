@@ -11,9 +11,10 @@ start
 
 |Speech2Nutrition|
 :get nutritional information;
+:send response;
 
-|Speech2Diet-API|
-:save results;
+|MRR-Upload|
+:save results in\nuser's meal report\nreviews db;
 
 repeat
   |User|

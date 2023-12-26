@@ -1,0 +1,41 @@
+@startuml speech2nutrition-component-diagram
+skinparam padding 10
+skinparam defaultTextAlignment center
+' left to right direction
+top to bottom direction
+
+!includesub components/external-services.puml!LLM_SERVICE
+!includesub components/external-services.puml!SPEECH_2_TEXT
+!includesub components/external-services.puml!AUDIO_STORAGE
+
+() "Audio File" as AudioFile
+AudioStorage -- AudioFile
+
+() "Audio" as Audio
+Speech2TextService -( Audio
+
+() "Prompt" as Prompt
+LLMService --( Prompt
+
+rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
+    !includesub components/speech2nutrition/definitions.puml!SPEECH_TO_TEXT
+    !includesub components/speech2nutrition/definitions.puml!FOOD_FEATURE_EXTRACTION
+    !includesub components/speech2nutrition/definitions.puml!FOOD_MAPPING
+
+    SpeechToText --( AudioFile
+    () "Audio Transcription" as AudioTranscription
+    SpeechToText -- AudioTranscription
+    SpeechToText -u- Audio
+
+    FoodFeatureExtraction --( AudioTranscription
+    () "Food Requests" as FoodRequests
+    FoodFeatureExtraction -- FoodRequests
+    FoodFeatureExtraction -u- Prompt
+
+    FoodMapping --( FoodRequests
+    () "Food Responses" as FoodResponses
+    FoodMapping -- FoodResponses
+
+}
+
+@enduml
