@@ -21,11 +21,12 @@ function getConfig() {
 
 const config = getConfig();
 const appName = getStackName(config.appName, config.env);
-
-new FitVoiceCDKStack(app, appName, {
+const fitvoiceCDKStack = new FitVoiceCDKStack(app, appName, {
   env: {
     region: config.region,
     account: config.accountId,
   },
   config: config,
 });
+cdk.Tags.of(fitvoiceCDKStack).add("project:name", config.appName);
+cdk.Tags.of(fitvoiceCDKStack).add("project:env", config.env);

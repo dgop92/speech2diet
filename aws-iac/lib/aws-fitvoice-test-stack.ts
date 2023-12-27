@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { BuildConfig } from "../config/app-env-vars";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sqs from "aws-cdk-lib/aws-sqs";
-// import * as iam from "aws-cdk-lib/aws-iam";
+import * as iam from "aws-cdk-lib/aws-iam";
 import { getCloudFormationID, getResourceName } from "../config/utils";
 
 type AwsEnvStackProps = cdk.StackProps & {
@@ -18,6 +18,24 @@ const testQueueProps: sqs.QueueProps = {
   // 10 KB
   maxMessageSizeBytes: 10240,
 };
+
+function createProgrammaticUser(
+  construct: Construct,
+  name: string,
+  policies: iam.PolicyStatement[]
+) {
+  const user = new iam.User(
+    construct,
+    getCloudFormationID(construct.node.id, name),
+    {
+      userName: getResourceName(construct.node.id, name),
+    }
+  );
+  policies.forEach((policy) => {
+    user.addToPolicy(policy);
+  });
+  return user;
+}
 
 export class FitVoiceCDKStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: AwsEnvStackProps) {
@@ -51,5 +69,43 @@ export class FitVoiceCDKStack extends cdk.Stack {
         ...testQueueProps,
       }
     );
+
+    // Creating the policies and users for the speech 2 nutrition service
+    const s2nServicePolicy1 = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:GetObject", "sqs:DeleteMessage", "sqs:ReceiveMessage"],
+      resources: [
+        mainBucket.arnForObjects("*"),
+        nutritionRequestQueue.queueArn,
+      ],
+    });
+    const s2nServicePolicy2 = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["sqs:SendMessage"],
+      resources: [nutritionResponseQueue.queueArn],
+    });
+    createProgrammaticUser(this, "s2n-service-user", [
+      s2nServicePolicy1,
+      s2nServicePolicy2,
+    ]);
+
+    const s2dServicePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:PutObject", "sqs:SendMessage"],
+      resources: [
+        mainBucket.arnForObjects("*"),
+        nutritionRequestQueue.queueArn,
+      ],
+    });
+    createProgrammaticUser(this, "s2d-service-user", [s2dServicePolicy]);
+
+    const mrrUploadServicePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["sqs:DeleteMessage", "sqs:ReceiveMessage"],
+      resources: [nutritionResponseQueue.queueArn],
+    });
+    createProgrammaticUser(this, "mrr-upload-service-user", [
+      mrrUploadServicePolicy,
+    ]);
   }
 }
