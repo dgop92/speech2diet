@@ -3,6 +3,7 @@ import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { FitVoiceCDKStack } from "../lib/aws-fitvoice-test-stack";
 import { loadEnvironmentVariables } from "../config/app-env-vars";
+import { getStackName } from "../config/utils";
 
 const app = new cdk.App();
 
@@ -19,7 +20,7 @@ function getConfig() {
 }
 
 const config = getConfig();
-const appName = `${config.appName}-${config.env}-stack`;
+const appName = getStackName(config.appName, config.env);
 
 new FitVoiceCDKStack(app, appName, {
   env: {
