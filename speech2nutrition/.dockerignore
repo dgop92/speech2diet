@@ -18,5 +18,7 @@ Dockerfile
 *.env
 .pytest_cache
 .vscode
+tests/
+scripts/
 
 zip_source.py
