@@ -14,8 +14,6 @@ class S3AudioStorage:
         self.s3 = boto3.client(
             "s3",
             region_name=AWS["AWS_REGION"],
-            aws_access_key_id=AWS["AWS_ACCESS_KEY_ID"],
-            aws_secret_access_key=AWS["AWS_SECRET_ACCESS_KEY"],
         )
 
     def read_file(self, audio_id: str) -> Tuple[bytes, Dict[str, Any]]:
