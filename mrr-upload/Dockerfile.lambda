@@ -1,0 +1,25 @@
+FROM public.ecr.aws/lambda/nodejs:20 as builder
+
+WORKDIR /usr/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM public.ecr.aws/lambda/nodejs:20
+
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+COPY package* ./
+
+RUN npm ci --only=production
+
+COPY --from=builder /usr/app/dist ./dist
+COPY --from=builder /usr/app/tsconfig.json ./tsconfig.json
+COPY --from=builder /usr/app/scripts/prod-setup.js ./scripts/prod-setup.js
+
+CMD ["dist/main/lambda-function.handler"]

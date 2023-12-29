@@ -11,6 +11,7 @@ export enum ErrorCode {
   FORBIDDEN = "forbidden",
   NOT_IMPLEMENTED = "not-implemented",
   APPLICATION_INTEGRITY_ERROR = "application-integrity-error",
+  UNEXPECTED_ERROR = "unexpected-error",
 }
 
 export interface BaseErrorParams {

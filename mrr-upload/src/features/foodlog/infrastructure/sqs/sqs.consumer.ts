@@ -3,13 +3,14 @@ import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-re
 import { NutritionInformationResponse } from "./entities/nutrition-information-response";
 import { fromNutritionInformationResponseToMealReportReviewCreateInput } from "./adapter";
 import { AppLogger } from "@common/logging/logger";
+import { handleMRRMessage } from "@features/foodlog/use-cases/handle-mrr-message";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 // even if we fail processing the message we don't want to retry it, we don't have
 // a dead letter queue and we don't want to keep trying to process the same message
 // over and over again. That's the reason why we don't throw an error here.
-export async function handleMRRMessage(
+export async function handleMRRMessageForSQSConsumer(
   message: Message,
   mealReportReviewUseCase: IMealReportReviewUseCase
 ): Promise<void> {
@@ -19,11 +20,7 @@ export async function handleMRRMessage(
       const body: NutritionInformationResponse = JSON.parse(message.Body);
       const data =
         fromNutritionInformationResponseToMealReportReviewCreateInput(body);
-      const mealReportReview = await mealReportReviewUseCase.create(data);
-      myLogger.info("created meal report review", {
-        audioId: mealReportReview.audioId,
-        appUserId: mealReportReview.appUserId,
-      });
+      handleMRRMessage(data, mealReportReviewUseCase);
     } else {
       myLogger.warn("message has no body", { messageId: message.MessageId });
     }

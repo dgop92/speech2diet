@@ -8,7 +8,5 @@ export function setupFactories(
   fireStoreClient: Firestore
 ) {
   authFactory(authFirebaseClient, fireStoreClient);
-  const { consumerAppFactory } = foodlogFactory(fireStoreClient);
-
-  return { consumerAppFactory };
+  foodlogFactory(fireStoreClient);
 }

@@ -3,7 +3,7 @@ import { APP_ENV_VARS } from "@common/config/app-env-vars";
 import { AppLogger } from "@common/logging/logger";
 import { Consumer } from "sqs-consumer";
 import { IMealReportReviewUseCase } from "../ports/meal-report-review.use-case.definition";
-import { handleMRRMessage } from "../infrastructure/sqs/sqs.consumer";
+import { handleMRRMessageForSQSConsumer } from "../infrastructure/sqs/sqs.consumer";
 
 let consumerApp: Consumer;
 let sqsClient: SQSClient;
@@ -32,7 +32,7 @@ export const myConsumerAppFactory = (
       queueUrl: APP_ENV_VARS.aws.sqs.nutritionResponseQueueUrl,
       sqs: sqsClient,
       handleMessage: async (message) => {
-        return handleMRRMessage(message, mealReportReviewUseCase);
+        return handleMRRMessageForSQSConsumer(message, mealReportReviewUseCase);
       },
       batchSize: 1,
       pollingWaitTimeMs: APP_ENV_VARS.aws.sqs.pollingTime,

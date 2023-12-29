@@ -6,15 +6,20 @@ import {
   getFirebaseApp,
   getFirestoreClient,
 } from "./firebase-app";
+import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.factory";
+import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 
 export async function startApp() {
   const firebaseApp = getFirebaseApp();
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
 
-  const { consumerAppFactory } = setupFactories(
-    authFirebaseClient,
-    firestoreClient
+  setupFactories(authFirebaseClient, firestoreClient);
+
+  // no need to pass firestore, it was already setup in setupFactories
+  const mealReportReviewFactory = myMealReportReviewFactory();
+  const consumerAppFactory = myConsumerAppFactory(
+    mealReportReviewFactory.mealReportReviewUseCase
   );
 
   consumerAppFactory.consumerApp.on("error", (err) => {

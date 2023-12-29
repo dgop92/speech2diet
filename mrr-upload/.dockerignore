@@ -19,3 +19,9 @@ http_tests
 endpoint-examples
 src/test
 *.env
+
+# firebase, those files are just for the emulator
+.firebarc
+firebase.json
+firestore.indexes.json
+firestore.rules

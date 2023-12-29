@@ -1,9 +1,4 @@
-import {
-  getOsEnv,
-  getOsEnvOrDefault,
-  parseListOrDefault,
-  parseIntOrThrow,
-} from "./env-utils";
+import { getOsEnv, getOsEnvOrDefault, parseIntOrThrow } from "./env-utils";
 
 export const APP_ENV_VARS = {
   NODE_ENV: getOsEnv("NODE_ENV"),
@@ -11,7 +6,10 @@ export const APP_ENV_VARS = {
   isTest: getOsEnv("NODE_ENV") === "test",
   aws: {
     sqs: {
-      nutritionResponseQueueUrl: getOsEnv("AWS_NUTRITION_RESPONSE_QUEUE_URL"),
+      nutritionResponseQueueUrl: getOsEnvOrDefault(
+        "AWS_NUTRITION_RESPONSE_QUEUE_URL",
+        ""
+      ),
       pollingTime: parseIntOrThrow(
         getOsEnvOrDefault("NUTRITION_RESPONSE_QUEUE_POLLING_TIME", "20000")
       ),
@@ -30,11 +28,5 @@ export const APP_ENV_VARS = {
   },
   logging: {
     level: getOsEnvOrDefault("LOG_LEVEL", "info"),
-  },
-  cors: {
-    allowOrigins: parseListOrDefault(
-      getOsEnvOrDefault("CORS_ALLOW_ORIGINS", ""),
-      "*"
-    ),
   },
 };
