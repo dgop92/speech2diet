@@ -5,6 +5,7 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import {
   getCloudFormationID,
   getResourceName,
@@ -111,6 +112,7 @@ export class FitVoiceCDKStack extends cdk.Stack {
     createProgrammaticUser(this, "mrr-upload-service-user", [
       mrrUploadServicePolicy,
     ]);
+
     // Creating lambda functions
     const s2nProjectPath = getRootOfExternalProject("speech2nutrition");
     // TODO: implement different environments
@@ -144,5 +146,10 @@ export class FitVoiceCDKStack extends cdk.Stack {
       }
     );
     s2nServiceLambda.addToRolePolicy(s2nLambdaServicePolicy);
+    const eventQueueSource = new SqsEventSource(nutritionRequestQueue, {
+      batchSize: 1,
+      enabled: true,
+    });
+    s2nServiceLambda.addEventSource(eventQueueSource);
   }
 }
