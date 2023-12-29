@@ -1,10 +1,15 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { BuildConfig } from "../config/app-env-vars";
+import { BuildConfig, loadS2NServiceVariables } from "../config/app-env-vars";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as iam from "aws-cdk-lib/aws-iam";
-import { getCloudFormationID, getResourceName } from "../config/utils";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import {
+  getCloudFormationID,
+  getResourceName,
+  getRootOfExternalProject,
+} from "../config/utils";
 
 type AwsEnvStackProps = cdk.StackProps & {
   config: Readonly<BuildConfig>;
@@ -40,7 +45,6 @@ function createProgrammaticUser(
 export class FitVoiceCDKStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: AwsEnvStackProps) {
     super(scope, id, props);
-
     const mainBucket = new s3.Bucket(
       this,
       getCloudFormationID(id, "main-bucket"),
@@ -107,5 +111,38 @@ export class FitVoiceCDKStack extends cdk.Stack {
     createProgrammaticUser(this, "mrr-upload-service-user", [
       mrrUploadServicePolicy,
     ]);
+    // Creating lambda functions
+    const s2nProjectPath = getRootOfExternalProject("speech2nutrition");
+    // TODO: implement different environments
+    const s2nEnvVars = loadS2NServiceVariables();
+    const s2nLambdaServicePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["sqs:SendMessage", "s3:GetObject"],
+      resources: [
+        nutritionResponseQueue.queueArn,
+        mainBucket.arnForObjects("*"),
+      ],
+    });
+    const s2nServiceLambda = new lambda.DockerImageFunction(
+      this,
+      getCloudFormationID(id, "s2n-service-lambda"),
+      {
+        functionName: getResourceName(id, "s2n-service-lambda"),
+        code: lambda.DockerImageCode.fromImageAsset(s2nProjectPath, {
+          file: "Dockerfile.lambda",
+        }),
+        // It takes 10 seconds roughly to init the function and the remaining time
+        // to bootstrap the external services of s2n
+        timeout: cdk.Duration.seconds(60),
+        memorySize: 256,
+        architecture: lambda.Architecture.X86_64,
+        environment: {
+          AWS_S3_BUCKET: mainBucket.bucketName,
+          AWS_NUTRITION_RESPONSE_QUEUE_URL: nutritionResponseQueue.queueUrl,
+          ...s2nEnvVars,
+        },
+      }
+    );
+    s2nServiceLambda.addToRolePolicy(s2nLambdaServicePolicy);
   }
 }

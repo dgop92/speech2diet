@@ -1,3 +1,5 @@
+import { resolve } from "path";
+
 /**
  * Returns the stack name based on the provided application name and environment.
  * @param appName - The name of the application.
@@ -26,4 +28,21 @@ export function getCloudFormationID(id: string, name: string) {
  */
 export function getResourceName(id: string, name: string) {
   return `${id}-${name}`;
+}
+
+/**
+ * Retrieves the root directory of an external project inside the mono-repo.
+ *
+ * TODO: Find a better way of finding the cwd of the file that calls this function.
+ *
+ * @param projectName - The name of the project.
+ * @returns The root directory of the external project.
+ * @throws Error if no project name is provided.
+ */
+export function getRootOfExternalProject(projectName: string) {
+  if (!projectName || projectName.length === 0) {
+    throw new Error("You must provide a project name.");
+  }
+  const root = resolve(process.cwd(), `../${projectName}`);
+  return root;
 }
