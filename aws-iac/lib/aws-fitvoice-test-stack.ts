@@ -1,6 +1,10 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { BuildConfig, loadS2NServiceVariables } from "../config/app-env-vars";
+import {
+  BuildConfig,
+  loadMRRUploadServiceVariables,
+  loadS2NServiceVariables,
+} from "../config/app-env-vars";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -146,10 +150,36 @@ export class FitVoiceCDKStack extends cdk.Stack {
       }
     );
     s2nServiceLambda.addToRolePolicy(s2nLambdaServicePolicy);
-    const eventQueueSource = new SqsEventSource(nutritionRequestQueue, {
+    const s2nEventQueueSource = new SqsEventSource(nutritionRequestQueue, {
       batchSize: 1,
       enabled: true,
     });
-    s2nServiceLambda.addEventSource(eventQueueSource);
+    s2nServiceLambda.addEventSource(s2nEventQueueSource);
+
+    const mrrUploadProjectPath = getRootOfExternalProject("mrr-upload");
+    // TODO: implement different environments
+    const mrrUploadEnvVars = loadMRRUploadServiceVariables();
+    const mrrUploadServiceLambda = new lambda.DockerImageFunction(
+      this,
+      getCloudFormationID(id, "mrr-upload-service-lambda"),
+      {
+        functionName: getResourceName(id, "mrr-upload-service-lambda"),
+        code: lambda.DockerImageCode.fromImageAsset(mrrUploadProjectPath, {
+          file: "Dockerfile.lambda",
+        }),
+        timeout: cdk.Duration.seconds(60),
+        memorySize: 256,
+        architecture: lambda.Architecture.X86_64,
+        environment: mrrUploadEnvVars,
+      }
+    );
+    const mrrUploadEventQueueSource = new SqsEventSource(
+      nutritionResponseQueue,
+      {
+        batchSize: 1,
+        enabled: true,
+      }
+    );
+    mrrUploadServiceLambda.addEventSource(mrrUploadEventQueueSource);
   }
 }

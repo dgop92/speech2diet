@@ -34,3 +34,21 @@ export function loadS2NServiceVariables() {
 }
 
 export type S2NServiceConfig = ReturnType<typeof loadS2NServiceVariables>;
+
+export function loadMRRUploadServiceVariables() {
+  require("dotenv").config({ path: "./external-env-vars/mrr-upload/.env" });
+
+  const config = {
+    // NODE_ENV can be set using the env var of the cdk project
+    NODE_ENV: getOsEnv("ENVIROMENT"),
+    LOG_LEVEL: getOsEnv("MRR_UPLOAD_LOG_LEVEL"),
+    GOOGLE_APPLICATION_CREDENTIALS_CONTENT: getOsEnv(
+      "MRR_UPLOAD_GOOGLE_APPLICATION_CREDENTIALS_CONTENT"
+    ),
+  };
+  return config;
+}
+
+export type MRRUploadServiceConfig = ReturnType<
+  typeof loadMRRUploadServiceVariables
+>;
