@@ -48,7 +48,10 @@ export const handler: Handler = async (event: SQSEvent, context) => {
     const body: NutritionInformationResponse = JSON.parse(record.body);
     const data =
       fromNutritionInformationResponseToMealReportReviewCreateInput(body);
-    handleMRRMessage(data, mealReportReviewFactory.mealReportReviewUseCase);
+    await handleMRRMessage(
+      data,
+      mealReportReviewFactory.mealReportReviewUseCase
+    );
   } catch (error) {
     myLogger.error("error handling message", {
       messageId: record.messageId,

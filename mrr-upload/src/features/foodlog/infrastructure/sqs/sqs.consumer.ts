@@ -20,7 +20,7 @@ export async function handleMRRMessageForSQSConsumer(
       const body: NutritionInformationResponse = JSON.parse(message.Body);
       const data =
         fromNutritionInformationResponseToMealReportReviewCreateInput(body);
-      handleMRRMessage(data, mealReportReviewUseCase);
+      await handleMRRMessage(data, mealReportReviewUseCase);
     } else {
       myLogger.warn("message has no body", { messageId: message.MessageId });
     }
