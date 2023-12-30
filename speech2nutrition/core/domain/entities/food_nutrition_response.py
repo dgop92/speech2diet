@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from domain.entities.food import Food
+from core.domain.entities.food import Food
 
 
 class FoodRecord(BaseModel):
