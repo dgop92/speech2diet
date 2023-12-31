@@ -12,7 +12,7 @@ from core.components.food_extraction.infrastructure.mocks.mock_food_extraction i
 logger = logging.getLogger(__name__)
 
 
-def speech2text_component_factory() -> ExtractFoodComponent:
+def food_extraction_component_factory() -> ExtractFoodComponent:
     if MOCK_SERVICES:
         logger.info("creating mock food extraction service")
         extraction_service = MockFoodExtractionService()
