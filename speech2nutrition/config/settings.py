@@ -22,7 +22,7 @@ DATABASE = {
 
 RABBITMQ_URL = config_as_str("RABBITMQ_URL", default="")
 
-MOCK_SERVICES = config_as_bool("MOCK_SERVICES", cast=bool, default=True)
+MOCK_SERVICES = config_as_bool("MOCK_SERVICES", default=True)
 MOCK_AUDIO_STORAGE_FOLDER = config_as_str(
     "MOCK_AUDIO_STORAGE_FOLDER", default="tests/data/audio"
 )

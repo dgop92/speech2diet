@@ -5,9 +5,11 @@ import spacy
 
 from config.database import MongoDatabase
 from config.logging import config_logger
-from domain.entities.food_nutrition_request import FoodNutritionRequest
-from infrastructure.food_mapping.factory import build_map_food_to_nutrition
-from infrastructure.food_mapping.repositories import SystemNutritionRepository
+from core.components.food_mapping.factory import build_map_food_to_nutrition
+from core.components.food_mapping.infrastructure.repositories.mongo_repository import (
+    SystemNutritionRepository,
+)
+from core.domain.entities.food_nutrition_request import FoodNutritionRequest
 
 
 def main() -> None:
@@ -21,7 +23,10 @@ def main() -> None:
         "name", type=str, help="Name of the food to find in the database"
     )
     parser.add_argument(
-        "description", type=str, help="Description of the food to find in the database"
+        "description",
+        type=str,
+        help="Description of the food to find in the database",
+        default="",
     )
     parser.add_argument(
         "--language", type=str, default="es_core_news_sm", help="Spacy language model"
@@ -35,9 +40,8 @@ def main() -> None:
 
     logger.info("connecting to mongo database")
     mongo_db = MongoDatabase()
-    db = mongo_db.get_database()
 
-    repository = SystemNutritionRepository(db)
+    repository = SystemNutritionRepository(mongo_db)
     fq_req = FoodNutritionRequest(
         food_name=args.name,
         description=args.description,

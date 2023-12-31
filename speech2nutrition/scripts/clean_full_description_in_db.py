@@ -5,7 +5,7 @@ import spacy
 
 from config.database import MongoDatabase
 from config.logging import config_logger
-from infrastructure.food_mapping.clean_db_keywords import (
+from core.components.food_mapping.infrastructure.repositories.clean_db_keywords import (
     clean_full_description_for_mongo_collection,
 )
 
