@@ -2,18 +2,19 @@ import logging
 
 import boto3
 
-from application.request_handler import handle_nutrition_information_request
 from config.logging import config_logger
 from config.settings import AWS
-from domain.entities.nutrition_information_request import NutritionInformationRequest
-from infrastructure.factories.factory import pipeline_factory
+from core.core_factory import core_factory
+from core.domain.entities.nutrition_information_request import (
+    NutritionInformationRequest,
+)
 
 sqs_client = boto3.client("sqs", region_name=AWS["AWS_REGION"])
 
 config_logger()
 logger = logging.getLogger(__name__)
-logger.info("initiating pipeline components")
-pipeline_components = pipeline_factory()
+logger.info("initiating request handler")
+request_handler = core_factory()
 
 
 def handler(event, context):
@@ -33,14 +34,7 @@ def handler(event, context):
                 body = records[0]["body"]
                 request = NutritionInformationRequest.parse_raw(body)
                 logger.info(f"processing request: {request}")
-                response = handle_nutrition_information_request(
-                    request,
-                    pipeline_components.s2t_service,
-                    pipeline_components.food_extraction_service,
-                    pipeline_components.system_repository,
-                    pipeline_components.user_repository,
-                    pipeline_components.map_food_to_nutrition_db,
-                )
+                response = request_handler(request)
                 logger.info(f"successfully processed request: {request}")
                 response_as_json = response.json()
                 logger.info("sending response to nutrition response queue")
