@@ -21,13 +21,13 @@ class Food(BaseModel):
     """ attributes that describes the food, such cooked, raw, etc """
     full_description: List[str]
     """ The full description of the food, including the food name and the description. Each item in the list is is clean using NLP techniques"""
-    portion_reference: int
+    portion_reference: float
     """ For USDA Foundation food reference units are in grams"""
     portion_unit: str
     """ The unit of the portion reference """
     food_source: FoodSource
     """ The source of the food, either from the user database or the system database """
-    calories: int
-    protein: int
-    fat: int
-    carbohydrates: int
+    calories: float
+    protein: float
+    fat: float
+    carbohydrates: float

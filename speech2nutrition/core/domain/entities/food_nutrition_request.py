@@ -8,7 +8,7 @@ class FoodNutritionRequest(BaseModel):
     """ The name of the food that user reported"""
     description: List[str]
     """ The description of the food that the user reported """
-    amount: int
+    amount: float
     """ The amount of the food that the user reported """
     unit: str
     """ The unit of the amount that the user reported """
