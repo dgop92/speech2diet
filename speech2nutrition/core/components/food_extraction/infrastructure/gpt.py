@@ -4,8 +4,8 @@ from typing import Any, Dict, List
 
 from openai import OpenAI
 
-from core.components.food_extraction.infrastructure.prompts import (
-    EXTRACT_FOOD_INFO_PROMPT,
+from core.components.food_extraction.infrastructure.build_prompt import (
+    get_extraction_prompt,
 )
 from core.domain.entities.food_nutrition_request import FoodNutritionRequest
 from core.domain.errors import ServiceException
@@ -27,7 +27,7 @@ class ChatGPTFoodExtractionService:
             messages=[
                 {
                     "role": "user",
-                    "content": EXTRACT_FOOD_INFO_PROMPT.format(TEXT_FRAGMENT=text),
+                    "content": get_extraction_prompt(text),
                 }
             ],
             model=self.engine,
