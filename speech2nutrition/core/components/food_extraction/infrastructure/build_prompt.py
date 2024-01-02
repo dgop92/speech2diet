@@ -20,7 +20,7 @@ examples = [
     {
         "text": "Disfruto de dos panes franceses con una taza de café negro",
         "result": [
-            {"food_name": "pan", "description": "franceses", "amount": 2, "unit": ""},
+            {"food_name": "panes", "description": "franceses", "amount": 2, "unit": ""},
             {
                 "food_name": "café",
                 "description": "negro",

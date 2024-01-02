@@ -13,6 +13,12 @@ from tests.food_extraction.test_sets.definitions import (
 )
 
 
+def avg(lst: List[float]) -> float:
+    if len(lst) == 0:
+        return 0
+    return sum(lst) / len(lst)
+
+
 def merge_food_name_description(
     nlp: Language, name: str, description: List[str]
 ) -> Set[str]:
@@ -179,9 +185,16 @@ def evaluate_test_case(
             nlp, combs, len(expected_food_items)
         )
 
+    if len(individual_metrics) == 0 and length_different == 0:
+        # if there are no individual metrics and the length is 0, then the total score is 1
+        total = 1
+    else:
+        # for normal cases the total score is the average.
+        # for special cases where the cartisian product is 0, the total score is 0
+        total = avg([x["total"] for x in individual_metrics])
+
     return {
         "individual_metrics": individual_metrics,
         "length_different": length_different,
-        "total": sum([x["total"] for x in individual_metrics])
-        / len(expected_food_items),
+        "total": total,
     }

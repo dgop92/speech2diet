@@ -37,7 +37,7 @@ class FoodNutritionRequest(BaseModel):
 
     @validator("amount")
     def amount_must_be_positive(cls, value):
-        if value <= 0:
+        if value < 0:
             raise ValueError("amount must be positive")
 
         return value

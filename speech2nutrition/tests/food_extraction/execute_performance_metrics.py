@@ -57,9 +57,10 @@ def main() -> None:
     food_extraction_component = food_extraction_component_factory()
 
     all_results: List[Tuple[str, List[Dict[str, Any]]]] = []
+    n_tests = 0
     for test_set_id, test_set in id_test_set_list:
         logger.info(f"executing test set with id: {test_set_id}")
-
+        n_tests += len(test_set)
         loaded_results = load_results(test_set_id)
         if loaded_results is None:
             logger.info(f"test set with id: '{test_set_id}' not found, executing")
@@ -96,15 +97,24 @@ def main() -> None:
             logger.info(f"test set '{test_set_id}' found, skipping")
             all_results.append((test_set_id, loaded_results))
 
+    all_individual_metrics = []
     for test_set_id, results in all_results:
         total = 0
         for result in results:
             test_id_total = result["total"]
-            logger.info(f"test set id: '{test_set_id}' - total score: {test_id_total}")
+            logger.info(f"test set id: '{test_set_id}' - total: {test_id_total}")
+
+            ind_metrics = result["individual_metrics"].copy()
+            all_individual_metrics.extend(
+                [{**m, "test_set_id": test_set_id} for m in ind_metrics]
+            )
 
             total += test_id_total
 
+    logger.info(f"number of tests: {n_tests}")
     logger.info(f"total score: {total}")
+    logger.info("Saving individual metrics")
+    save_results("individual_metrics", all_individual_metrics)
 
 
 if __name__ == "__main__":
