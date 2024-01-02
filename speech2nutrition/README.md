@@ -14,28 +14,46 @@ pip install -r requirements.txt
 
 ## Tests
 
-As we are using multiple external services we can not execute all tests in a single command. There is a classification
+As we are working with LLM where the output is not deterministic we need to separate the unit tests from the scripts that tests the performance of the component with the LLM.
 
-- Unit tests: tests that do not require external services
+- Unit tests: tests that are deterministic and can be run in any machine.
 
 ```bash
-pytest -v --ignore=tests/infrastructure/external_services
+pytest -v
 ```
 
-- Integration tests: tests that require external services
+- Food extraction service: To get the performance metrics of this component run the following command
 
 ```bash
-pytest -v tests/infrastructure/external_services
+python -m tests.food_extraction.execute_performance_metrics
 ```
 
-- Manual tests: tests that require manual interaction
+A folder in `tests\data\fe_results` will be created with the results of the performance metrics for each test set
+
+## Entry Points
+
+You can execute this service in different ways:
+
+Using the `main.py` will create a consumer that will listen to a queue and process the messages. It's up to you to decide with the environment variable `MESSAGE_QUEUE_SERVICE` whether to use AWS SQS or RabbitMQ
 
 ```bash
-python -m tests.infrastructure.external_services.chatgpt_food_extraction
+python main.py
 ```
 
+Or using the Dockerfile
+
 ```bash
-python -m tests.infrastructure.full_pipeline
+docker build -t speech2nutrition .
+docker run --env-file .env speech2nutrition
+```
+
+You can also use a lambda function with the `lambda_function.py` file
+
+To test it locally you can use docker
+
+```bash
+docker build -f Dockerfile.lambda -t speech2nutrition .
+docker run --env-file .env speech2nutrition
 ```
 
 ## Extras
