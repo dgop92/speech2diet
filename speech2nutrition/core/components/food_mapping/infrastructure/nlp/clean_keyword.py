@@ -5,6 +5,18 @@ from spacy.language import Language
 logger = logging.getLogger(__name__)
 
 
+def remove_spanish_accents(text: str) -> str:
+    """
+    Remove spanish vowels accents from a text
+    """
+    text = text.replace("á", "a")
+    text = text.replace("é", "e")
+    text = text.replace("í", "i")
+    text = text.replace("ó", "o")
+    text = text.replace("ú", "u")
+    return text
+
+
 def clean_description_keyword(
     nlp: Language, text: str, disable_lemmatization: bool = True
 ):
@@ -19,6 +31,9 @@ def clean_description_keyword(
     logger.debug(f"cleaning description keyword '{text}'")
 
     text = text.lower()
+
+    # Remove spanish accents
+    text = remove_spanish_accents(text)
 
     doc = nlp(text)
 

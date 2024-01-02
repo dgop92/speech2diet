@@ -7,3 +7,5 @@ logging.conf
 zip_source.py
 source_code.zip
 .vscode
+
+tests/data/fe_results
