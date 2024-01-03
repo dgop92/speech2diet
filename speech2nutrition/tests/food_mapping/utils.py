@@ -1,7 +1,26 @@
 import uuid
 from typing import Any, Dict, List
 
+from core.components.food_mapping.definitions.food_map_v2 import FoodScoreQuery
 from core.domain.entities.food import Food
+
+
+def score_food_by_exact_match(query: FoodScoreQuery) -> float:
+    """
+    Calculates the score of a food query based on the intersection of the
+    user food full description and the target full food description
+
+    The full description is the food name plus the food description
+    """
+    target_description = query.food.full_description
+
+    user_description = query.food_description
+    full_user_description = [query.food_name] + user_description
+
+    number_of_matches = len(
+        set(full_user_description).intersection(set(target_description))
+    )
+    return number_of_matches
 
 
 def generate_random_uuid():
