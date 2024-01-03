@@ -27,8 +27,8 @@ export const FoodReportReviewCreateInputSchema = Joi.object({
   userReport: Joi.object({
     foodName: Joi.string().required(),
     description: Joi.array().items(Joi.string()).required(),
-    amount: Joi.number().required(),
-    unit: Joi.string().required(),
+    amount: Joi.number().min(0).required(),
+    unit: Joi.string().allow("").required(),
   }).required(),
   systemResult: Joi.object({
     foundFoodItem: FoodItemCreateInputSchema.allow(null).required(),
