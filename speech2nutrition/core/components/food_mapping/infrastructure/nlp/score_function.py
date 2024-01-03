@@ -4,7 +4,7 @@ from typing import List
 import Levenshtein as lev
 from spacy.language import Language
 
-from core.components.food_mapping.definitions import FoodScoreQuery, FoodScoreResult
+from core.components.food_mapping.definitions.food_map_v2 import FoodScoreQuery
 from core.components.food_mapping.infrastructure.nlp.clean_keyword import (
     clean_description_keyword,
 )
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def score_food_by_exact_fuzzy_matches(
     query: FoodScoreQuery,
     nlp: Language,
-) -> FoodScoreResult:
+) -> float:
     """
     Score the food by comparing the user's description with the target food's description
 
@@ -39,10 +39,10 @@ def score_food_by_exact_fuzzy_matches(
     """
 
     target_description = query.food.full_description
-    user_description = query.user_description
-    user_food_name = query.user_food_name
+    user_description = query.food_description
+    user_food_name = query.food_name
 
-    logger.debug(f"scoring {query.user_food_name}")
+    logger.debug(f"scoring {query.food_name}")
 
     # is possible that a food name is composed of multiple words, e.g. "carne de res"
     cleaned_user_food_name = clean_description_keyword(nlp, user_food_name)
@@ -84,5 +84,5 @@ def score_food_by_exact_fuzzy_matches(
             if lev.ratio(ud, td) > LEVENSHTIEN_THRESHOLD:
                 score += 1
 
-    logger.debug(f"final score: {score} for {query.user_food_name}")
-    return FoodScoreResult(food=query.food, score=score)
+    logger.debug(f"final score: {score} for {query.food_name}")
+    return score
