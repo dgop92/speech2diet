@@ -1,3 +1,5 @@
+import os
+
 from decouple import config
 
 
@@ -55,6 +57,10 @@ AWS = {
     "AWS_ACCESS_KEY_ID": config_as_str("AWS_ACCESS_KEY_ID"),
     "AWS_SECRET_ACCESS_KEY": config_as_str("AWS_SECRET_ACCESS_KEY"),
 }
+
+# for aws credentials,
+os.environ["AWS_ACCESS_KEY_ID"] = AWS["AWS_ACCESS_KEY_ID"]
+os.environ["AWS_SECRET_ACCESS_KEY"] = AWS["AWS_SECRET_ACCESS_KEY"]
 
 if MESSAGE_QUEUE_SERVICE == "sqs" and AWS["AWS_NUTRITION_REQUEST_QUEUE_URL"] == "":
     raise ValueError(

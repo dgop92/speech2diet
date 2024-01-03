@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, TypedDict
+from typing import Any, Dict
 
 from deepgram import Deepgram
 
@@ -41,10 +41,12 @@ class DeepgramWhisperSpeech2TextModel:
         mimetype: str = metadata["mime_type"]
         source = {"buffer": audio, "mimetype": mimetype}
 
-        # timeout is set to 15 seconds because description of meals are short
+        # timeout is set to 15 seconds because description of meals are short,
+        # nevertheless in some cases the deepgram service is busy and
+        # it takes more than 15 seconds to respond
         try:
             response = self.deepgram.transcription.sync_prerecorded(
-                source, self.options, timeout=15  # type: ignore
+                source, self.options, timeout=180  # type: ignore
             )
             return response["results"]["channels"][0]["alternatives"][0]["transcript"]
         except Exception as e:

@@ -1,13 +1,13 @@
 import logging
 
-from domain.definitions.speech_to_text import AudioStorage, Speech2TextToModel
+from core.components.speech2text.definitions import AudioStorage, Speech2TextModel
 
 logger = logging.getLogger(__name__)
 
 
 class Speech2TextService:
     def __init__(
-        self, audio_storage: AudioStorage, speech2text_model: Speech2TextToModel
+        self, audio_storage: AudioStorage, speech2text_model: Speech2TextModel
     ):
         self.audio_storage = audio_storage
         self.speech2text_model = speech2text_model

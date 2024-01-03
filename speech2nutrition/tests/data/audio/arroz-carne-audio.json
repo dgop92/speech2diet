@@ -1,0 +1,14 @@
+[
+  {
+    "food_name": "arroz",
+    "description": "blanco, cocido",
+    "amount": 100,
+    "unit": "gramos"
+  },
+  {
+    "food_name": "carne",
+    "description": "res",
+    "amount": 100,
+    "unit": "gramos"
+  }
+]
