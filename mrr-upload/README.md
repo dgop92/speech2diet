@@ -4,7 +4,7 @@ This service is responsible for uploading the meal report review to the database
 
 ## Setup
 
-It is recommended to run the project in node 16.15.0
+It is recommended to run the project in node 16.15.0 or greater.
 
 ### Dependencies
 
@@ -51,6 +51,8 @@ You can use the .example files as a template.
 
 ## How to run
 
+### Consumers
+
 Run the test consumer with:
 
 ```bash
@@ -64,6 +66,17 @@ npm run dev:consumer
 ```
 
 The only difference between the commands are the environment variables used.
+
+### Lambda
+
+The project can be deployed as a lambda function. Use the `Dockerfile.lambda` file to build the image and run it locally.
+
+To deploy the lambda function, use the following command:
+
+```bash
+docker build -f Dockerfile.lambda -t mrr-upload .
+docker run --env-file <your-env-file> mrr-upload
+```
 
 ## Optional - Doppler for secrets management
 
