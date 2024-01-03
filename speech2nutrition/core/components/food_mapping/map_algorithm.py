@@ -38,8 +38,13 @@ class FoodMapper:
         lookup_preference: DBLookupPreference,
         app_user_id: str,
     ) -> FoodNutritionResponse:
+        # TODO: create the real user repository using the app_user_id,
+        #  for now we will use the system repository
+        logger.info(f"creating user repository for user {app_user_id}")
+        user_repository = self.system_repository
+
         repo_foods_response = find_foods_by_preference(
-            request, lookup_preference, self.system_repository, app_user_id
+            request, lookup_preference, self.system_repository, user_repository
         )
 
         if len(repo_foods_response.foods) == 0:

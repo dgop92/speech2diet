@@ -12,13 +12,8 @@ def find_foods_by_preference(
     food_request: FoodNutritionRequest,
     lookup_preference: DBLookupPreference,
     system_repository: NutritionRepository,
-    app_user_id: str,
+    user_repository: NutritionRepository,
 ) -> RepoFoodsResponse:
-    # TODO: create the real user repository using the app_user_id,
-    #  for now we will use the system repository
-    logger.info(f"creating user repository for user {app_user_id}")
-    user_repository = system_repository
-
     if lookup_preference == DBLookupPreference.user_db_system_db:
         logger.debug("looking up in user repository")
         user_foods = user_repository.get_foods_by_name(food_request.food_name)
