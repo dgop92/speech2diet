@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     config_logger()
-    request_handler = core_factory()
 
     parser = argparse.ArgumentParser(
         description="Test all components of the speech to nutrition service"
@@ -26,6 +25,8 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    request_handler = core_factory()
 
     try:
         request = NutritionInformationRequest(

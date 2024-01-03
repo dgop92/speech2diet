@@ -54,13 +54,16 @@ AWS = {
         "NUTRITION_REQUEST_QUEUE_POLLING_TIME", default=60000
     ),
     "AWS_S3_BUCKET": config_as_str("AWS_S3_BUCKET"),
-    "AWS_ACCESS_KEY_ID": config_as_str("AWS_ACCESS_KEY_ID"),
-    "AWS_SECRET_ACCESS_KEY": config_as_str("AWS_SECRET_ACCESS_KEY"),
+    # if we run the service in AWS, we can use the IAM role for credentials
+    "AWS_ACCESS_KEY_ID": config_as_str("AWS_ACCESS_KEY_ID", default=""),
+    "AWS_SECRET_ACCESS_KEY": config_as_str("AWS_SECRET_ACCESS_KEY", default=""),
 }
 
 # for aws credentials,
-os.environ["AWS_ACCESS_KEY_ID"] = AWS["AWS_ACCESS_KEY_ID"]
-os.environ["AWS_SECRET_ACCESS_KEY"] = AWS["AWS_SECRET_ACCESS_KEY"]
+if AWS["AWS_ACCESS_KEY_ID"] != "":
+    os.environ["AWS_ACCESS_KEY_ID"] = AWS["AWS_ACCESS_KEY_ID"]
+if AWS["AWS_SECRET_ACCESS_KEY"] != "":
+    os.environ["AWS_SECRET_ACCESS_KEY"] = AWS["AWS_SECRET_ACCESS_KEY"]
 
 if MESSAGE_QUEUE_SERVICE == "sqs" and AWS["AWS_NUTRITION_REQUEST_QUEUE_URL"] == "":
     raise ValueError(
