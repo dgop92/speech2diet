@@ -137,9 +137,16 @@ export class FitVoiceCDKStack extends cdk.Stack {
         code: lambda.DockerImageCode.fromImageAsset(s2nProjectPath, {
           file: "Dockerfile.lambda",
         }),
-        // It takes 10 seconds roughly to init the function and the remaining time
-        // to bootstrap the external services of s2n
-        timeout: cdk.Duration.seconds(60),
+        /* 
+        It takes 10 seconds roughly to init the function and the remaining time
+        to bootstrap the external services of s2n
+
+        Even though the function only takes 10-20 seconds we need to increase the 
+        timeout. The external service diagram sometimes takes up to 3 minutes to 
+        transcribe an audio if the servers are busy. One of the reasons for this 
+        considerable amount of time is that we are using the free credits of service.
+        */
+        timeout: cdk.Duration.seconds(240),
         memorySize: 256,
         architecture: lambda.Architecture.X86_64,
         environment: {
