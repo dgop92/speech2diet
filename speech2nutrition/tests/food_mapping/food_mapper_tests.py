@@ -251,9 +251,10 @@ class FoodMapperTest(unittest.TestCase):
         self.assertEqual(response.food_record.amount, 200)
         self.assertEqual(response.food_record.unit_was_transformed, True)
 
-    def test_cannot_transform_user_unit_to_food_portion_unit(self):
+    def test_use_default_in_user_unit_to_food_portion_unit(self):
         """
-        should raise an error if cannot transform user unit to food portion unit
+        should use portion reference as default if cannot transform user unit
+        to food portion unit
         """
         request = FoodNutritionRequest(
             food_name="arroz",
@@ -272,5 +273,56 @@ class FoodMapperTest(unittest.TestCase):
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
-        self.assertEqual(response.food_record.amount, 0)
-        self.assertEqual(response.food_record.unit_was_transformed, False)
+        # for testin all foods have portion reference of 100
+        self.assertEqual(response.food_record.amount, 100)
+        self.assertEqual(response.food_record.unit_was_transformed, True)
+
+    def test_use_default_portion_reference_if_unit_not_reported(self):
+        """
+        should use portion reference as default if unit is not reported
+        """
+        request = FoodNutritionRequest(
+            food_name="arroz",
+            description=[],
+            amount=0,
+            unit="",
+        )
+        data = create_foods(
+            [
+                {
+                    "food_name": "arroz",
+                    "full_description": ["integral", "cocido"],
+                },
+            ]
+        )
+        repository = MockNutritionRepository(data)
+        response = map_food(request, repository)
+
+        # for testin all foods have portion reference of 100
+        self.assertEqual(response.food_record.amount, 100)
+        self.assertEqual(response.food_record.unit_was_transformed, True)
+
+    def test_use_default_portion_reference_if_unit_not_reported_but_amount_was(self):
+        """
+        should use portion reference as default to multiply by its quantity if unit is not reported (countable food)
+        """
+        request = FoodNutritionRequest(
+            food_name="manzana",
+            description=[],
+            amount=2,
+            unit="",
+        )
+        data = create_foods(
+            [
+                {
+                    "food_name": "manzana",
+                    "full_description": ["cruda"],
+                },
+            ]
+        )
+        repository = MockNutritionRepository(data)
+        response = map_food(request, repository)
+
+        # for testin all foods have portion reference of 100
+        self.assertEqual(response.food_record.amount, 200)
+        self.assertEqual(response.food_record.unit_was_transformed, True)

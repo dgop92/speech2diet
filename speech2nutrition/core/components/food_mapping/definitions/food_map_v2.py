@@ -31,9 +31,9 @@ class FoodUnitQuery:
     food: Food
     """ The food object """
     unit: str
-    """ The unit reported by the user """
+    """ The unit reported by the user, if empty the user did not report a unit """
     amount: float
-    """ The amount of the food reported by the user """
+    """ The amount of the food reported by the user, if 0 the user did not report a unit """
 
 
 @dataclass
@@ -47,6 +47,8 @@ class FoodUnitResponse:
     Whether the unit was transformed from the user's unit to the 
     food portion reference unit
     """
+    # TODO: instead of a boolean flag, we should return an object with data about
+    # the transformation, so the user can see how the amount was transformed
 
 
 FoodUnitFunction = Callable[[FoodUnitQuery], FoodUnitResponse]
