@@ -17,38 +17,3 @@ export function loadEnvironmentVariables(envname: string) {
 }
 
 export type BuildConfig = ReturnType<typeof loadEnvironmentVariables>;
-
-export function loadS2NServiceVariables() {
-  require("dotenv").config({ path: "./external-env-vars/s2n/.env" });
-
-  const config = {
-    MONGO_URL: getOsEnv("S2N_MONGO_URL"),
-    DB_NAME: getOsEnv("S2N_DB_NAME"),
-    LOGGING_CONFIG_FILE: getOsEnv("S2N_LOGGING_CONFIG_FILE"),
-    MOCK_SERVICES: getOsEnv("S2N_MOCK_SERVICES"),
-    OPENAI_KEY: getOsEnv("S2N_OPENAI_KEY"),
-    OPENAI_ENGINE: getOsEnv("S2N_OPENAI_ENGINE"),
-    DEEPGRAM_KEY: getOsEnv("S2N_DEEPGRAM_KEY"),
-  };
-  return config;
-}
-
-export type S2NServiceConfig = ReturnType<typeof loadS2NServiceVariables>;
-
-export function loadMRRUploadServiceVariables() {
-  require("dotenv").config({ path: "./external-env-vars/mrr-upload/.env" });
-
-  const config = {
-    // NODE_ENV can be set using the env var of the cdk project
-    NODE_ENV: getOsEnv("ENVIROMENT"),
-    LOG_LEVEL: getOsEnv("MRR_UPLOAD_LOG_LEVEL"),
-    GOOGLE_APPLICATION_CREDENTIALS_CONTENT: getOsEnv(
-      "MRR_UPLOAD_GOOGLE_APPLICATION_CREDENTIALS_CONTENT"
-    ),
-  };
-  return config;
-}
-
-export type MRRUploadServiceConfig = ReturnType<
-  typeof loadMRRUploadServiceVariables
->;

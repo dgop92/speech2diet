@@ -3,11 +3,12 @@ import { resolve } from "path";
 /**
  * Returns the stack name based on the provided application name and environment.
  * @param appName - The name of the application.
+ * @param stackType - The type of stack (e.g., compute, storage, etc.).
  * @param env - The environment (e.g., development, production).
  * @returns The stack name in the format "appName-env-stack".
  */
-export function getStackName(appName: string, env: string) {
-  return `${appName}-${env}-stack`;
+export function getStackName(appName: string, stackType: string, env: string) {
+  return `${appName}-${stackType}-${env}-stack`;
 }
 
 /**

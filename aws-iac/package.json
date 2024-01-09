@@ -6,12 +6,9 @@
   },
   "scripts": {
     "cdk": "cdk",
-    "cdk-synth-test": "tsc && cdk synth \"*\" -c config=test",
-    "cdk-diff-test": "tsc && cdk diff \"*\" -c config=test",
-    "cdk-deploy-test": "tsc && cdk deploy \"*\" -c config=test",
-    "cdk-synth-dev": "tsc && cdk synth \"*\" -c config=dev",
-    "cdk-diff-dev": "tsc && cdk diff \"*\" -c config=dev",
-    "cdk-deploy-dev": "tsc && cdk deploy \"*\" -c config=dev"
+    "cdk-synth-dev": "cdk synth \"*\" -c config=dev",
+    "cdk-diff-dev": "cdk diff \"*\" -c config=dev",
+    "cdk-deploy-dev": "cdk deploy \"*\" -c config=dev"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
