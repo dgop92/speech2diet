@@ -3,13 +3,13 @@ import logging
 import boto3
 
 from config.logging import config_logger
-from config.settings import AWS
+from config.settings_v2 import APP_CONFIG
 from core.core_factory import core_factory
 from core.domain.entities.nutrition_information_request import (
     NutritionInformationRequest,
 )
 
-sqs_client = boto3.client("sqs", region_name=AWS["AWS_REGION"])
+sqs_client = boto3.client("sqs", region_name=APP_CONFIG.aws_region)
 
 config_logger()
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def handler(event, context):
                 response_as_json = response.json()
                 logger.info("sending response to nutrition response queue")
                 sqs_client.send_message(
-                    QueueUrl=AWS["AWS_NUTRITION_RESPONSE_QUEUE_URL"],
+                    QueueUrl=APP_CONFIG.aws_nutrition_response_queue,
                     MessageBody=response_as_json,
                 )
                 logger.info("response sent to nutrition response queue")

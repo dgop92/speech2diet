@@ -3,7 +3,7 @@ import logging
 import spacy
 
 from config.database import MongoDatabase
-from config.settings import MOCK_SERVICES
+from config.settings_v2 import APP_CONFIG
 from core.components.food_mapping.definitions.food_map_v2 import (
     MapFoodToNutritionDBComponentV2,
 )
@@ -28,7 +28,7 @@ def food_mapping_component_factory() -> MapFoodToNutritionDBComponentV2:
     logger.info("loading spanish model for spacy")
     spacy_language = spacy.load("es_core_news_sm")
 
-    if MOCK_SERVICES:
+    if APP_CONFIG.mock_services:
         logger.info("creating mock system repository")
         system_repository = MockNutritionRepository(data=[])
     else:

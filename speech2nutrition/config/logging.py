@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from config.settings import LOGGING_CONFIG_FILE
+from config.settings_v2 import APP_CONFIG
 
 
 def config_logger():
@@ -13,6 +13,8 @@ def config_logger():
     logging.getLogger("openai._base_client").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.WARNING)
     logging.getLogger("pika").setLevel(logging.WARNING)
-    logging.config.fileConfig(fname=LOGGING_CONFIG_FILE, disable_existing_loggers=False)
+    logging.config.fileConfig(
+        fname=APP_CONFIG.logging_config_file, disable_existing_loggers=False
+    )
     logger = logging.getLogger(__name__)
     logger.info("logger configured")

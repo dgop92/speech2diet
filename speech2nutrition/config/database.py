@@ -1,13 +1,13 @@
 from pymongo import MongoClient
 
-from config.settings import DATABASE
+from config.settings_v2 import APP_CONFIG
 from config.utils import Singleton
 
 
 class MongoDatabase(metaclass=Singleton):
     def __init__(self):
-        self.client = MongoClient(DATABASE["mongo_url"])
-        self.db = self.client[DATABASE["db_name"]]
+        self.client = MongoClient(APP_CONFIG.nutrition_mongo_url)
+        self.db = self.client[APP_CONFIG.nutrition_db_name]
 
     def get_database(self):
         return self.db

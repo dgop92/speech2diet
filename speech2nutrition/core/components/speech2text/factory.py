@@ -1,11 +1,6 @@
 import logging
 
-from config.settings import (
-    AWS,
-    DEEPGRAM_CONFIG,
-    MOCK_AUDIO_STORAGE_FOLDER,
-    MOCK_SERVICES,
-)
+from config.settings_v2 import APP_CONFIG
 from core.components.speech2text.application.s2t_service import Speech2TextService
 from core.components.speech2text.definitions import Speech2TextComponent
 from core.components.speech2text.infrastructure.mocks.mock_audio_storage import (
@@ -23,20 +18,21 @@ logger = logging.getLogger(__name__)
 
 
 def speech2text_component_factory() -> Speech2TextComponent:
-    if MOCK_SERVICES:
+    if APP_CONFIG.mock_services:
         logger.info("creating mock audio storage")
-        audio_storage = MockAudioStorage(audio_folder_path=MOCK_AUDIO_STORAGE_FOLDER)
+        audio_storage = MockAudioStorage(
+            audio_folder_path=APP_CONFIG.mock_audio_storage_folder
+        )
         logger.info("creating mock speech2text model")
         speech2text_model = MockSpeech2TextToModel()
     else:
         logger.info("creating s3 audio storage")
         audio_storage = S3AudioStorage(
-            region_name=AWS["AWS_REGION"],
-            bucket_name=AWS["AWS_S3_BUCKET"],
+            region_name=APP_CONFIG.aws_region, bucket_name=APP_CONFIG.aws_s3_bucket
         )
         logger.info("creating deepgram whisper speech2text model")
         speech2text_model = DeepgramWhisperSpeech2TextModel(
-            api_key=DEEPGRAM_CONFIG["KEY"]
+            api_key=APP_CONFIG.deepgram_key
         )
         logger.info("creating chatgpt food extraction service")
 

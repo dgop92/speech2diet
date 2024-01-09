@@ -2,7 +2,7 @@ import logging
 
 import boto3
 
-from config.settings import AWS
+from config.settings_v2 import APP_CONFIG
 from core.core_factory import RequestHandler
 from core.domain.entities.nutrition_information_request import (
     NutritionInformationRequest,
@@ -27,7 +27,7 @@ class SimpleConsumer(SQSConsumer):
         response_as_json = response.json(ensure_ascii=False)
         logger.info("sending response to nutrition response queue")
         self.sqs_client.send_message(
-            QueueUrl=AWS["AWS_NUTRITION_RESPONSE_QUEUE_URL"],
+            QueueUrl=APP_CONFIG.aws_nutrition_response_queue,
             MessageBody=response_as_json,
         )
         logger.info("response sent to nutrition response queue")
@@ -45,12 +45,12 @@ class SimpleConsumer(SQSConsumer):
 def start_sqs_app(request_handler: RequestHandler):
     sqs_client = boto3.client(
         "sqs",
-        region_name=AWS["AWS_REGION"],
+        region_name=APP_CONFIG.aws_region,
     )
     consumer = SimpleConsumer(
         sqs_client=sqs_client,
-        queue_url=AWS["AWS_NUTRITION_REQUEST_QUEUE_URL"],
-        polling_wait_time_ms=AWS["NUTRITION_REQUEST_QUEUE_POLLING_TIME"],
+        queue_url=APP_CONFIG.aws_nutrition_request_queue,
+        polling_wait_time_ms=APP_CONFIG.aws_nutrition_request_queue_polling_time,
         batch_size=1,
     )
     consumer.set_request_handler(request_handler)

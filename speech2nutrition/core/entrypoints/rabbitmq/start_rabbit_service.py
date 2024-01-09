@@ -2,7 +2,7 @@ import logging
 
 import pika
 
-from config.settings import RABBITMQ_URL
+from config.settings_v2 import APP_CONFIG
 from core.core_factory import RequestHandler
 from core.entrypoints.rabbitmq.nr_callback import NutritionRequestCallback
 
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def start_rabbitmq(callback: NutritionRequestCallback):
     logger.info("connecting to rabbitmq")
-    connection = pika.BlockingConnection(pika.URLParameters(RABBITMQ_URL))
+    connection = pika.BlockingConnection(pika.URLParameters(APP_CONFIG.rabbitmq_url))
     channel = connection.channel()
     logger.info("connected to rabbitmq")
 
