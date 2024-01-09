@@ -84,12 +84,12 @@ class APPConfig(metaclass=Singleton):
         # Assumption: If we aren't using aws ssm, that means that we will not be using rabbitmq
         self.rabbitmq_url = ""
 
-        self.open_ai_engine = ssm.get_parameter(
-            Name=self.get_key_for_ssm("open_ai_engine"), WithDecryption=True
+        self.open_ai_key = ssm.get_parameter(
+            Name=self.get_key_for_ssm("open_ai_key"), WithDecryption=True
         )["Parameter"]["Value"]
-        self.open_ai_key = ssm.get_parameter(Name=self.get_key_for_ssm("open_ai_key"))[
-            "Parameter"
-        ]["Value"]
+        self.open_ai_engine = ssm.get_parameter(
+            Name=self.get_key_for_ssm("open_ai_engine")
+        )["Parameter"]["Value"]
 
         self.deepgram_key = ssm.get_parameter(
             Name=self.get_key_for_ssm("deepgram_key"), WithDecryption=True
