@@ -6,26 +6,29 @@ import {
   getTestAuthFirebaseClient,
   getTestFirestoreClient,
 } from "./test-firebase-app";
+import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
+import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.factory";
 
 export async function startApp() {
-  const firebaseApp = getTestFirebaseApp();
+  const firebaseApp = await getTestFirebaseApp();
   const authFirebaseClient = getTestAuthFirebaseClient(firebaseApp);
   const firestoreClient = getTestFirestoreClient(firebaseApp);
 
   setupFactories(authFirebaseClient, firestoreClient);
 
-  const { consumerAppFactory } = setupFactories(
-    authFirebaseClient,
-    firestoreClient
+  // no need to pass firestore, it was already setup in setupFactories
+  const mealReportReviewFactory = myMealReportReviewFactory();
+  const consumerAppFactory = myConsumerAppFactory(
+    mealReportReviewFactory.mealReportReviewUseCase
   );
 
   consumerAppFactory.consumerApp.on("error", (err) => {
     myLogger.error("an unexpected error occurred", err);
   });
 
-  myLogger.info("starting consumer app");
+  myLogger.info("starting test consumer app");
   consumerAppFactory.consumerApp.start();
-  myLogger.info("consumer started");
+  myLogger.info("test consumer started");
 }
 
 const logger = createDevLogger();

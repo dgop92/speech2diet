@@ -10,7 +10,7 @@ import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.facto
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 
 export async function startApp() {
-  const firebaseApp = getFirebaseApp();
+  const firebaseApp = await getFirebaseApp();
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
 

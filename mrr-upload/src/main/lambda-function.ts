@@ -20,19 +20,19 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 export async function startApp() {
   myLogger.info("starting app");
-  const firebaseApp = getFirebaseApp();
+  const firebaseApp = await getFirebaseApp();
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
 
   setupFactories(authFirebaseClient, firestoreClient);
 }
 
-startApp();
-
 // even if we fail processing the message we don't want to retry it, we don't have
 // a dead letter queue and we don't want to keep trying to process the same message
 // over and over again. That's the reason why we don't throw an error here.
 export const handler: Handler = async (event: SQSEvent, context) => {
+  await startApp();
+
   if (event.Records.length === 0) {
     myLogger.warn("no records to process");
     return;
