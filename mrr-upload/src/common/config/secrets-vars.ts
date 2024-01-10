@@ -3,7 +3,7 @@ import { getEncryptedParameter } from "./parameter-store";
 
 export async function getAppSecret(name: string) {
   // specify where to get the secret from, available options are: ssm, env
-  const secretFrom = getOsEnvOrDefault("SECRET_FROM", "env");
+  const secretFrom = getOsEnvOrDefault("SECRETS_FROM", "env");
   const nodeEnv = getOsEnv("NODE_ENV");
 
   if (secretFrom === "env") {
@@ -11,7 +11,7 @@ export async function getAppSecret(name: string) {
   }
 
   if (secretFrom === "ssm") {
-    const parameterName = `/fitvoice-app/${nodeEnv}/s2d-api/${name}`;
+    const parameterName = `/fitvoice-app/${nodeEnv}/mrr-upload/${name}`;
     return getEncryptedParameter(parameterName);
   }
 
