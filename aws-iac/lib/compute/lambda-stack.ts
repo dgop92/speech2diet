@@ -7,6 +7,7 @@ import { getCloudFormationID, getResourceName } from "../../config/utils";
 import { AwsEnvStackProps } from "../utils/custom-types";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { S2NLambda } from "./s2n-lambda";
+import { MRRUploadLambda } from "./mrr-upload-lambda";
 
 export interface LambdaStackProps extends AwsEnvStackProps {
   mainBucket: s3.Bucket;
@@ -46,5 +47,25 @@ export class LambdaStack extends cdk.Stack {
         return `/${props.config.appName}/${props.config.env}/s2n/${name}`;
       },
     });
+
+    const nutritionResponseEventSource = new SqsEventSource(
+      nutritionResponseQueue,
+      {
+        batchSize: 1,
+        enabled: true,
+      }
+    );
+    new MRRUploadLambda(
+      this,
+      getCloudFormationID(id, "mrr-upload-service-lambda"),
+      {
+        functionName: getResourceName(id, "mrr-upload-service-lambda"),
+        sqsEventSource: nutritionResponseEventSource,
+        env: props.config.env,
+        getSecretParamName: (name: string) => {
+          return `/${props.config.appName}/${props.config.env}/mrr-upload/${name}`;
+        },
+      }
+    );
   }
 }
