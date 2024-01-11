@@ -90,12 +90,9 @@ export class FirebaseUserRepository implements IAuthUserRepository {
   }
 
   async deleteAll(): Promise<void> {
-    myLogger.debug("deleting all auth users");
-    const allUsers = await this.authFirebaseClient.listUsers();
-    await Promise.all(
-      allUsers.users.map((user) => this.authFirebaseClient.deleteUser(user.uid))
+    throw new Error(
+      "Deprecated method, it was only used for testing purposes. It has been moved to TestAuthDBHelper"
     );
-    myLogger.debug("all auth users deleted");
   }
 
   async verifyToken(token: string): Promise<AuthUser> {

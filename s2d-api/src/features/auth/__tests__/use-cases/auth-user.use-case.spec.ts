@@ -4,13 +4,12 @@ import {
   WinstonLogger,
 } from "@common/logging/winston-logger";
 import { AuthUser } from "@features/auth/entities/auth-user";
-import { RANDOM_USER_ID } from "../test-utils/firebase-test-helpers";
 import { AuthUserUseCase } from "@features/auth/use-cases/auth-user.use-case.";
-import { TEST_EMAILS } from "../test-utils/users-test-data";
+import { RANDOM_USER_ID, TEST_EMAILS } from "../test-utils/users-test-data";
 import { ApplicationError, ErrorCode, InvalidInputError } from "@common/errors";
 import { IAuthUserUseCase } from "@features/auth/ports/auth-user.use-case.definition";
-import { IAuthUserRepository } from "@features/auth/ports/auth-user.repository.definition";
 import { myAuthUserFactory } from "@features/auth/factories/auth-user.factory";
+import { TestAuthDBHelper } from "test/test-auth-db-helper";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -18,19 +17,22 @@ AppLogger.getAppLogger().setLogger(winstonLogger);
 
 describe("users use-case", () => {
   let authUserUseCase: IAuthUserUseCase;
-  let authUserRepository: IAuthUserRepository;
+  let deleteAllRecords: () => Promise<void>;
 
   beforeAll(async () => {
+    await TestAuthDBHelper.instance.setupTestAuthDB();
+    const authUserFactory = myAuthUserFactory(
+      TestAuthDBHelper.instance.authFirebaseClient
+    );
+    const authUserRepository = authUserFactory.authUserRepository;
+    deleteAllRecords = () => TestAuthDBHelper.instance.deleteAllUsers();
+
     authUserUseCase = new AuthUserUseCase(authUserRepository);
-    // it's going to use the mock use-case
-    const authUserFactory = myAuthUserFactory();
-    authUserUseCase = authUserFactory.authUserUseCase;
-    authUserRepository = authUserFactory.authUserRepository;
   });
 
   describe("Create", () => {
     beforeEach(async () => {
-      await authUserRepository.deleteAll();
+      await deleteAllRecords();
       await authUserUseCase.create({
         data: {
           email: TEST_EMAILS.emailTest1,
@@ -81,7 +83,7 @@ describe("users use-case", () => {
     let authUser1: AuthUser;
 
     beforeEach(async () => {
-      await authUserRepository.deleteAll();
+      await deleteAllRecords();
       authUser1 = await authUserUseCase.create({
         data: {
           email: TEST_EMAILS.emailTest1,
@@ -113,7 +115,7 @@ describe("users use-case", () => {
     let authUser1: AuthUser;
 
     beforeAll(async () => {
-      await authUserRepository.deleteAll();
+      await deleteAllRecords();
       authUser1 = await authUserUseCase.create({
         data: {
           email: TEST_EMAILS.emailTest1,

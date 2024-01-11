@@ -5,22 +5,12 @@ import {
 } from "@common/logging/winston-logger";
 
 import { ErrorCode, RepositoryError } from "@common/errors";
-import { AppUserRepository } from "@features/auth/infrastructure/firestore/repositories/app-user.repository";
 import { AppUser } from "@features/auth/entities/app-user";
 import { TEST_APP_USERS, TEST_USERS } from "../test-utils/users-test-data";
-import {
-  deleteAllDocumentsFromCollection,
-  RANDOM_USER_ID,
-} from "../test-utils/firebase-test-helpers";
-import {
-  getTestFirebaseApp,
-  getTestFirestoreClient,
-} from "test/test-firebase-app";
-import {
-  createFirestoreCollection,
-  FirestoreCollection,
-} from "@common/firebase/utils";
-import { FirestoreAppUser } from "@features/auth/infrastructure/firestore/entities/app-user.firestore";
+import { RANDOM_USER_ID } from "../test-utils/users-test-data";
+import { myAppUserFactory } from "@features/auth/factories/app-user.factory";
+import { TestDBHelper } from "test/test-db-helper";
+import { IAppUserRepository } from "@features/auth/ports/app-user.repository.definition";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -29,28 +19,28 @@ AppLogger.getAppLogger().setLogger(winstonLogger);
 // Note userId is mock in order to not use firebase auth
 
 describe("app user repository", () => {
-  let appUserRepository: AppUserRepository;
-  let collection: FirestoreCollection<FirestoreAppUser>;
+  let appUserRepository: IAppUserRepository;
+  let deleteAllRecords: () => Promise<void>;
 
   beforeAll(async () => {
-    const app = getTestFirebaseApp();
-    const firestoreClient = getTestFirestoreClient(app);
-    collection = createFirestoreCollection<FirestoreAppUser>(
-      firestoreClient,
-      "app-users"
+    await TestDBHelper.instance.setupTestDB();
+    const appUserFactory = myAppUserFactory(
+      TestDBHelper.instance.firestoreClient
     );
-    appUserRepository = new AppUserRepository(collection);
+    appUserRepository = appUserFactory.appUserRepository;
+    deleteAllRecords = () =>
+      TestDBHelper.instance.clearCollection(appUserFactory.appUserCollection);
   });
 
   afterAll(async () => {
-    await deleteAllDocumentsFromCollection(collection);
+    TestDBHelper.instance.teardownTestDB();
   });
 
   describe("Create", () => {
     let appUser1: AppUser;
 
     beforeEach(async () => {
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllRecords();
       appUser1 = await appUserRepository.create(TEST_APP_USERS.appUserTest1);
     });
 
@@ -86,7 +76,7 @@ describe("app user repository", () => {
     let appUser1: AppUser;
 
     beforeAll(async () => {
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllRecords();
       appUser1 = await appUserRepository.create(TEST_APP_USERS.appUserTest1);
     });
 
@@ -122,7 +112,7 @@ describe("app user repository", () => {
     let appUser1: AppUser;
 
     beforeAll(async () => {
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllRecords();
       appUser1 = await appUserRepository.create(TEST_APP_USERS.appUserTest1);
     });
 
@@ -140,7 +130,7 @@ describe("app user repository", () => {
     let appUser1: AppUser;
 
     beforeEach(async () => {
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllRecords();
       appUser1 = await appUserRepository.create(TEST_APP_USERS.appUserTest1);
     });
 

@@ -4,24 +4,28 @@ import { Firestore } from "firebase-admin/firestore";
 import { IAppUserRepository } from "../ports/app-user.repository.definition";
 import { IAppUserUseCase } from "../ports/app-user.use-case.definition";
 import { AppUserUseCase } from "../use-cases/app-user.use-case";
-import { createFirestoreCollection } from "@common/firebase/utils";
+import {
+  FirestoreCollection,
+  createFirestoreCollection,
+} from "@common/firebase/utils";
 import { FirestoreAppUser } from "../infrastructure/firestore/entities/app-user.firestore";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 let appUserRepository: IAppUserRepository;
 let appUserUseCase: IAppUserUseCase;
+let appUserCollection: FirestoreCollection<FirestoreAppUser>;
 
 export const myAppUserFactory = (firestore?: Firestore) => {
   myLogger.info("calling appUserFactory");
 
   if (firestore !== undefined && appUserRepository === undefined) {
     myLogger.info("creating appUserRepository");
-    const collection = createFirestoreCollection<FirestoreAppUser>(
+    appUserCollection = createFirestoreCollection<FirestoreAppUser>(
       firestore,
       "app-users"
     );
-    appUserRepository = new AppUserRepository(collection);
+    appUserRepository = new AppUserRepository(appUserCollection);
     myLogger.info("appUserRepository created");
   }
 
@@ -34,5 +38,6 @@ export const myAppUserFactory = (firestore?: Firestore) => {
   return {
     appUserRepository,
     appUserUseCase,
+    appUserCollection,
   };
 };

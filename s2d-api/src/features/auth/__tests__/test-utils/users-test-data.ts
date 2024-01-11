@@ -1,3 +1,5 @@
+export const RANDOM_USER_ID = "G1J2tcEfOFYBycm8ZcXi9tZjN852";
+
 export const TEST_EMAILS = {
   emailTest1: "test-email-1@example.com",
   emailTest2: "test-email-2@example.com",

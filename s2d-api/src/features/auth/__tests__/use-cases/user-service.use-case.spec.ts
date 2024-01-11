@@ -4,29 +4,20 @@ import {
   WinstonLogger,
 } from "@common/logging/winston-logger";
 import {
-  deleteAllDocumentsFromCollection,
   RANDOM_USER_ID,
-} from "../test-utils/firebase-test-helpers";
-import { TEST_APP_USERS, TEST_EMAILS } from "../test-utils/users-test-data";
+  TEST_APP_USERS,
+  TEST_EMAILS,
+} from "../test-utils/users-test-data";
 import { ApplicationError, ErrorCode } from "@common/errors";
 import { User } from "@features/auth/entities/user";
 import { IUserServiceUseCase } from "@features/auth/ports/user-service.use-case.definition";
 import { IAppUserUseCase } from "@features/auth/ports/app-user.use-case.definition";
 import { IAuthUserUseCase } from "@features/auth/ports/auth-user.use-case.definition";
-import { IAuthUserRepository } from "@features/auth/ports/auth-user.repository.definition";
 import { myAuthUserFactory } from "@features/auth/factories/auth-user.factory";
 import { myAppUserFactory } from "@features/auth/factories/app-user.factory";
 import { myUserServiceFactory } from "@features/auth/factories/user-service-factory";
-import {
-  createFirestoreCollection,
-  FirestoreCollection,
-} from "@common/firebase/utils";
-import { FirestoreAppUser } from "@features/auth/infrastructure/firestore/entities/app-user.firestore";
-import {
-  getTestFirebaseApp,
-  getTestFirestoreClient,
-} from "test/test-firebase-app";
-import { getAuthFirebaseClient } from "main/firebase-app";
+import { TestAuthDBHelper } from "test/test-auth-db-helper";
+import { TestDBHelper } from "test/test-db-helper";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -36,24 +27,25 @@ describe("user service use-case", () => {
   let authUserUseCase: IAuthUserUseCase;
   let appUserUseCase: IAppUserUseCase;
   let userServiceUseCase: IUserServiceUseCase;
-  let authUserRepository: IAuthUserRepository;
-  let collection: FirestoreCollection<FirestoreAppUser>;
+
+  let deleteAllUsers: () => Promise<void>;
+  let deleteAllAppUsers: () => Promise<void>;
 
   beforeAll(async () => {
-    const app = getTestFirebaseApp();
-    const firestoreClient = getTestFirestoreClient(app);
-    const authClient = getAuthFirebaseClient(app);
-
-    const authUserFactory = myAuthUserFactory(authClient);
-    authUserUseCase = authUserFactory.authUserUseCase;
-    authUserRepository = authUserFactory.authUserRepository;
-    collection = createFirestoreCollection<FirestoreAppUser>(
-      firestoreClient,
-      "app-users"
+    await TestAuthDBHelper.instance.setupTestAuthDB();
+    const authUserFactory = myAuthUserFactory(
+      TestAuthDBHelper.instance.authFirebaseClient
     );
+    authUserUseCase = authUserFactory.authUserUseCase;
+    deleteAllUsers = () => TestAuthDBHelper.instance.deleteAllUsers();
 
-    const appUserFactory = myAppUserFactory(firestoreClient);
+    await TestDBHelper.instance.setupTestDB();
+    const appUserFactory = myAppUserFactory(
+      TestDBHelper.instance.firestoreClient
+    );
     appUserUseCase = appUserFactory.appUserUseCase;
+    deleteAllAppUsers = () =>
+      TestDBHelper.instance.clearCollection(appUserFactory.appUserCollection);
 
     const userServiceFactory = myUserServiceFactory(
       authUserUseCase,
@@ -64,8 +56,8 @@ describe("user service use-case", () => {
 
   describe("Create", () => {
     beforeEach(async () => {
-      await authUserRepository.deleteAll();
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllUsers();
+      await deleteAllAppUsers();
       await userServiceUseCase.create({
         authUserData: {
           email: TEST_EMAILS.emailTest1,
@@ -135,8 +127,8 @@ describe("user service use-case", () => {
     let user1: User;
 
     beforeAll(async () => {
-      await authUserRepository.deleteAll();
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllUsers();
+      await deleteAllAppUsers();
       user1 = await userServiceUseCase.create({
         authUserData: {
           email: TEST_EMAILS.emailTest1,
@@ -186,8 +178,8 @@ describe("user service use-case", () => {
     let user: User;
 
     beforeEach(async () => {
-      await authUserRepository.deleteAll();
-      await deleteAllDocumentsFromCollection(collection);
+      await deleteAllUsers();
+      await deleteAllAppUsers();
       user = await userServiceUseCase.create({
         authUserData: {
           email: TEST_EMAILS.emailTest1,
