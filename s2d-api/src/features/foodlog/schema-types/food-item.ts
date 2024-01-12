@@ -3,15 +3,6 @@
  * Do not modify this file manually
  */
 
-import { FoodCreateInput } from '.';
-
-export interface FoodItemCreateInput {
-  amount: number;
-  food: FoodCreateInput;
-  score: number;
-  unitWasTransformed: boolean;
-}
-
 export interface FoodItemSearchInput {
   searchBy: {
     foodReportReviewId: string;

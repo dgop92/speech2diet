@@ -2,21 +2,12 @@ import { MealReportReview } from "../entities/meal-report-review";
 import {
   MealReportReviewUpdateInput,
   MealReportReviewSearchInput,
-  MealReportReviewCreateInput,
 } from "../schema-types";
 
 export type MealReportReviewUpdateRepoData =
   MealReportReviewUpdateInput["data"];
 
-export type MealReportReviewCreateRepoData =
-  MealReportReviewCreateInput["data"];
-
 export interface IMealReportReviewRepository {
-  create(input: MealReportReviewCreateRepoData): Promise<MealReportReview>;
-  create<T>(
-    input: MealReportReviewCreateRepoData,
-    transactionManager?: T
-  ): Promise<MealReportReview>;
   update(
     mealReportReview: MealReportReview,
     input: MealReportReviewUpdateRepoData

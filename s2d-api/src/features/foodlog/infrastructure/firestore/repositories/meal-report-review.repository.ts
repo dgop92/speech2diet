@@ -1,7 +1,6 @@
 import { FirestoreCollection } from "@common/firebase/utils";
 import {
   IMealReportReviewRepository,
-  MealReportReviewCreateRepoData,
   MealReportReviewUpdateRepoData,
 } from "@features/foodlog/ports/meal-report-review.repository.definition";
 import { Transaction, Query } from "firebase-admin/firestore";
@@ -10,10 +9,7 @@ import { MealReportReview } from "@features/foodlog/entities/meal-report-review"
 import { MealReportReviewSearchInput } from "@features/foodlog/schema-types";
 import { ErrorCode, RepositoryError } from "@common/errors";
 import { AppLogger } from "@common/logging/logger";
-import {
-  firestoreMealReportReviewToDomain,
-  mealReportReviewDataToFirestoreMealReportReview,
-} from "../transformers";
+import { firestoreMealReportReviewToDomain } from "../transformers";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -42,33 +38,6 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
   constructor(
     private readonly collection: FirestoreCollection<FirestoreMealReportReview>
   ) {}
-  create(input: MealReportReviewCreateRepoData): Promise<MealReportReview>;
-  create<T>(
-    input: MealReportReviewCreateRepoData,
-    transactionManager?: T | undefined
-  ): Promise<MealReportReview>;
-  async create(
-    input: MealReportReviewCreateRepoData,
-    transactionManager?: any
-  ): Promise<MealReportReview> {
-    myLogger.debug("creating meal report review");
-    shouldThrowTransactionError(transactionManager);
-
-    const firestoreMealReportReview =
-      mealReportReviewDataToFirestoreMealReportReview(input);
-
-    const mealReportReviewDocRef = this.collection.doc(
-      firestoreMealReportReview.id
-    );
-
-    await mealReportReviewDocRef.set(firestoreMealReportReview);
-
-    myLogger.debug("meal report review created", {
-      mealReportReviewId: firestoreMealReportReview.id,
-    });
-
-    return firestoreMealReportReviewToDomain(firestoreMealReportReview);
-  }
 
   update(
     mealReportReview: MealReportReview,

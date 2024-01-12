@@ -1,4 +1,4 @@
-import { FoodItem, FoodItemCreateInputSchema } from "./food-item";
+import { FoodItem } from "./food-item";
 import Joi from "joi";
 
 export interface UserReport {
@@ -22,19 +22,6 @@ export interface FoodReportReview {
   userReport: UserReport;
   systemResult: SystemResult;
 }
-
-export const FoodReportReviewCreateInputSchema = Joi.object({
-  userReport: Joi.object({
-    foodName: Joi.string().required(),
-    description: Joi.array().items(Joi.string()).required(),
-    amount: Joi.number().required(),
-    unit: Joi.string().required(),
-  }).required(),
-  systemResult: Joi.object({
-    foundFoodItem: FoodItemCreateInputSchema.allow(null).required(),
-    suggestions: Joi.array().items(FoodItemCreateInputSchema).required(),
-  }).required(),
-}).meta({ className: "FoodReportReviewCreateInput" });
 
 export const FoodReportReviewSearchInputSchema = Joi.object({
   searchBy: Joi.object({
