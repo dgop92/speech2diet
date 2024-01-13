@@ -153,6 +153,8 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     );
 
     // TODO: move to query to firestore
+    // if the found meal report review does not belong to the user
+    // throw an error
     if (appUserId !== mealReportReview.appUserId) {
       throw new RepositoryError(
         "meal report review not found",
@@ -215,6 +217,13 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     });
 
     shouldThrowTransactionError(transactionManager);
+
+    if (appUserId === undefined) {
+      throw new RepositoryError(
+        "app user id is required",
+        ErrorCode.INVALID_INPUT
+      );
+    }
 
     let query: Query<FirestoreMealReportReview> = this.collection;
 
