@@ -2,8 +2,8 @@ import { FoodItem, FoodItemCreateInputSchema } from "./food-item";
 import Joi from "joi";
 
 export interface UserReport {
-  foodName: string;
   /** The name of the food that the user reported */
+  foodName: string;
   /** The description of the food that the user reported */
   description: string[];
   /** The amount of the food that the user reported */

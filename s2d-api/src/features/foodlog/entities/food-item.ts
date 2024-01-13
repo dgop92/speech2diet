@@ -3,16 +3,19 @@ import Joi from "joi";
 import { FoodCreateInputSchema } from "./food";
 
 export interface FoodItem {
+  /** the id that identifies the food item */
   id: string;
   /** The food object */
   food: Food;
   /** The score of the food record, the higher the score the more likely the food is the correct food */
   score: number;
-  /** Amount in the food's portion unit. If amount is 0, then the amount could not be found because the unit was not found */
+  /** Amount in the food's portion reference unit. If amount is 0, then the amount could not be computed */
   amount: number;
-  /** Whether the unit was transformed to the unit given by the food portion unit */
+  /** Whether the unit was transformed from the user's unit to the food's portion reference unit */
   unitWasTransformed: boolean;
-  /** Whether the amount was given by the user */
+  /** Whether the amount was modify by the user manually using the app.
+   * Useful to know if the amount was modified because the user made a mistake or because the user wanted to add more/less of the food
+   */
   amountByUser: boolean;
 }
 

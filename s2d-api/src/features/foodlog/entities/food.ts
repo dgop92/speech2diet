@@ -14,9 +14,9 @@ export interface Food {
   otherNames: string[];
   /** Attributes that describe the food, such as cooked, raw, etc */
   description: string[];
-  /** For USDA Foundation food reference units are in grams */
+  /** the portion reference, that is the amount of the food that the nutrition information is based on, for example 100 grams */
   portionReference: number;
-  /** The unit of the portion reference */
+  /** The unit of the portion reference, For USDA Foundation food units are in grams */
   portionUnit: string;
   /** The source of the food, either from the user database or the system database */
   foodSource: FoodSource;
