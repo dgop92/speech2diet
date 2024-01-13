@@ -137,6 +137,45 @@ describe("meal report review repository", () => {
     });
   });
 
+  describe("Delete", () => {
+    let mealReportReview1: MealReportReview;
+
+    beforeEach(async () => {
+      await deleteAllRecords();
+      const mealReportReviewInput = createInputMealReportReview({
+        audioId: "audioId-1",
+        foodReports: [],
+        mealRecordedAt: new Date(),
+      });
+      mealReportReview1 = await mealReportReviewRepository.create(
+        mealReportReviewInput.data
+      );
+    });
+
+    it("should delete a meal report review", async () => {
+      await mealReportReviewRepository.delete(mealReportReview1);
+      const result = await mealReportReviewRepository.getOneBy({
+        searchBy: {
+          id: mealReportReview1.id,
+          appUserId: mealReportReview1.appUserId,
+        },
+      });
+      expect(result).toBeUndefined();
+    });
+
+    it("should throw an error if meal report review does not exist", async () => {
+      await mealReportReviewRepository.delete(mealReportReview1);
+      try {
+        await mealReportReviewRepository.delete(mealReportReview1);
+      } catch (error) {
+        expect(error).toBeInstanceOf(RepositoryError);
+        if (error instanceof RepositoryError) {
+          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
+        }
+      }
+    });
+  });
+
   describe("Get one by", () => {
     let mealReportReview1: MealReportReview;
     let mealReportReview2: MealReportReview;
