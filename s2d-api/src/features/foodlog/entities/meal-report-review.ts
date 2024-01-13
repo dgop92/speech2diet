@@ -1,4 +1,7 @@
-import { FoodReportReview } from "./food-report-review";
+import {
+  FoodReportReview,
+  FoodReportReviewCreateInputSchema,
+} from "./food-report-review";
 import Joi from "joi";
 
 export enum DBLookupPreference {
@@ -32,6 +35,26 @@ export const MealReportReviewPaginationSchema = Joi.object({
 export const MealReportReviewOptionsSchema = Joi.object({
   fetchFoodReports: Joi.boolean().optional(),
 }).meta({ className: "MealReportReviewOptions" });
+
+export const MealReportReviewCreateInputSchema = Joi.object({
+  data: Joi.object({
+    appUserId: Joi.string().required(),
+    audioId: Joi.string().required(),
+    rawTranscript: Joi.string().required(),
+    foodReports: Joi.array()
+      .items(FoodReportReviewCreateInputSchema)
+      .required(),
+    dbLookupPreference: Joi.string()
+      .valid(
+        DBLookupPreference.USER_DB_SYSTEM_DB,
+        DBLookupPreference.SYSTEM_DB_USER_DB,
+        DBLookupPreference.USER_DB,
+        DBLookupPreference.SYSTEM_DB
+      )
+      .required(),
+    mealRecordedAt: Joi.date().required(),
+  }).required(),
+}).meta({ className: "MealReportReviewCreateInput" });
 
 export const MealReportReviewUpdateInputSchema = Joi.object({
   searchBy: Joi.object({

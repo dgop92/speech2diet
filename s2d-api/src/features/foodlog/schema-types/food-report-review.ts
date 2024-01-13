@@ -3,6 +3,21 @@
  * Do not modify this file manually
  */
 
+import { FoodItemCreateInput } from '.';
+
+export interface FoodReportReviewCreateInput {
+  systemResult: {
+    foundFoodItem: FoodItemCreateInput | null;
+    suggestions: FoodItemCreateInput[];
+  };
+  userReport: {
+    amount: number;
+    description: string[];
+    foodName: string;
+    unit: string;
+  };
+}
+
 export interface FoodReportReviewSearchInput {
   searchBy: {
     id: string;

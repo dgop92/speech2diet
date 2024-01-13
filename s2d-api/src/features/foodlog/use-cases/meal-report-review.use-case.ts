@@ -3,6 +3,7 @@ import { AppLogger } from "@common/logging/logger";
 import { validateDataWithJoi } from "@common/validations";
 import {
   MealReportReview,
+  MealReportReviewCreateInputSchema,
   MealReportReviewSearchInputSchema,
   MealReportReviewUpdateInputSchema,
 } from "../entities/meal-report-review";
@@ -12,6 +13,7 @@ import {
   MealReportReviewLookUpField,
 } from "../ports/meal-report-review.use-case.definition";
 import {
+  MealReportReviewCreateInput,
   MealReportReviewSearchInput,
   MealReportReviewUpdateInput,
 } from "../schema-types";
@@ -23,6 +25,20 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 export class MealReportReviewUseCase implements IMealReportReviewUseCase {
   constructor(private readonly repository: IMealReportReviewRepository) {}
+
+  create(input: MealReportReviewCreateInput): Promise<MealReportReview>;
+  create(
+    input: MealReportReviewCreateInput,
+    transactionManager?: any
+  ): Promise<MealReportReview>;
+  create(
+    input: MealReportReviewCreateInput,
+    transactionManager?: any
+  ): Promise<MealReportReview> {
+    this.validateInput(MealReportReviewCreateInputSchema, input);
+
+    return this.repository.create(input.data, transactionManager);
+  }
 
   update(
     input: MealReportReviewUpdateInput,
