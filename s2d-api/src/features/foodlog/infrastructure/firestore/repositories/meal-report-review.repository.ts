@@ -156,10 +156,7 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     // if the found meal report review does not belong to the user
     // throw an error
     if (appUserId !== mealReportReview.appUserId) {
-      throw new RepositoryError(
-        "meal report review not found",
-        ErrorCode.NOT_FOUND
-      );
+      return undefined;
     }
 
     myLogger.debug("meal report review found", { id });

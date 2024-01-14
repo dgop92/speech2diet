@@ -21,7 +21,7 @@ const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
 AppLogger.getAppLogger().setLogger(winstonLogger);
 
-describe("meal report review repository", () => {
+describe("meal report review use-case", () => {
   let mealReportReviewUseCase: IMealReportReviewUseCase;
   let appUser1: AppUser;
   let appUser2: AppUser;
@@ -190,7 +190,7 @@ describe("meal report review repository", () => {
         }
       }
     });
-    it("should throw an not found error if meal report review does not belong to the app user ", async () => {
+    it("should throw a not found error if meal report review does not belong to the app user", async () => {
       try {
         await mealReportReviewUseCase.update(
           {
@@ -200,8 +200,8 @@ describe("meal report review repository", () => {
           appUser2
         );
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
+        expect(error).toBeInstanceOf(ApplicationError);
+        if (error instanceof ApplicationError) {
           expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
         }
       }
@@ -353,23 +353,16 @@ describe("meal report review repository", () => {
       );
       expect(result).toBeUndefined();
     });
-
-    it("should throw an error if meal report review id does not belong to the app user", async () => {
-      try {
-        await mealReportReviewUseCase.getOneBy(
-          {
-            searchBy: {
-              id: mealReportReview1.id,
-            },
+    it("should not found meal report review id does not belong to the app user", async () => {
+      const result = await mealReportReviewUseCase.getOneBy(
+        {
+          searchBy: {
+            id: mealReportReview1.id,
           },
-          appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        },
+        appUser2
+      );
+      expect(result).toBeUndefined();
     });
   });
 
