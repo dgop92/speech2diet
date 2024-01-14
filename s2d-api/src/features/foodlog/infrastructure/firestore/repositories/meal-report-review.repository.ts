@@ -178,16 +178,7 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
 
     const mealReportReviewDocRef = this.collection.doc(mealReportReviewId);
 
-    try {
-      await mealReportReviewDocRef.delete();
-    } catch (error) {
-      if (error.code === "not-found") {
-        throw new RepositoryError(
-          "meal report review not found",
-          ErrorCode.NOT_FOUND
-        );
-      }
-    }
+    await mealReportReviewDocRef.delete();
 
     myLogger.debug("meal report review deleted", { mealReportReviewId });
   }

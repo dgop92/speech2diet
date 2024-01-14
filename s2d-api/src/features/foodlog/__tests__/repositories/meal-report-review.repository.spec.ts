@@ -14,6 +14,7 @@ import {
 } from "../test-utils/mrr-input-test-data";
 import { MealReportReview } from "@features/foodlog/entities/meal-report-review";
 import { ErrorCode, RepositoryError } from "@common/errors";
+import { getError, NoErrorThrownError } from "test/test-utils";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -162,18 +163,6 @@ describe("meal report review repository", () => {
       });
       expect(result).toBeUndefined();
     });
-
-    it("should throw an error if meal report review does not exist", async () => {
-      await mealReportReviewRepository.delete(mealReportReview1);
-      try {
-        await mealReportReviewRepository.delete(mealReportReview1);
-      } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
-    });
   });
 
   describe("Get one by", () => {
@@ -259,20 +248,14 @@ describe("meal report review repository", () => {
       expect(result).toBeUndefined();
     });
 
-    it("should throw an error if meal report review id does not belong to app user id", async () => {
-      try {
-        await mealReportReviewRepository.getOneBy({
-          searchBy: {
-            id: mealReportReview1.id,
-            appUserId: mealReportReview2.appUserId,
-          },
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+    it("should return undefined if meal report review does not belong to app user", async () => {
+      const result = await mealReportReviewRepository.getOneBy({
+        searchBy: {
+          id: mealReportReview1.id,
+          appUserId: mealReportReview2.appUserId,
+        },
+      });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -451,16 +434,14 @@ describe("meal report review repository", () => {
     });
 
     it("should throw an error if app user is not defined", async () => {
-      try {
-        await mealReportReviewRepository.getManyBy({
+      const error = await getError(async () =>
+        mealReportReviewRepository.getManyBy({
           searchBy: {},
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
-          expect(error.errorCode).toBe(ErrorCode.INVALID_INPUT);
-        }
-      }
+        })
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(RepositoryError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.INVALID_INPUT);
     });
   });
 });

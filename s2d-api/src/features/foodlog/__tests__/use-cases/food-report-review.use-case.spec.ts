@@ -20,6 +20,7 @@ import { AppUser } from "@features/auth/entities/app-user";
 import { ApplicationError, ErrorCode } from "@common/errors";
 import { FoodReportReviewUseCase } from "@features/foodlog/use-cases/food-report-review.use-case";
 import { FoodReportReview } from "@features/foodlog/entities/food-report-review";
+import { getError, NoErrorThrownError } from "test/test-utils";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -112,8 +113,8 @@ describe("food report review use-case", () => {
       expect(updatedMealReportReview!.foodReports).toHaveLength(0);
     });
     it("should throw an error if meal report review not found when deleting", async () => {
-      try {
-        await foodReportReviewUseCase.delete(
+      const error = await getError(async () =>
+        foodReportReviewUseCase.delete(
           {
             searchBy: {
               id: "frr-id",
@@ -121,17 +122,15 @@ describe("food report review use-case", () => {
             },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
     it("should throw an error if food report review not found when deleting", async () => {
-      try {
-        await foodReportReviewUseCase.delete(
+      const error = await getError(async () =>
+        foodReportReviewUseCase.delete(
           {
             searchBy: {
               id: "frr-id",
@@ -139,20 +138,17 @@ describe("food report review use-case", () => {
             },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
   });
 
   describe("Get One By", () => {
     let mealReportReview1: MealReportReview;
     let foodReportReview1: FoodReportReview;
-    let foodReportReview2: FoodReportReview;
 
     beforeEach(async () => {
       await deleteAllRecords();
@@ -175,7 +171,6 @@ describe("food report review use-case", () => {
         mealReportReviewInput
       );
       foodReportReview1 = mealReportReview1.foodReports![0];
-      foodReportReview2 = mealReportReview1.foodReports![1];
       await mealReportReviewUseCase.create(
         createInputMealReportReview({
           appUserId: appUser2.id,
@@ -219,8 +214,8 @@ describe("food report review use-case", () => {
       expect(foodReport).toBeUndefined();
     });
     it("should throw an error if meal report review not found when getting one food report", async () => {
-      try {
-        await foodReportReviewUseCase.getOneBy(
+      const error = await getError(async () =>
+        foodReportReviewUseCase.getOneBy(
           {
             searchBy: {
               id: foodReportReview1.id,
@@ -228,13 +223,11 @@ describe("food report review use-case", () => {
             },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
   });
 
@@ -296,21 +289,19 @@ describe("food report review use-case", () => {
       );
     });
     it("should throw an error if meal report review not found when getting food reports", async () => {
-      try {
-        await foodReportReviewUseCase.getManyBy(
+      const error = await getError(async () =>
+        foodReportReviewUseCase.getManyBy(
           {
             searchBy: {
               mealReviewReportId: "asdasfd",
             },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
   });
 });

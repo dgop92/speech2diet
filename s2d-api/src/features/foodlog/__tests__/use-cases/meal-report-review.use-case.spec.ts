@@ -16,6 +16,7 @@ import { ApplicationError, ErrorCode, RepositoryError } from "@common/errors";
 import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-review.use-case.definition";
 import { myAppUserFactory } from "@features/auth/factories/app-user.factory";
 import { AppUser } from "@features/auth/entities/app-user";
+import { getError, NoErrorThrownError } from "test/test-utils";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -175,36 +176,34 @@ describe("meal report review use-case", () => {
       expect(result.pending).toBe(false);
     });
     it("should throw an error if meal report review is not found", async () => {
-      try {
-        await mealReportReviewUseCase.update(
+      const error = await getError(async () =>
+        mealReportReviewUseCase.update(
           {
             data: { pending: false },
             searchBy: { id: "asdgasdg" },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
     it("should throw a not found error if meal report review does not belong to the app user", async () => {
-      try {
-        await mealReportReviewUseCase.update(
+      const error = await getError(async () =>
+        mealReportReviewUseCase.update(
           {
             data: { pending: false },
             searchBy: { id: mealReportReview1.id },
           },
           appUser2
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
   });
 
@@ -245,21 +244,19 @@ describe("meal report review use-case", () => {
     });
 
     it("should throw an error if meal report review does not exist", async () => {
-      try {
-        await mealReportReviewUseCase.delete(
+      const error = await getError(async () =>
+        mealReportReviewUseCase.delete(
           {
             searchBy: {
               id: "asfasfajkh",
             },
           },
           appUser1
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApplicationError);
-        if (error instanceof ApplicationError) {
-          expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
-        }
-      }
+        )
+      );
+      expect(error).not.toBeInstanceOf(NoErrorThrownError);
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
   });
 
