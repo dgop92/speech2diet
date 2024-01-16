@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MealReportReviewControllerV1 } from "./controllers/v1/mrr.controller";
 import { FoodReportReviewControllerV1 } from "./controllers/v1/frr.controller";
-import { UploadService } from "./upload.service";
 import { AudioControllerV1 } from "./controllers/v1/audio.controller";
 
 @Module({
@@ -10,6 +9,5 @@ import { AudioControllerV1 } from "./controllers/v1/audio.controller";
     FoodReportReviewControllerV1,
     AudioControllerV1,
   ],
-  providers: [UploadService],
 })
 export class FoodLogModule {}

@@ -3,6 +3,7 @@
  * Do not modify this file manually
  */
 
+export * from './audio-metadata';
 export * from './food-item';
 export * from './food-report-review';
 export * from './food';

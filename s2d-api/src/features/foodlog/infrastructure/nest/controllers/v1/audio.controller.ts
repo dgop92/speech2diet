@@ -11,9 +11,10 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { UploadService } from "../../upload.service";
 import { myNutritionRequestPublisherFactory } from "@features/foodlog/factories/nutrition-request-publisher.factory";
 import { INutritionRequestPublisher } from "@features/foodlog/ports/nutrition-request-publisher.definition";
+import { myAudioStorageFactory } from "@features/foodlog/factories/audio-storage.factory";
+import { IAudioStorage } from "@features/foodlog/ports/audio-storage.definition";
 
 @Controller({
   path: "report",
@@ -21,10 +22,13 @@ import { INutritionRequestPublisher } from "@features/foodlog/ports/nutrition-re
 })
 export class AudioControllerV1 {
   private readonly nutritionRequestPublisher: INutritionRequestPublisher;
+  private readonly audioStorage: IAudioStorage;
 
-  constructor(private readonly uploadService: UploadService) {
+  constructor() {
     const { nutritionRequestPublisher } = myNutritionRequestPublisherFactory();
+    const { audioStorage } = myAudioStorageFactory();
     this.nutritionRequestPublisher = nutritionRequestPublisher;
+    this.audioStorage = audioStorage;
   }
 
   @UseGuards(UserGuard)
@@ -41,7 +45,10 @@ export class AudioControllerV1 {
     @GetUser() user: User
   ) {
     const mimeType = file.mimetype;
-    const audioId = await this.uploadService.upload(file.buffer, mimeType);
+    const audioId = await this.audioStorage.upload(file.buffer, {
+      // @ts-ignore: pipe validation ensures this is a valid mime type
+      data: mimeType,
+    });
     const nir = await this.nutritionRequestPublisher.publish(
       { data: { audioId } },
       user.appUser
