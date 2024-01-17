@@ -251,7 +251,7 @@ describe("meal report review (e2e)", () => {
 
     // invalid query parameters
 
-    it("should return 404 when limit is not a number", async () => {
+    it("should return 400 when limit is not a number", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -262,7 +262,7 @@ describe("meal report review (e2e)", () => {
         })
         .expect(400);
     });
-    it("should return 404 when pending is not a boolean", async () => {
+    it("should return 400 when pending is not a boolean", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -273,7 +273,7 @@ describe("meal report review (e2e)", () => {
         })
         .expect(400);
     });
-    it("should return 404 when fetchFoodReports is not a boolean", async () => {
+    it("should return 400 when fetchFoodReports is not a boolean", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
