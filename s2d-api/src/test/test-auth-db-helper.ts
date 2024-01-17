@@ -3,6 +3,7 @@ import {
   getTestFirebaseApp,
   getTestAuthFirebaseClient,
 } from "./test-firebase-app";
+import axios from "axios";
 
 export class TestAuthDBHelper {
   private static _instance: TestAuthDBHelper;
@@ -35,5 +36,34 @@ export class TestAuthDBHelper {
     await Promise.all(
       allUsers.users.map((user) => this.authFirebaseClient.deleteUser(user.uid))
     );
+  }
+
+  async getAuthTokenForUser(uuid: string) {
+    const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || "";
+
+    if (FIREBASE_API_KEY === "") {
+      throw new Error("FIREBASE_API_KEY is not set");
+    }
+    const useEmulator = !!process.env.FIREBASE_AUTH_EMULATOR_HOST;
+
+    let url;
+
+    if (useEmulator) {
+      url = `http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${FIREBASE_API_KEY}`;
+    } else {
+      url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${FIREBASE_API_KEY}`;
+    }
+
+    const customToken = await this.authFirebaseClient.createCustomToken(uuid);
+    const res = await axios({
+      url: url,
+      method: "post",
+      data: {
+        token: customToken,
+        returnSecureToken: true,
+      },
+    });
+
+    return res.data.idToken as string;
   }
 }

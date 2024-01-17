@@ -45,7 +45,7 @@ export class MealReportReviewControllerV1 {
     @GetUser() user: User,
     @Query() query: QueryParamsWithPagination
   ) {
-    // TODO: Implement user id filter
+    // TODO: Implement sort by date option
     return this.mealReportReviewUseCase.getManyBy(
       {
         options: {
@@ -55,7 +55,6 @@ export class MealReportReviewControllerV1 {
           limit: query?.limit,
         },
         searchBy: {
-          id: query?.id,
           pending: query?.pending,
         },
       },
