@@ -20,6 +20,7 @@ import {
 } from "@common/logging/winston-logger";
 import { AppLogger } from "@common/logging/logger";
 import { FoodReportReview } from "@features/foodlog/entities/food-report-review";
+import { FoodItem } from "@features/foodlog/entities/food-item";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -377,6 +378,345 @@ describe("food report review (e2e)", () => {
     it("should return 401 when user is not authenticated", async () => {
       request(app.getHttpServer())
         .delete(`/frr/${mealReportReview1.id}`)
+        .expect(401);
+    });
+  });
+
+  describe("PATCH /frr/:id/change-food", () => {
+    let mealReportReview1: MealReportReview;
+    let foodReportReview1: FoodReportReview;
+    let suggestion1: FoodItem;
+
+    let mealReportReview2: MealReportReview;
+    let foodReportReview2: FoodReportReview;
+
+    beforeEach(async () => {
+      await deleteAllRecords();
+      const mealReportReviewInput1 = createInputMealReportReview({
+        appUserId: user1.appUser.id,
+        audioId: "audio-id-1",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: createInputTestFoodItem(),
+            suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
+          }),
+        ],
+        mealRecordedAt: new Date(),
+      });
+      mealReportReview1 = await mealReportReviewUseCase.create(
+        mealReportReviewInput1
+      );
+      foodReportReview1 = mealReportReview1.foodReports![0];
+      suggestion1 = foodReportReview1.systemResult.suggestions![0];
+
+      const mealReportReviewInput2 = createInputMealReportReview({
+        appUserId: user2.appUser.id,
+        audioId: "audio-id-2",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: null,
+            suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
+          }),
+        ],
+        mealRecordedAt: new Date(),
+      });
+      mealReportReview2 = await mealReportReviewUseCase.create(
+        mealReportReviewInput2
+      );
+      foodReportReview2 = mealReportReview2.foodReports![0];
+    });
+
+    // positive cases
+
+    it("should update the 'found food' by one of the suggestions", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.id).toBe(suggestion1.id);
+        });
+    });
+
+    // negative cases
+
+    it("should not update the 'found food' when the meal report review does not exit", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=123012930123-123?suggestionId=${suggestion1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(404);
+    });
+    it("should not update the 'found food' when the food report review does not exit", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/asjdk28-1234/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(404);
+    });
+    it("should not update the 'found food' when the suggestion does not exit", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=123012930123-123`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(404);
+    });
+    it("should not update the 'found food' when the food report review does not belong to the user", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(404);
+    });
+
+    // test invalid input
+
+    it("should return 400 when mrrId is not provided", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?suggestionId=${suggestion1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(400);
+    });
+    it("should return 400 when suggestionId is not provided", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(400);
+    });
+
+    // test authenication
+
+    it("should return 401 when user is not authenticated", async () => {
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+        )
+        .expect(401);
+    });
+  });
+
+  describe("PATCH /frr/:id/found-food", () => {
+    let mealReportReview1: MealReportReview;
+    let foodReportReview1: FoodReportReview;
+
+    beforeEach(async () => {
+      await deleteAllRecords();
+      const mealReportReviewInput1 = createInputMealReportReview({
+        appUserId: user1.appUser.id,
+        audioId: "audio-id-1",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: createInputTestFoodItem(),
+            suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
+          }),
+        ],
+        mealRecordedAt: new Date(),
+      });
+      mealReportReview1 = await mealReportReviewUseCase.create(
+        mealReportReviewInput1
+      );
+      foodReportReview1 = mealReportReview1.foodReports![0];
+
+      const mealReportReviewInput2 = createInputMealReportReview({
+        appUserId: user2.appUser.id,
+        audioId: "audio-id-2",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: null,
+            suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
+          }),
+        ],
+        mealRecordedAt: new Date(),
+      });
+      await mealReportReviewUseCase.create(mealReportReviewInput2);
+    });
+
+    // positive cases
+
+    it("should update the 'found food' by one of the suggestions", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReview1.id}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: 150,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.id).toBe(
+            foodReportReview1.systemResult.foundFoodItem!.id
+          );
+          expect(res.body.amount).toBe(150);
+        });
+    });
+
+    // negative cases
+
+    it("should not update the 'found food' when the meal report review does not exit", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(`/frr/${foodReportReviewId}/found-food?mrrId=123012930123-123`)
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: 150,
+        })
+        .expect(404);
+    });
+    it("should not update the 'found food' when the food report review does not exit", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      const foodReportReviewId = "asjdk28-1234";
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: 150,
+        })
+        .expect(404);
+    });
+    it("should not update the 'found food' when the food report review does not belong to the user", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: 150,
+        })
+        .expect(404);
+    });
+
+    // invalid input
+
+    it("should return 400 when mrrId is not provided", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(`/frr/${foodReportReviewId}/found-food`)
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: 150,
+        })
+        .expect(400);
+    });
+
+    it("should return 400 when amount is negative", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: -150,
+        })
+        .expect(400);
+    });
+    it("should return 400 when amount is not a number", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user1.authUser.id
+      );
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .send({
+          amount: "abc",
+        })
+        .expect(400);
+    });
+
+    // test authenication
+
+    it("should return 401 when user is not authenticated", async () => {
+      const foodReportReviewId = foodReportReview1.id;
+      request(app.getHttpServer())
+        .patch(
+          `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
+        )
+        .send({
+          amount: 150,
+        })
         .expect(401);
     });
   });
