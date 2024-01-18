@@ -112,12 +112,13 @@ describe("food report review use-case", () => {
       );
       expect(updatedMealReportReview!.foodReports).toHaveLength(0);
     });
-    it("should throw an error if meal report review not found when deleting", async () => {
+    it("should throw an error when meal report review is not found when deleting", async () => {
+      const foodReport = mealReportReview1.foodReports![0];
       const error = await getError(async () =>
         foodReportReviewUseCase.delete(
           {
             searchBy: {
-              id: "frr-id",
+              id: foodReport.id,
               mealReviewReportId: "asdasfd",
             },
           },
@@ -128,7 +129,7 @@ describe("food report review use-case", () => {
       expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
-    it("should throw an error if food report review not found when deleting", async () => {
+    it("should throw an error when food report review is not found when deleting", async () => {
       const error = await getError(async () =>
         foodReportReviewUseCase.delete(
           {
@@ -188,6 +189,7 @@ describe("food report review use-case", () => {
         })
       );
     });
+
     it("should get one food report by id", async () => {
       const foodReport = await foodReportReviewUseCase.getOneBy(
         {
@@ -201,7 +203,7 @@ describe("food report review use-case", () => {
       expect(foodReport).toBeDefined();
       expect(foodReport!.id).toBe(foodReportReview1.id);
     });
-    it("should not get one food report by id", async () => {
+    it("should return undefined when food report does not exist", async () => {
       const foodReport = await foodReportReviewUseCase.getOneBy(
         {
           searchBy: {
@@ -213,7 +215,7 @@ describe("food report review use-case", () => {
       );
       expect(foodReport).toBeUndefined();
     });
-    it("should throw an error if meal report review not found when getting one food report", async () => {
+    it("should throw an error when meal report review is not found", async () => {
       const error = await getError(async () =>
         foodReportReviewUseCase.getOneBy(
           {
@@ -267,6 +269,7 @@ describe("food report review use-case", () => {
         })
       );
     });
+
     it("should get all food reports of a meal report review", async () => {
       const foodReports = await foodReportReviewUseCase.getManyBy(
         {
@@ -288,7 +291,7 @@ describe("food report review use-case", () => {
         new Set(expectedFoodReportIds)
       );
     });
-    it("should throw an error if meal report review not found when getting food reports", async () => {
+    it("should throw an error when meal report review is not found", async () => {
       const error = await getError(async () =>
         foodReportReviewUseCase.getManyBy(
           {

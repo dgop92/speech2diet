@@ -184,7 +184,7 @@ describe("food item use-case", () => {
       expect(suggestionIds).not.toContain(suggestion2.id);
     });
 
-    it("should throw an error if meal report review does not exits", async () => {
+    it("should throw an error when meal report review does not exits", async () => {
       const error = await getError(async () =>
         foodItemUseCase.changeFoundFoodBySuggestion(
           {
@@ -203,7 +203,7 @@ describe("food item use-case", () => {
       expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
 
-    it("should throw an error if food report review does not exits", async () => {
+    it("should throw an error when food report review does not exits", async () => {
       const error = await getError(async () =>
         foodItemUseCase.changeFoundFoodBySuggestion(
           {
@@ -222,7 +222,7 @@ describe("food item use-case", () => {
       expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
 
-    it("should throw an error if suggestion does not exits", async () => {
+    it("should throw an error when suggestion does not exits", async () => {
       const error = await getError(async () =>
         foodItemUseCase.changeFoundFoodBySuggestion(
           {
@@ -242,7 +242,7 @@ describe("food item use-case", () => {
     });
   });
 
-  describe("Change food by suggestion", () => {
+  describe("Update found food", () => {
     let mealReportReview1: MealReportReview;
     let foodReportReview1: FoodReportReview;
 
@@ -305,7 +305,7 @@ describe("food item use-case", () => {
       expect(foundFood?.amount).toBe(150);
     });
 
-    it("should throw an error if meal report review does not exits", async () => {
+    it("should throw an error when meal report review does not exits", async () => {
       const error = await getError(async () =>
         foodItemUseCase.updateFoundFood(
           {
@@ -326,7 +326,7 @@ describe("food item use-case", () => {
       expect(error).toHaveProperty("errorCode", ErrorCode.NOT_FOUND);
     });
 
-    it("should throw an error if food report review does not exits", async () => {
+    it("should throw an error when food report review does not exits", async () => {
       const error = await getError(async () =>
         foodItemUseCase.updateFoundFood(
           {

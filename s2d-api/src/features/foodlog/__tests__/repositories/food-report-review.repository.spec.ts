@@ -86,7 +86,7 @@ describe("food report review repository", () => {
       expect(updatedMealReportReview!.foodReports).toHaveLength(0);
     });
 
-    it("should do nothing if the food report was already deleted", async () => {
+    it("should do nothing when the food report was already deleted", async () => {
       const foodReport = mealReportReview1.foodReports![0];
       await foodReportReviewRepository.removeFoodReportReview(
         foodReport,

@@ -46,7 +46,7 @@ describe("meal report review repository", () => {
       await deleteAllRecords();
     });
 
-    it("should create an meal report review with empty food reports", async () => {
+    it("should create a meal report review with empty food reports", async () => {
       const mealReportReviewInput = createInputMealReportReview({
         audioId: "audioId-1",
         foodReports: [],
@@ -60,7 +60,7 @@ describe("meal report review repository", () => {
       expect(result.foodReports).toHaveLength(0);
       expect(result.audioId).toEqual(mealReportReviewInput.data.audioId);
     });
-    it("should create an meal report review with one empty food report", async () => {
+    it("should create a meal report review with one empty food report", async () => {
       const foodReportInput = createInputTestFoodReport({
         foundFoodItem: null,
         suggestions: [],
@@ -80,7 +80,7 @@ describe("meal report review repository", () => {
       expect(result?.foodReports?.[0].systemResult.foundFoodItem).toBeNull();
       expect(result?.foodReports?.[0].systemResult.suggestions).toHaveLength(0);
     });
-    it("should create an meal report review with one food report with data", async () => {
+    it("should create a meal report review with one food report with data", async () => {
       const foodReportInput = createInputTestFoodReport({
         foundFoodItem: createInputTestFoodItem(),
         suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
@@ -117,7 +117,7 @@ describe("meal report review repository", () => {
       );
     });
 
-    it("should update the pending status of an meal report review to true", async () => {
+    it("should update the pending status of a meal report review to true", async () => {
       const result = await mealReportReviewRepository.update(
         mealReportReview1,
         { pending: true }
@@ -127,7 +127,7 @@ describe("meal report review repository", () => {
       expect(result.pending).toBe(true);
     });
 
-    it("should update the pending status of an meal report review to false", async () => {
+    it("should update the pending status of a meal report review to false", async () => {
       const result = await mealReportReviewRepository.update(
         mealReportReview1,
         { pending: false }
@@ -195,7 +195,7 @@ describe("meal report review repository", () => {
       );
     });
 
-    it("should get an meal report review by id", async () => {
+    it("should get a meal report review by id", async () => {
       const result = await mealReportReviewRepository.getOneBy({
         searchBy: {
           id: mealReportReview1.id,
@@ -207,7 +207,7 @@ describe("meal report review repository", () => {
       expect(result?.appUserId).toEqual(mealReportReview1.appUserId);
     });
 
-    it("should get an meal report review by id without fetching its food reports", async () => {
+    it("should get a meal report review by id without fetching its food reports", async () => {
       const result = await mealReportReviewRepository.getOneBy({
         searchBy: {
           id: mealReportReview1.id,
@@ -220,7 +220,7 @@ describe("meal report review repository", () => {
       expect(result?.foodReports).toBeUndefined();
     });
 
-    it("should get an meal report review by id and fetch its food reports", async () => {
+    it("should get a meal report review by id and fetch its food reports", async () => {
       const result = await mealReportReviewRepository.getOneBy({
         searchBy: {
           id: mealReportReview2.id,
@@ -238,7 +238,7 @@ describe("meal report review repository", () => {
       expect(result?.foodReports?.[0].systemResult.suggestions).toHaveLength(2);
     });
 
-    it("should not get an meal report review by id", async () => {
+    it("should return undefined if meal report review does not exist", async () => {
       const result = await mealReportReviewRepository.getOneBy({
         searchBy: {
           id: "asdgsdf",
@@ -248,7 +248,7 @@ describe("meal report review repository", () => {
       expect(result).toBeUndefined();
     });
 
-    it("should return undefined if meal report review does not belong to app user", async () => {
+    it("should return undefined when the user of the meal report review is not the owner", async () => {
       const result = await mealReportReviewRepository.getOneBy({
         searchBy: {
           id: mealReportReview1.id,
@@ -424,7 +424,7 @@ describe("meal report review repository", () => {
       expect(results[0].id).toBe(mealReportReview3.id);
     });
 
-    it("should not get any meal report reviews of an app user that does not exist", async () => {
+    it("should not get any meal report reviews when an app user does not exist", async () => {
       const results = await mealReportReviewRepository.getManyBy({
         searchBy: {
           appUserId: "asdgasdg",
@@ -433,7 +433,7 @@ describe("meal report review repository", () => {
       expect(results).toHaveLength(0);
     });
 
-    it("should throw an error if app user is not defined", async () => {
+    it("should throw an error when app user is not defined", async () => {
       const error = await getError(async () =>
         mealReportReviewRepository.getManyBy({
           searchBy: {},

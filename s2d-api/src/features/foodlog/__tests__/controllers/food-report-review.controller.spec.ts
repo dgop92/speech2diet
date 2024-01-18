@@ -143,7 +143,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases
 
-    it("should not fetch all food report reviews when the meal report review does not exit", async () => {
+    it("should return 404 not found when the meal report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -155,7 +155,7 @@ describe("food report review (e2e)", () => {
         .expect(404);
     });
 
-    it("should not fetch all food report when meal report review user is not the owner", async () => {
+    it("should return 404 not found when the user of the meal report review is not the owner", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -169,7 +169,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases - invalid input
 
-    it("should return 400 when mrrId is not provided", async () => {
+    it("should return 400 invalid input when mrrId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -181,9 +181,9 @@ describe("food report review (e2e)", () => {
         .expect(400);
     });
 
-    // test authenication
+    // test authentication
 
-    it("should return 401 when user is not authenticated", async () => {
+    it("should return 401 unauthorized when user is not authenticated", async () => {
       request(app.getHttpServer())
         .get(`/frr/${mealReportReview1.id}`)
         .expect(401);
@@ -252,7 +252,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases
 
-    it("should not fetch a food report review when the meal report review does not exit", async () => {
+    it("should return 404 not found when the meal report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -263,7 +263,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not fetch a food report review when the food report review does not belong to the user", async () => {
+    it("should return 404 not found when the user of the food report review is not the owner", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -277,7 +277,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases - invalid input
 
-    it("should return 400 when mrrId is not provided", async () => {
+    it("should return 400 invalid input when mrrId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -289,9 +289,9 @@ describe("food report review (e2e)", () => {
         .expect(400);
     });
 
-    // test authenication
+    // test authentication
 
-    it("should return 401 when user is not authenticated", async () => {
+    it("should return 401 unauthorized when user is not authenticated", async () => {
       request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .expect(401);
@@ -336,7 +336,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases
 
-    it("should not delete a food report review when the meal report review does not exit", async () => {
+    it("should return 404 not found when the meal report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -347,7 +347,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not delete a food report review when the food report review does not belong to the user", async () => {
+    it("should return 404 not found when the user of the food report review is not the owner", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -361,7 +361,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases - invalid input
 
-    it("should return 400 when mrrId is not provided", async () => {
+    it("should return 400 invalid input when mrrId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -373,9 +373,9 @@ describe("food report review (e2e)", () => {
         .expect(400);
     });
 
-    // test authenication
+    // test authentication
 
-    it("should return 401 when user is not authenticated", async () => {
+    it("should return 401 unauthorized when user is not authenticated", async () => {
       request(app.getHttpServer())
         .delete(`/frr/${mealReportReview1.id}`)
         .expect(401);
@@ -447,7 +447,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases
 
-    it("should not update the 'found food' when the meal report review does not exit", async () => {
+    it("should return 404 not found when the meal report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -460,7 +460,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not update the 'found food' when the food report review does not exit", async () => {
+    it("should return 404 not found when the food report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -473,7 +473,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not update the 'found food' when the suggestion does not exit", async () => {
+    it("should return 404 not found when the suggestion does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -486,7 +486,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not update the 'found food' when the food report review does not belong to the user", async () => {
+    it("should return 404 not found when the user of the food report review is not the owner", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -502,7 +502,7 @@ describe("food report review (e2e)", () => {
 
     // test invalid input
 
-    it("should return 400 when mrrId is not provided", async () => {
+    it("should return 400 invalid input when mrrId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -515,7 +515,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(400);
     });
-    it("should return 400 when suggestionId is not provided", async () => {
+    it("should return 400 invalid input when suggestionId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -529,9 +529,9 @@ describe("food report review (e2e)", () => {
         .expect(400);
     });
 
-    // test authenication
+    // test authentication
 
-    it("should return 401 when user is not authenticated", async () => {
+    it("should return 401 unauthorized when user is not authenticated", async () => {
       request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
@@ -603,7 +603,7 @@ describe("food report review (e2e)", () => {
 
     // negative cases
 
-    it("should not update the 'found food' when the meal report review does not exit", async () => {
+    it("should return 404 not found when the meal report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -618,7 +618,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not update the 'found food' when the food report review does not exit", async () => {
+    it("should return 404 not found when the food report review does not exist", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -635,7 +635,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(404);
     });
-    it("should not update the 'found food' when the food report review does not belong to the user", async () => {
+    it("should return 404 not found when the user of the food report review is not the owner", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
@@ -655,7 +655,7 @@ describe("food report review (e2e)", () => {
 
     // invalid input
 
-    it("should return 400 when mrrId is not provided", async () => {
+    it("should return 400 invalid input when mrrId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -670,8 +670,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(400);
     });
-
-    it("should return 400 when amount is negative", async () => {
+    it("should return 400 invalid input when amount is negative", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -688,7 +687,7 @@ describe("food report review (e2e)", () => {
         })
         .expect(400);
     });
-    it("should return 400 when amount is not a number", async () => {
+    it("should return 400 invalid input when amount is not a number", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
@@ -706,9 +705,9 @@ describe("food report review (e2e)", () => {
         .expect(400);
     });
 
-    // test authenication
+    // test authentication
 
-    it("should return 401 when user is not authenticated", async () => {
+    it("should return 401 unauthorized when user is not authenticated", async () => {
       const foodReportReviewId = foodReportReview1.id;
       request(app.getHttpServer())
         .patch(

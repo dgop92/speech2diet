@@ -63,7 +63,7 @@ describe("meal report review use-case", () => {
       await deleteAllRecords();
     });
 
-    it("should create an meal report review with empty food reports", async () => {
+    it("should create a meal report review with empty food reports", async () => {
       const mealReportReviewInput = createInputMealReportReview({
         appUserId: appUser1.id,
         audioId: "audioId-1",
@@ -78,7 +78,7 @@ describe("meal report review use-case", () => {
       expect(result.foodReports).toHaveLength(0);
       expect(result.audioId).toEqual(mealReportReviewInput.data.audioId);
     });
-    it("should create an meal report review with one empty food report", async () => {
+    it("should create a meal report review with one empty food report", async () => {
       const foodReportInput = createInputTestFoodReport({
         foundFoodItem: null,
         suggestions: [],
@@ -99,7 +99,7 @@ describe("meal report review use-case", () => {
       expect(result?.foodReports?.[0].systemResult.foundFoodItem).toBeNull();
       expect(result?.foodReports?.[0].systemResult.suggestions).toHaveLength(0);
     });
-    it("should create an meal report review with one food report with data", async () => {
+    it("should create a meal report review with one food report with data", async () => {
       const foodReportInput = createInputTestFoodReport({
         foundFoodItem: createInputTestFoodItem(),
         suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
@@ -148,7 +148,7 @@ describe("meal report review use-case", () => {
       );
     });
 
-    it("should update the pending status of an meal report review to true", async () => {
+    it("should update the pending status of a meal report review to true", async () => {
       const result = await mealReportReviewUseCase.update(
         {
           data: { pending: true },
@@ -162,7 +162,7 @@ describe("meal report review use-case", () => {
       expect(result.pending).toBe(true);
     });
 
-    it("should update the pending status of an meal report review to false", async () => {
+    it("should update the pending status of a meal report review to false", async () => {
       const result = await mealReportReviewUseCase.update(
         {
           data: { pending: false },
@@ -290,7 +290,7 @@ describe("meal report review use-case", () => {
       );
     });
 
-    it("should get an meal report review by id", async () => {
+    it("should get a meal report review by id", async () => {
       const result = await mealReportReviewUseCase.getOneBy(
         {
           searchBy: {
@@ -304,7 +304,7 @@ describe("meal report review use-case", () => {
       expect(result?.appUserId).toEqual(mealReportReview1.appUserId);
     });
 
-    it("should get an meal report review by id without fetching its food reports", async () => {
+    it("should get a meal report review by id without fetching its food reports", async () => {
       const result = await mealReportReviewUseCase.getOneBy(
         {
           searchBy: {
@@ -319,7 +319,7 @@ describe("meal report review use-case", () => {
       expect(result?.foodReports).toBeUndefined();
     });
 
-    it("should get an meal report review by id and fetch its food reports", async () => {
+    it("should get a meal report review by id and fetch its food reports", async () => {
       const result = await mealReportReviewUseCase.getOneBy(
         {
           searchBy: {
@@ -339,7 +339,7 @@ describe("meal report review use-case", () => {
       expect(result?.foodReports?.[0].systemResult.suggestions).toHaveLength(2);
     });
 
-    it("should not get an meal report review by id", async () => {
+    it("should not get a meal report review by id", async () => {
       const result = await mealReportReviewUseCase.getOneBy(
         {
           searchBy: {
