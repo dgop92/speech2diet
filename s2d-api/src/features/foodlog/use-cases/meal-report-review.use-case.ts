@@ -123,9 +123,15 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     appUser: AppUser,
     transactionManager?: any
   ): Promise<MealReportReview | undefined> {
-    this.validateInput(MealReportReviewSearchInputSchema, input);
+    const newInput = this.validateInput<MealReportReviewSearchInput>(
+      MealReportReviewSearchInputSchema,
+      input
+    );
     return this.repository.getOneBy(
-      { ...input, searchBy: { ...input.searchBy, appUserId: appUser.id } },
+      {
+        ...newInput,
+        searchBy: { ...newInput.searchBy, appUserId: appUser.id },
+      },
       transactionManager
     );
   }

@@ -19,6 +19,8 @@ import {
   createTestLogger,
 } from "@common/logging/winston-logger";
 import { AppLogger } from "@common/logging/logger";
+import { APP_FILTER } from "@nestjs/core";
+import { AllExceptionsFilter } from "main/nest/general-exception-filter";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -65,6 +67,12 @@ describe("meal report review (e2e)", () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [FoodLogModule],
+      providers: [
+        {
+          provide: APP_FILTER,
+          useClass: AllExceptionsFilter,
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -132,7 +140,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr")
         .set({
           Authorization: `Bearer ${token}`,
@@ -154,7 +162,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?fetchFoodReports=true")
         .set({
           Authorization: `Bearer ${token}`,
@@ -173,7 +181,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?fetchFoodReports=false")
         .set({
           Authorization: `Bearer ${token}`,
@@ -188,7 +196,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?pending=true")
         .set({
           Authorization: `Bearer ${token}`,
@@ -203,7 +211,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?pending=false")
         .set({
           Authorization: `Bearer ${token}`,
@@ -218,8 +226,8 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
-        .get("/mrr?pending=false")
+      await request(app.getHttpServer())
+        .get("/mrr")
         .set({
           Authorization: `Bearer ${token}`,
         })
@@ -234,7 +242,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?limit=1")
         .set({
           Authorization: `Bearer ${token}`,
@@ -252,7 +260,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?limit=abc")
         .set({
           Authorization: `Bearer ${token}`,
@@ -263,7 +271,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?pending=abc")
         .set({
           Authorization: `Bearer ${token}`,
@@ -274,7 +282,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/mrr?fetchFoodReports=abc")
         .set({
           Authorization: `Bearer ${token}`,
@@ -285,7 +293,7 @@ describe("meal report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer()).get("/mrr").expect(401);
+      await request(app.getHttpServer()).get("/mrr").expect(401);
     });
   });
 
@@ -326,7 +334,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -340,7 +348,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview1.id}?fetchFoodReports=true`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -355,7 +363,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview1.id}?fetchFoodReports=false`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -370,7 +378,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/829381923-192389`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -381,7 +389,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview2.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -392,7 +400,7 @@ describe("meal report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview1.id}`)
         .expect(401);
     });
@@ -435,7 +443,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/mrr/${mealReportReview1.id}`)
         .send({
           pending: false,
@@ -456,8 +464,11 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/mrr/829381923-192389`)
+        .send({
+          pending: false,
+        })
         .set({
           Authorization: `Bearer ${token}`,
         })
@@ -467,8 +478,11 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/mrr/${mealReportReview2.id}`)
+        .send({
+          pending: false,
+        })
         .set({
           Authorization: `Bearer ${token}`,
         })
@@ -481,7 +495,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/mrr/${mealReportReview1.id}`)
         .send({
           pending: "abc",
@@ -495,7 +509,7 @@ describe("meal report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/mrr/${mealReportReview1.id}`)
         .expect(401);
     });
@@ -538,7 +552,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/mrr/${mealReportReview1.id}`)
         .send({
           pending: false,
@@ -555,7 +569,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/mrr/829381923-192389`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -566,7 +580,7 @@ describe("meal report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/mrr/${mealReportReview2.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -577,7 +591,7 @@ describe("meal report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/mrr/${mealReportReview1.id}`)
         .expect(401);
     });

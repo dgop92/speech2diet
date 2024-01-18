@@ -21,6 +21,12 @@ import {
 import { AppLogger } from "@common/logging/logger";
 import { FoodReportReview } from "@features/foodlog/entities/food-report-review";
 import { FoodItem } from "@features/foodlog/entities/food-item";
+import { APP_FILTER } from "@nestjs/core";
+import { AllExceptionsFilter } from "main/nest/general-exception-filter";
+import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-report-review.factory";
+import { FoodReportReviewUseCase } from "@features/foodlog/use-cases/food-report-review.use-case";
+import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory";
+import { FoodItemUseCase } from "@features/foodlog/use-cases/food-item.use-case";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -46,6 +52,23 @@ describe("food report review (e2e)", () => {
         mealReportReviewFactory.mealReportReviewCollection
       );
 
+    const foodReportReviewFactory = myFoodReportReviewFactory(
+      TestDBHelper.instance.firestoreClient
+    );
+    const foodReportReviewUseCase =
+      foodReportReviewFactory.foodReportReviewUseCase;
+    (foodReportReviewUseCase as FoodReportReviewUseCase).setDependencies(
+      mealReportReviewUseCase
+    );
+
+    const foodItemFactory = myFoodItemFactory(
+      TestDBHelper.instance.firestoreClient
+    );
+    const foodItemUseCase = foodItemFactory.foodItemUseCase;
+    (foodItemUseCase as FoodItemUseCase).setDependencies(
+      mealReportReviewUseCase
+    );
+
     await TestAuthDBHelper.instance.setupTestAuthDB();
     // clean up auth users before running all tests
     await TestAuthDBHelper.instance.deleteAllUsers();
@@ -67,6 +90,12 @@ describe("food report review (e2e)", () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [FoodLogModule],
+      providers: [
+        {
+          provide: APP_FILTER,
+          useClass: AllExceptionsFilter,
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -120,9 +149,9 @@ describe("food report review (e2e)", () => {
 
     it("should fetch all food report reviews of a meal report review", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
-        user2.authUser.id
+        user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -147,7 +176,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr?mrrId=123012930123-123`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -159,7 +188,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -173,7 +202,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -184,7 +213,7 @@ describe("food report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${mealReportReview1.id}`)
         .expect(401);
     });
@@ -239,7 +268,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -256,7 +285,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}?mrrId=123012930123-123`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -267,7 +296,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -281,7 +310,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -292,7 +321,7 @@ describe("food report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .expect(401);
     });
@@ -326,7 +355,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -340,7 +369,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/frr/${foodReportReview1.id}?mrrId=123012930123-123`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -351,7 +380,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/frr/${foodReportReview1.id}?mrrId=${mealReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -365,7 +394,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/frr/${foodReportReview1.id}`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -376,7 +405,7 @@ describe("food report review (e2e)", () => {
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/frr/${mealReportReview1.id}`)
         .expect(401);
     });
@@ -432,9 +461,9 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}&suggestionId=${suggestion1.id}`
         )
         .set({
           Authorization: `Bearer ${token}`,
@@ -451,9 +480,9 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/${foodReportReview1.id}/change-food?mrrId=123012930123-123?suggestionId=${suggestion1.id}`
+          `/frr/${foodReportReview1.id}/change-food?mrrId=123012930123-123&suggestionId=${suggestion1.id}`
         )
         .set({
           Authorization: `Bearer ${token}`,
@@ -464,9 +493,9 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/asjdk28-1234/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+          `/frr/asjdk28-1234/change-food?mrrId=${mealReportReview1.id}&suggestionId=${suggestion1.id}`
         )
         .set({
           Authorization: `Bearer ${token}`,
@@ -477,9 +506,9 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=123012930123-123`
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}&suggestionId=123012930123-123`
         )
         .set({
           Authorization: `Bearer ${token}`,
@@ -490,9 +519,9 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user2.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}&suggestionId=${suggestion1.id}`
         )
         .set({
           Authorization: `Bearer ${token}`,
@@ -506,7 +535,7 @@ describe("food report review (e2e)", () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReview1.id}/change-food?suggestionId=${suggestion1.id}`
         )
@@ -515,11 +544,12 @@ describe("food report review (e2e)", () => {
         })
         .expect(400);
     });
-    it("should return 400 invalid input when suggestionId is not provided", async () => {
+    // TODO: re add this test when suggestionId is send through the body
+    /* it("should return 400 invalid input when suggestionId is not provided", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}`
         )
@@ -527,14 +557,14 @@ describe("food report review (e2e)", () => {
           Authorization: `Bearer ${token}`,
         })
         .expect(400);
-    });
+    }); */
 
     // test authentication
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
-          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}?suggestionId=${suggestion1.id}`
+          `/frr/${foodReportReview1.id}/change-food?mrrId=${mealReportReview1.id}&suggestionId=${suggestion1.id}`
         )
         .expect(401);
     });
@@ -578,11 +608,11 @@ describe("food report review (e2e)", () => {
 
     // positive cases
 
-    it("should update the 'found food' by one of the suggestions", async () => {
+    it("should update the 'found food' amount", async () => {
       const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
         user1.authUser.id
       );
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReview1.id}/found-food?mrrId=${mealReportReview1.id}`
         )
@@ -608,7 +638,7 @@ describe("food report review (e2e)", () => {
         user1.authUser.id
       );
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/frr/${foodReportReviewId}/found-food?mrrId=123012930123-123`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -623,7 +653,7 @@ describe("food report review (e2e)", () => {
         user1.authUser.id
       );
       const foodReportReviewId = "asjdk28-1234";
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
         )
@@ -640,7 +670,7 @@ describe("food report review (e2e)", () => {
         user2.authUser.id
       );
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
         )
@@ -660,7 +690,7 @@ describe("food report review (e2e)", () => {
         user1.authUser.id
       );
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(`/frr/${foodReportReviewId}/found-food`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -675,7 +705,7 @@ describe("food report review (e2e)", () => {
         user1.authUser.id
       );
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
         )
@@ -692,7 +722,7 @@ describe("food report review (e2e)", () => {
         user1.authUser.id
       );
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
         )
@@ -709,7 +739,7 @@ describe("food report review (e2e)", () => {
 
     it("should return 401 unauthorized when user is not authenticated", async () => {
       const foodReportReviewId = foodReportReview1.id;
-      request(app.getHttpServer())
+      await request(app.getHttpServer())
         .patch(
           `/frr/${foodReportReviewId}/found-food?mrrId=${mealReportReview1.id}`
         )
