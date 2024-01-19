@@ -85,6 +85,69 @@ describe("meal report review (e2e)", () => {
     await app.close();
   });
 
+  describe("POST /mrr", () => {
+    beforeAll(async () => {
+      await deleteAllRecords();
+    });
+
+    // positive cases
+
+    it("should create a meal report review", async () => {
+      const mealReportReviewInput1 = createInputMealReportReview({
+        appUserId: user1.appUser.id,
+        audioId: "audioId-1",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: createInputTestFoodItem(),
+            suggestions: [createInputTestFoodItem(), createInputTestFoodItem()],
+          }),
+        ],
+        mealRecordedAt: new Date(),
+      });
+      await request(app.getHttpServer())
+        .post("/mrr")
+        .set({
+          "X-API-KEY": "dummy",
+        })
+        .send(mealReportReviewInput1.data)
+        .expect(201);
+    });
+
+    // invalid data
+
+    it("should return 400 when input is invalid", async () => {
+      const mealReportReviewInput1 = {
+        a: 2,
+        mealRecordedAt: new Date(),
+      };
+      await request(app.getHttpServer())
+        .post("/mrr")
+        .set({
+          "X-API-KEY": "dummy",
+        })
+        .send({
+          ...mealReportReviewInput1,
+          appUserId: "invalid-app-user-id",
+        })
+        .expect(400);
+    });
+
+    // test authentication
+
+    it("should return 401 unauthorized when api key is not sent", async () => {
+      await request(app.getHttpServer()).post("/mrr").send({}).expect(401);
+    });
+    it("should return 401 unauthorized when api key is invalid", async () => {
+      await request(app.getHttpServer())
+        .post("/mrr")
+        .set({
+          "X-API-KEY": "invalid-api-key",
+        })
+        .send({})
+        .expect(401);
+    });
+  });
+
   describe("GET /mrr", () => {
     let mealReportReview2: MealReportReview;
     let mealReportReview3: MealReportReview;

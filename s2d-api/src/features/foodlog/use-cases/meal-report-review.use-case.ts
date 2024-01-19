@@ -35,9 +35,12 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     input: MealReportReviewCreateInput,
     transactionManager?: any
   ): Promise<MealReportReview> {
-    this.validateInput(MealReportReviewCreateInputSchema, input);
+    const newInput = this.validateInput<MealReportReviewCreateInput>(
+      MealReportReviewCreateInputSchema,
+      input
+    );
 
-    return this.repository.create(input.data, transactionManager);
+    return this.repository.create(newInput.data, transactionManager);
   }
 
   update(

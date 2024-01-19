@@ -5,6 +5,7 @@ import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-review.use-case.definition";
 import {
+  MealReportReviewCreateInput,
   MealReportReviewSearchInput,
   MealReportReviewUpdateInput,
 } from "@features/foodlog/schema-types";
@@ -18,7 +19,11 @@ import {
   Patch,
   Body,
   HttpCode,
+  Post,
 } from "@nestjs/common";
+import { SimpleApiKeyGuard } from "../../guards/simple-apikey.guard";
+
+type CreateMealReportReviewRequest = MealReportReviewCreateInput["data"];
 
 type QueryParams = MealReportReviewSearchInput["searchBy"] &
   MealReportReviewSearchInput["options"];
@@ -37,6 +42,14 @@ export class MealReportReviewControllerV1 {
   constructor() {
     const { mealReportReviewUseCase } = myMealReportReviewFactory();
     this.mealReportReviewUseCase = mealReportReviewUseCase;
+  }
+
+  @UseGuards(SimpleApiKeyGuard)
+  @Post()
+  createMealReportReview(@Body() requestData: CreateMealReportReviewRequest) {
+    return this.mealReportReviewUseCase.create({
+      data: requestData,
+    });
   }
 
   @UseGuards(UserGuard)
