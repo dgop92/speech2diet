@@ -7,12 +7,17 @@ import {
 
 import { IMealReportReviewUseCase } from "../ports/meal-report-review.use-case.definition";
 import { MealReportReviewCreateInput } from "../schema-types";
+import { IMealReportReviewRepository } from "../ports/meal-report-review.repository.definition";
 
 export class MealReportReviewUseCase implements IMealReportReviewUseCase {
+  constructor(
+    private readonly mealReportReviewRepository: IMealReportReviewRepository
+  ) {}
+
   create(input: MealReportReviewCreateInput): Promise<MealReportReview> {
     this.validateInput(MealReportReviewCreateInputSchema, input);
 
-    throw new Error("Method not implemented.");
+    return this.mealReportReviewRepository.create(input.data);
   }
 
   private validateInput<T = any>(schema: Joi.ObjectSchema<T>, input: any) {
