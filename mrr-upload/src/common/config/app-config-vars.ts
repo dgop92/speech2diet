@@ -26,15 +26,6 @@ function getAppConfiguration() {
     );
   }
 
-  const firebaseAuthEmulatorHost = getOsEnvOrDefault(
-    "FIREBASE_AUTH_EMULATOR_HOST",
-    ""
-  );
-  const firebaseFirestoreEmulatorHost = getOsEnvOrDefault(
-    "FIREBASE_FIRESTORE_EMULATOR_HOST",
-    ""
-  );
-
   const loggingLevel = getOsEnvOrDefault("LOG_LEVEL", "info");
 
   return {
@@ -48,10 +39,6 @@ function getAppConfiguration() {
       region: awsRegion,
       accessKeyId: awsAccessKeyId,
       secretAccessKey: awsSecretAccessKey,
-    },
-    firebase: {
-      authEmulatorHost: firebaseAuthEmulatorHost,
-      firestoreEmulatorHost: firebaseFirestoreEmulatorHost,
     },
     logging: {
       level: loggingLevel,

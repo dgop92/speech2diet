@@ -1,20 +1,11 @@
 import { AppLogger } from "@common/logging/logger";
 import { WinstonLogger, createDevLogger } from "@common/logging/winston-logger";
 import { setupFactories } from "main/setup-factories";
-import {
-  getTestFirebaseApp,
-  getTestAuthFirebaseClient,
-  getTestFirestoreClient,
-} from "./test-firebase-app";
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.factory";
 
 export async function startApp() {
-  const firebaseApp = await getTestFirebaseApp();
-  const authFirebaseClient = getTestAuthFirebaseClient(firebaseApp);
-  const firestoreClient = getTestFirestoreClient(firebaseApp);
-
-  setupFactories(authFirebaseClient, firestoreClient);
+  setupFactories();
 
   // no need to pass firestore, it was already setup in setupFactories
   const mealReportReviewFactory = myMealReportReviewFactory();

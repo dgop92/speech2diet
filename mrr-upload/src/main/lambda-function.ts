@@ -1,10 +1,5 @@
 require("../../scripts/prod-setup");
 import { Handler, SQSEvent } from "aws-lambda";
-import {
-  getAuthFirebaseClient,
-  getFirebaseApp,
-  getFirestoreClient,
-} from "./firebase-app";
 import { setupFactories } from "./setup-factories";
 import { WinstonLogger, createDevLogger } from "@common/logging/winston-logger";
 import { AppLogger } from "@common/logging/logger";
@@ -20,11 +15,8 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 export async function startApp() {
   myLogger.info("starting app");
-  const firebaseApp = await getFirebaseApp();
-  const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
-  const firestoreClient = getFirestoreClient(firebaseApp);
 
-  setupFactories(authFirebaseClient, firestoreClient);
+  setupFactories();
 }
 
 // even if we fail processing the message we don't want to retry it, we don't have

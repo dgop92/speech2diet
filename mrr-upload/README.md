@@ -14,36 +14,6 @@ Install the project dependencies with:
 npm install
 ```
 
-If you want to use the Firebase emulator, consider the following steps:
-
-1. Install the Firebase CLI with:
-
-```bash
-npm install -g firebase-tools@12.4.3
-```
-
-2. Login to Firebase with:
-
-```bash
-firebase login
-```
-
-3. Create a project in Firebase using the Firebase console.
-
-4. Now, create a `.firebaserc` file in the root of the project with the following content:
-
-```json
-{
-  "projects": {
-    "default": "<project-name>"
-  }
-}
-```
-
-To avoid any issues, it is recommended that the name of the project is the same as the one mentioned in the Google credentials environment variable.
-
-Remember if you use the emulators the data is reset every time you restart the emulators.
-
 ### Environment variables
 
 Remember to create the necessary environment variables located in the folder `env-vars/`

@@ -6,9 +6,7 @@ dist/
 
 http_tests
 generated-oapi
-firebase-credentials
 
 *-debug.log
 
-.firebaserc
 .vscode

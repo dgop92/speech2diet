@@ -1,8 +1,7 @@
-import { Firestore } from "firebase-admin/firestore";
 import { myMealReportReviewFactory } from "./meal-report-review.factory";
 
-export function foodlogFactory(fireStoreClient?: Firestore) {
-  const mealReportReviewFactory = myMealReportReviewFactory(fireStoreClient);
+export function foodlogFactory() {
+  const mealReportReviewFactory = myMealReportReviewFactory();
 
   return {
     mealReportReviewFactory,
