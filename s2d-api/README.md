@@ -4,7 +4,7 @@ The API for the Speech 2 Diet project.
 
 ## Setup
 
-It is recommended to run the project in node 16.15.0
+It is recommended to run the project in node 16.15.0 or greater.
 
 ### Dependencies
 
@@ -44,10 +44,12 @@ To avoid any issues, it is recommended that the name of the project is the same 
 
 Remember if you use the emulators the data is reset every time you restart the emulators.
 
-### Environment variables
+### Environment variables and secrets
 
 Remember to create the necessary environment variables located in the folder `env-vars/`
 You can use the .example files as a template.
+
+In the env.examples, some variables are marked as secrets. These variables can be extracted from aws parameter store or env vars. You can define what to use setting the `SECRETS_FROM` env var to `ssm` or `env`.
 
 ## How to run
 
@@ -79,18 +81,18 @@ Run the dev server with:
 npm run dev:server
 ```
 
-## Optional - Doppler for secrets management
+## Optional - Doppler for env vars management
 
-This project can use Doppler for secrets management. First, setup the project and environment using the following command:
+This project can use Doppler for env vars management. First, setup the project and environment using the following command:
 
 ```bash
-doppler setup --project <project-name> --config dev
+doppler setup --project <project-name> --config <env-name>
 ```
 
-Download the secrets using the following command:
+Download the env vars using the following command:
 
 ```bash
-doppler secrets download --no-file --format=env-no-quotes > env-vars/.dev.env
+doppler secrets download --no-file --format=env-no-quotes > env-vars/.<env-name>.env
 ```
 
 Make sure the encoding of the file is UTF-8. dotenv will not work with UTF-16.
