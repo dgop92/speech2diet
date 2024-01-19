@@ -141,7 +141,7 @@ export class AppUserUseCase implements IAppUserUseCase {
     }
 
     myLogger.debug("user found, deleting", { id: input.searchBy.id });
-    this.userRepository.delete(appUser, transactionManager);
+    await this.userRepository.delete(appUser, transactionManager);
   }
 
   getOneBy(input: AppUserSearchInput): Promise<AppUser | undefined>;

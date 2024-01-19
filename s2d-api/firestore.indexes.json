@@ -1,4 +1,51 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "meal-report-reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "appUserId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mealRecordedAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "meal-report-reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "appUserId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mealRecordedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "meal-report-reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "appUserId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "pending",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mealRecordedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

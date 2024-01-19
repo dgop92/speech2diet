@@ -9,3 +9,4 @@ generated-oapi
 firebase-credentials
 
 *-debug.log
+.firebaserc

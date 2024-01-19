@@ -14,7 +14,6 @@ import { ApplicationError, ErrorCode, InvalidInputError } from "@common/errors";
 import { myAppUserFactory } from "@features/auth/factories/app-user.factory";
 import { IAppUserUseCase } from "@features/auth/ports/app-user.use-case.definition";
 import { TestDBHelper } from "test/test-db-helper";
-import { IAppUserRepository } from "@features/auth/ports/app-user.repository.definition";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
