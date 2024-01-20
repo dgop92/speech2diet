@@ -16,13 +16,7 @@ export const myConsumerAppFactory = (
 
   if (sqsClient === undefined) {
     myLogger.info("creating sqsClient");
-    sqsClient = new SQSClient({
-      region: APP_CONFIG_VARS.aws.region,
-      credentials: {
-        accessKeyId: APP_CONFIG_VARS.aws.accessKeyId,
-        secretAccessKey: APP_CONFIG_VARS.aws.secretAccessKey,
-      },
-    });
+    sqsClient = new SQSClient();
     myLogger.info("sqsClient created");
   }
 

@@ -1,6 +1,6 @@
 # Meal Report Review Upload Service
 
-This service is responsible for uploading the meal report review to the database by consuming the messages from the nutrition response queue
+This service is responsible for uploading the meal report review to the corresponding service owner of the app's core db, in this case s2d-api.
 
 ## Setup
 
@@ -14,10 +14,12 @@ Install the project dependencies with:
 npm install
 ```
 
-### Environment variables
+### Environment variables and secrets
 
 Remember to create the necessary environment variables located in the folder `env-vars/`
 You can use the .example files as a template.
+
+In the env.examples, some variables are marked as secrets. These variables can be extracted from aws parameter store or env vars. You can define what to use, by setting the `SECRETS_FROM` env var to `ssm` or `env`.
 
 ## How to run
 
@@ -48,18 +50,18 @@ docker build -f Dockerfile.lambda -t mrr-upload .
 docker run --env-file <your-env-file> mrr-upload
 ```
 
-## Optional - Doppler for secrets management
+## Optional - Doppler for env vars management
 
-This project can use Doppler for secrets management. First, setup the project and environment using the following command:
+This project can use Doppler for env vars management. First, setup the project and environment using the following command:
 
 ```bash
-doppler setup --project <project-name> --config dev
+doppler setup --project <project-name> --config <env-name>
 ```
 
-Download the secrets using the following command:
+Download the env vars using the following command:
 
 ```bash
-doppler secrets download --no-file --format=env-no-quotes > env-vars/.dev.env
+doppler secrets download --no-file --format=env-no-quotes > env-vars/.<env-name>.env
 ```
 
 Make sure the encoding of the file is UTF-8. dotenv will not work with UTF-16.
