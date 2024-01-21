@@ -3,17 +3,20 @@ skinparam padding 2
 
 |User|
 start
-:record meal;
+:record meal by\nvoice;
 
 |Speech2Diet-API|
 :save audio to audio storage;
-:send request;
+:send request\nto queue;
 
 |Speech2Nutrition|
 :get nutritional information;
-:send response;
+:send response\nto queue;
 
 |MRR-Upload|
+:send request\nto s2d-api;
+
+|Speech2Diet-API|
 :save results in\nuser's meal report\nreviews db;
 
 repeat

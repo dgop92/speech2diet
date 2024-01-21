@@ -35,6 +35,6 @@ Speech2Nutrition -> ResponseDefaultExchange: send response\nmessages
 ResponseDefaultExchange -l-> ResponseQueue
 ResponseQueue <-l- MRRUpload: consume response\nmessages
 
-
+MRRUpload -u-> Speech2DietAPI: save mrr data [http]
 
 @enduml

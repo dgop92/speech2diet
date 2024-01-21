@@ -7,6 +7,7 @@ top to bottom direction
 !includesub components/external-services.puml!LLM_SERVICE
 !includesub components/external-services.puml!SPEECH_2_TEXT
 !includesub components/external-services.puml!AUDIO_STORAGE
+!includesub components/main-components.puml!NUTRITION_DB
 
 () "Audio File" as AudioFile
 AudioStorage -- AudioFile
@@ -16,6 +17,9 @@ Speech2TextService -( Audio
 
 () "Prompt" as Prompt
 LLMService --( Prompt
+
+() "Nutrition Info" as NutritionData
+NutritionDB -- NutritionData
 
 rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
     !includesub components/speech2nutrition/definitions.puml!SPEECH_TO_TEXT
@@ -35,6 +39,7 @@ rectangle "Speech 2 Nutrition" as Speech2Nutrition #line.dashed {
     FoodMapping --( FoodRequests
     () "Food Responses" as FoodResponses
     FoodMapping -- FoodResponses
+    FoodMapping -u-( NutritionData
 
 }
 
