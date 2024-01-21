@@ -7,9 +7,23 @@ FitVoice, formally known as speech2diet, is an application that allows people to
 - Describe what you are eating using your voice.
 - After a while, you will see in the app the list of foods you have consumed in your meal with their nutritional information.
 
-_Note: This is a mono repo containing all the necessary services for the app’s backend._
+This a mono repo containing all the necessary services for the app’s backend. To learn more about each service, read its respective `README.md` file.
 
-_Note2: I am still working on the project and improving the documentation for all the services._
+_Note: I'm still working on the project and improving the documentation for all the services._
+
+## Motivation
+
+It all started because I wanted an application to record my food intake with ease. Manually entering the information is tedious and time-consuming. Barcode scanning methods don't work well in my country. I decided to create this application with two novel techniques to improve the limitations of current solutions.
+
+**1. Food intake logging by voice recording**
+
+Maybe this was impossible in the past, but with the emergence of large language models and improvements in automatic speech recognition, extracting food information from an audio transcription has become straightforward. Since most people use their smartphone while eating, all it takes is a little effort to record what they are eating in the app.
+
+**2. Custom nutritional informational database**
+
+Because everyone's diet is different, using generic nutritional information can lead to inaccurate results. Having your own database of frequently consumed foods can mitigate inaccuracy and help you record foods more quickly. For instance, you can register your own version of "sandwich" along with the specific nutritional information based on the ingredients you typically use. Now, when you mention "sandwich", it will use the one you registered previously.
+
+Finally, for me, the best way to learn is by building projects and so far, this is the most complex personal project that I have ever built. A project with the purpose of learning cloud computing with AWS, system design, and many other things.
 
 ## Terminology
 
@@ -24,7 +38,7 @@ _s2d-api:_ Speech 2 Diet API
 
 **¿What are meal report reviews?**
 
-To keep it simple, it's just a report containing all the foods you consumed in a meal that the user must review. Remember, these reports are system generated, and the review process is necessary to fix possible errors. [The data model](https://github.com/dgop92/speech2diet/blob/main/s2d-api/src/features/foodlog/entities/meal-report-review.ts)
+To keep it simple, it's just a report containing all the foods you consumed in a meal that the user must review. Remember, these reports are system generated, and the review process is necessary to fix possible errors. [See the data model](https://github.com/dgop92/speech2diet/blob/main/s2d-api/src/features/foodlog/entities/meal-report-review.ts)
 
 ## AWS Infrastructure Diagram
 
@@ -89,3 +103,9 @@ Same answer as above. Nevertheless, the positive aspect of the project is that c
 - NestJS
 
 For more information about the libraries used in the project, please check the package.json or requirements.txt files.
+
+## The fundamental workflow
+
+The following diagram shows the fundamental workflow of the app across the different services.
+
+![Fundamental workflow](docs/fundamental-workflow.png)
