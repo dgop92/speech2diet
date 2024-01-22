@@ -1,20 +1,40 @@
 # Speech 2 Nutrition
 
-A service to convert an audio with a description of a meal into a structured list of foods with its nutritional information.
+## Overview
+
+The core of FitVoice is the service "Speech 2 Nutrition". Its responsibility is to convert an audio description of a meal into a structured list of foods with their nutritional information.
+
+![Component Diagram](docs/speech2nutrition-component-diagram.png)
+
+When a message is received, the initial processing responsibility falls on the "Speech 2 Text" component. This component retrieves the audio from the storage service and then proceeds to transcribe the content. After obtaining a precise transcription of the audio, it is passed on to the second component, known as "Food Feature Extraction." This component harnesses the power of large language models (LLMs) to extract names, descriptions, quantities, and units for each food mentioned in the audio transcript. Now, with the structured list of foods containing the user's food intake, the system moves to the third and last component "Food Mapping". In this phase, it looks for the best matching foods based on the user report in the nutritional database.
 
 ## Setup
 
-The service was developed using Python 3.10.9
+1. It is recommend to use Python 3.10.9
 
-Install the dependencies:
+2. Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+3. Activate the virtual environment:
+
+```bash
+source venv/bin/activate
+```
+
+You can also activate the virtual environment using VSCode. Just select the Python interpreter in the bottom left corner.
+
+4. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Tests
+5. Create a `.env` file following the `.env.example` file
 
-As we are working with LLM where the output is not deterministic we need to separate the unit tests from the scripts that tests the performance of the component with the LLM.
+## Tests
 
 - Unit tests: tests that are deterministic and can be run in any machine.
 
@@ -22,15 +42,17 @@ As we are working with LLM where the output is not deterministic we need to sepa
 pytest -v
 ```
 
-- Food extraction service: To get the performance metrics of this component run the following command
+- Food extraction service: To get the component performance metrics, run the following command.
 
 ```bash
 python -m tests.food_extraction.execute_performance_metrics
 ```
 
-A folder in `tests\data\fe_results` will be created with the results of the performance metrics for each test set
+Unit tests cannot be write for this component because the results are not completely deterministic as its using LLMs.
 
-## Entry Points
+A folder in `tests\data\fe_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/food_extraction/test_sets`
+
+## How to run
 
 You can execute this service in different ways:
 
@@ -58,7 +80,7 @@ docker run --env-file .env speech2nutrition
 
 ## Extras
 
-### Example of a request
+### Request example
 
 ```json
 {
@@ -69,7 +91,7 @@ docker run --env-file .env speech2nutrition
 }
 ```
 
-### Example of a response
+### Response example
 
 ```json
 {
