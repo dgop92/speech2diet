@@ -11,7 +11,7 @@ export async function getAppSecret(name: string) {
   }
 
   if (secretFrom === "ssm") {
-    const parameterName = `/fitvoice-app/${nodeEnv}/mrr-upload/${name}`;
+    const parameterName = `/fitvoice-app/${nodeEnv}/s2d-api/${name}`;
     return getEncryptedParameter(parameterName);
   }
 

@@ -3,7 +3,7 @@ import { getAuth, Auth } from "firebase-admin/auth";
 import { getFirestore, Firestore } from "firebase-admin/firestore";
 import { App } from "firebase-admin/app";
 import { initializeApp, cert } from "firebase-admin/app";
-import { APP_ENV_VARS } from "@common/config/app-env-vars";
+import { getAppSecret } from "@common/config/secrets-vars";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -11,11 +11,14 @@ let authFirebaseClient: Auth;
 let fireStoreClient: Firestore;
 let firebaseApp: App;
 
-export function getTestFirebaseApp() {
+export async function getTestFirebaseApp() {
   myLogger.info("trying to get firebase app");
   if (!firebaseApp) {
+    const credensContent = await getAppSecret(
+      "GOOGLE_APPLICATION_CREDENTIALS_CONTENT"
+    );
     firebaseApp = initializeApp({
-      credential: cert(JSON.parse(APP_ENV_VARS.firebase.credentialsContent)),
+      credential: cert(JSON.parse(credensContent)),
     });
     myLogger.info("firebase app created");
   }

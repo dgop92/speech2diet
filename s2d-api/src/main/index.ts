@@ -13,7 +13,7 @@ import {
 } from "./firebase-app";
 
 export async function startApp() {
-  const firebaseApp = getFirebaseApp();
+  const firebaseApp = await getFirebaseApp();
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
 

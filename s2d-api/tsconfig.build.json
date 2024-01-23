@@ -5,6 +5,8 @@
     "baseUrl": "./src",
     "outDir": "./dist",
     "esModuleInterop": true,
+    // We skip lib check because of an unresolved with supertest types
+    "skipLibCheck": true,
     "paths": {
       "@features/*": [
         "features/*"
