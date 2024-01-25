@@ -16,7 +16,7 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 export async function startApp() {
   myLogger.info("starting app");
 
-  setupFactories();
+  await setupFactories();
 }
 
 // even if we fail processing the message we don't want to retry it, we don't have

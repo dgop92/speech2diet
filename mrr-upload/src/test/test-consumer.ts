@@ -5,7 +5,7 @@ import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-repo
 import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.factory";
 
 export async function startApp() {
-  setupFactories();
+  await setupFactories();
 
   // no need to pass firestore, it was already setup in setupFactories
   const mealReportReviewFactory = myMealReportReviewFactory();

@@ -11,7 +11,7 @@ const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 let mealReportReviewUseCase: IMealReportReviewUseCase;
 let mealReportRepository: IMealReportReviewRepository;
 
-export const myMealReportReviewFactory = () => {
+export const myMealReportReviewFactory = (createMrrEndpoint?: string) => {
   myLogger.info("calling mealReportReviewFactory");
 
   if (mealReportRepository === undefined) {
@@ -20,11 +20,17 @@ export const myMealReportReviewFactory = () => {
       mealReportRepository = new MealReportReviewMockRepository();
       myLogger.info("mealReportRepository mock created");
     } else {
-      myLogger.info("creating mealReportRepository");
-      mealReportRepository = new MealReportReviewAxiosRepository(
-        APP_CONFIG_VARS.s2dServer.createMrrEndpoint
-      );
-      myLogger.info("mealReportRepository created");
+      if (createMrrEndpoint !== undefined) {
+        myLogger.info("creating mealReportRepository");
+        mealReportRepository = new MealReportReviewAxiosRepository(
+          createMrrEndpoint
+        );
+        myLogger.info("mealReportRepository created");
+      } else {
+        throw new Error(
+          "you must provide a createMrrEndpoint to create the mealReportRepository"
+        );
+      }
     }
   }
 

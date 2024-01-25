@@ -5,7 +5,7 @@ import { myConsumerAppFactory } from "@features/foodlog/factories/consumer.facto
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 
 export async function startApp() {
-  setupFactories();
+  await setupFactories();
   const mealReportReviewFactory = myMealReportReviewFactory();
   const consumerAppFactory = myConsumerAppFactory(
     mealReportReviewFactory.mealReportReviewUseCase

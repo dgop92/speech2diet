@@ -17,17 +17,6 @@ function getAppConfiguration() {
     getOsEnvOrDefault("NUTRITION_RESPONSE_QUEUE_POLLING_TIME", "20000")
   );
 
-  const s2dServerCreateMrrEndpoint = getOsEnvOrDefault(
-    "S2D_SERVER_CREATE_MRR_ENDPOINT",
-    ""
-  );
-
-  if (!isTest && s2dServerCreateMrrEndpoint === "") {
-    throw new Error(
-      "in other environments than test you must declare S2D_SERVER_CREATE_MRR_ENDPOINT"
-    );
-  }
-
   if (
     nutritionResponseQueueUrl !== "" &&
     (awsAccessKeyId == "" || awsSecretAccessKey == "")
@@ -53,9 +42,6 @@ function getAppConfiguration() {
     },
     logging: {
       level: loggingLevel,
-    },
-    s2dServer: {
-      createMrrEndpoint: s2dServerCreateMrrEndpoint,
     },
   };
 }
