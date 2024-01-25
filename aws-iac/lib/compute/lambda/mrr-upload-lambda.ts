@@ -2,7 +2,7 @@ import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { getRootOfExternalProject } from "../../config/utils";
+import { getRootOfExternalProject } from "../../../config/utils";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 type MRRUploadServiceConfig = {
@@ -70,8 +70,12 @@ export class MRRUploadLambda extends Construct {
 
     const secrets: { id: string; paramName: string }[] = [
       {
-        id: "google-application-credentials-content-parameter",
-        paramName: "GOOGLE_APPLICATION_CREDENTIALS_CONTENT",
+        id: "mrr-upload-api-key-parameter",
+        paramName: "MRR_UPLOAD_API_KEY",
+      },
+      {
+        id: "s2d-server-create-mrr-endpoint-parameter",
+        paramName: "S2D_SERVER_CREATE_MRR_ENDPOINT",
       },
     ];
 

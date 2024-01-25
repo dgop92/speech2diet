@@ -4,7 +4,7 @@ import * as cdk from "aws-cdk-lib";
 import { loadEnvironmentVariables } from "../config/app-env-vars";
 import { getStackName } from "../config/utils";
 import { StorageStack } from "../lib/storage/storage-stack";
-import { LambdaStack } from "../lib/compute/lambda-stack";
+import { LambdaStack } from "../lib/compute/lambda/lambda-stack";
 
 const app = new cdk.App();
 

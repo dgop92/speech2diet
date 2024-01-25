@@ -3,7 +3,7 @@ import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { getRootOfExternalProject } from "../../config/utils";
+import { getRootOfExternalProject } from "../../../config/utils";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 type S2NServiceConfig = {
