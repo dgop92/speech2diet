@@ -5,6 +5,7 @@ import { loadEnvironmentVariables } from "../config/app-env-vars";
 import { getStackName } from "../config/utils";
 import { StorageStack } from "../lib/storage/storage-stack";
 import { LambdaStack } from "../lib/compute/lambda/lambda-stack";
+import { NetworkStack } from "../lib/network/vpc";
 
 const app = new cdk.App();
 
@@ -21,6 +22,24 @@ function getConfig() {
 }
 
 const config = getConfig();
+
+const fitvoiceNetworkStackName = getStackName(
+  config.appName,
+  "network",
+  config.env
+);
+
+const fitvoiceNetworkStack = new NetworkStack(app, fitvoiceNetworkStackName, {
+  env: {
+    region: config.region,
+    account: config.accountId,
+  },
+  config: config,
+});
+cdk.Tags.of(fitvoiceNetworkStack).add("project:name", config.appName);
+cdk.Tags.of(fitvoiceNetworkStack).add("project:env", config.env);
+cdk.Tags.of(fitvoiceNetworkStack).add("project:stack", "network");
+
 const fitvoiceStorageStackName = getStackName(
   config.appName,
   "storage",
