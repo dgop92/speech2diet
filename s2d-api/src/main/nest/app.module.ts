@@ -4,6 +4,7 @@ import { APP_FILTER, RouterModule } from "@nestjs/core";
 import { AllExceptionsFilter } from "./general-exception-filter";
 import { LoggerMiddleware } from "./logger-middleware";
 import { FoodLogModule } from "@features/foodlog/infrastructure/nest/foodlog.module";
+import { HealthController } from "./health.controller";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FoodLogModule } from "@features/foodlog/infrastructure/nest/foodlog.mod
       useClass: AllExceptionsFilter,
     },
   ],
+  controllers: [HealthController],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from "main/nest/general-exception-filter";
 import { LoggerMiddleware } from "main/nest/logger-middleware";
 import { TestUtilControllerV1 } from "./test-utils.controller";
 import { FoodLogModule } from "@features/foodlog/infrastructure/nest/foodlog.module";
+import { HealthController } from "main/nest/health.controller";
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { FoodLogModule } from "@features/foodlog/infrastructure/nest/foodlog.mod
       useClass: AllExceptionsFilter,
     },
   ],
-  controllers: [TestUtilControllerV1],
+  controllers: [TestUtilControllerV1, HealthController],
 })
 export class TestModule {
   configure(consumer: MiddlewareConsumer) {

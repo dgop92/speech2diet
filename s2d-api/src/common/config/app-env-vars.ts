@@ -17,8 +17,23 @@ function getAppConfiguration() {
   const awsAccessKeyId = getOsEnvOrDefault("AWS_ACCESS_KEY_ID", "");
   const awsSecretAccessKey = getOsEnvOrDefault("AWS_SECRET_ACCESS_KEY", "");
 
-  const nutritionRequestQueueUrl = getOsEnv("AWS_NUTRITION_REQUEST_QUEUE_URL");
-  const s3Bucket = getOsEnv("AWS_S3_BUCKET");
+  const nutritionRequestQueueUrl = getOsEnvOrDefault(
+    "AWS_NUTRITION_REQUEST_QUEUE_URL",
+    ""
+  );
+  const s3Bucket = getOsEnvOrDefault("AWS_S3_BUCKET", "");
+
+  if (!isTest && s3Bucket === "") {
+    throw new Error(
+      "AWS_S3_BUCKET environment variable is required for non testing environments"
+    );
+  }
+
+  if (!isTest && nutritionRequestQueueUrl === "") {
+    throw new Error(
+      "AWS_NUTRITION_REQUEST_QUEUE_URL environment variable is required for non testing environments"
+    );
+  }
 
   const firebaseAuthEmulatorHost = getOsEnvOrDefault(
     "FIREBASE_AUTH_EMULATOR_HOST",
