@@ -15,7 +15,7 @@ export class NetworkStack extends cdk.Stack {
     this.vpc = new ec2.Vpc(this, getCloudFormationID(id, "vpc"), {
       vpcName: getResourceName(id, "vpc"),
       ipAddresses: ec2.IpAddresses.cidr("10.0.0.0/16"),
-      maxAzs: 1,
+      maxAzs: 2,
       subnetConfiguration: [
         {
           name: "public",
