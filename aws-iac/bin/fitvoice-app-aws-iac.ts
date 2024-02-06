@@ -7,6 +7,7 @@ import { StorageStack } from "../lib/storage/storage-stack";
 import { LambdaStack } from "../lib/compute/lambda/lambda-stack";
 import { NetworkStack } from "../lib/network/vpc";
 import { S2DAPIStack } from "../lib/compute/s2d-api/s2d-api-stack";
+import { S2DAPIRepoStack } from "../lib/compute/s2d-api/s2d-api-repo-stack";
 
 const app = new cdk.App();
 
@@ -75,6 +76,23 @@ const fitvoiceLambdaStack = new LambdaStack(app, fitvoiceLambdaStackName, {
 cdk.Tags.of(fitvoiceLambdaStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceLambdaStack).add("project:env", config.env);
 cdk.Tags.of(fitvoiceLambdaStack).add("project:stack", "lambda");
+
+const fitvoiceS2DRepoStackName = getStackName(
+  config.appName,
+  "s2d-api-repo",
+  config.env
+);
+const fitvoiceS2DRepoStack = new S2DAPIRepoStack(
+  app,
+  fitvoiceS2DRepoStackName,
+  {
+    env: {
+      region: config.region,
+      account: config.accountId,
+    },
+    config: config,
+  }
+);
 
 const fitvoiceS2DStackName = getStackName(
   config.appName,

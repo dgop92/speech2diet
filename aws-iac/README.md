@@ -26,6 +26,14 @@ cdk diff fitvoice-app-lambda-dev-stack -c config=dev
 cdk deploy fitvoice-app-lambda-dev-stack -c config=dev
 ```
 
+S2D-API Repo Stack in dev environment
+
+```bash
+cdk synth fitvoice-app-s2d-api-repo-dev-stack -c config=dev
+cdk diff fitvoice-app-s2d-api-repo-dev-stack -c config=dev
+cdk deploy fitvoice-app-s2d-api-repo-dev-stack -c config=dev
+```
+
 S2D-API Stack in dev environment
 
 ```bash
