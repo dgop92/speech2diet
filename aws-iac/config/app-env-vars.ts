@@ -12,6 +12,9 @@ export function loadEnvironmentVariables(envname: string) {
     appName: getOsEnv("APP_NAME"),
     region: getOsEnv("AWS_REGION"),
     accountId: getOsEnv("AWS_ACCOUNT_ID"),
+    appRunnerAutoScalingConfigArn: getOsEnv(
+      "APP_RUNNER_AUTO_SCALING_CONFIG_ARN"
+    ),
   };
   return config;
 }

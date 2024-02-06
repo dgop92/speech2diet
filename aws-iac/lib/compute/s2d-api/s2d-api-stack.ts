@@ -1,19 +1,14 @@
 import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
-import * as autoscaling from "aws-cdk-lib/aws-autoscaling";
-import * as ecs from "aws-cdk-lib/aws-ecs";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as apprunner from "aws-cdk-lib/aws-apprunner";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 import { AwsEnvStackProps } from "../../utils/custom-types";
-import {
-  getCloudFormationID,
-  getResourceName,
-  getRootOfExternalProject,
-} from "../../../config/utils";
+import { getCloudFormationID } from "../../../config/utils";
 
 type S2DAPIConfig = {
   NODE_ENV: string;
@@ -64,45 +59,40 @@ function getEnvironmentVariablesFromEnv(
 }
 
 export interface S2DAPIStackProps extends AwsEnvStackProps {
-  vpc: ec2.Vpc;
   nutritionRequestQueue: sqs.Queue;
   mainBucket: s3.Bucket;
+  autoScalingConfigARN: string;
+  ecrRepository: ecr.Repository;
 }
 
 export class S2DAPIStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: S2DAPIStackProps) {
     super(scope, id, props);
 
-    // Auto scaling group as the capacity provider for the ECS cluster
-
-    const autoScalingGroup = new autoscaling.AutoScalingGroup(this, "asg", {
-      vpc: props.vpc,
-      instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.T2,
-        ec2.InstanceSize.MICRO
-      ),
-      machineImage: ecs.EcsOptimizedImage.amazonLinux2(),
-      associatePublicIpAddress: true,
-      maxCapacity: 1,
-      minCapacity: 1,
-      autoScalingGroupName: getResourceName(id, "asg"),
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PUBLIC,
-      },
-    });
-
-    // Role and policies for the EC2 instances from the auto scaling group
-
-    const s2dServicePolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:PutObject", "sqs:SendMessage"],
-      resources: [
-        props.mainBucket.bucketArn,
-        props.nutritionRequestQueue.queueArn,
+    // Role and policies for the app runner
+    const s2dServicePolicyDocument = new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["s3:PutObject", "sqs:SendMessage"],
+          resources: [
+            props.mainBucket.bucketArn,
+            props.nutritionRequestQueue.queueArn,
+          ],
+        }),
       ],
     });
-    autoScalingGroup.addToRolePolicy(s2dServicePolicy);
-
+    const s2dInstanceRole = new iam.Role(
+      this,
+      getCloudFormationID(id, "s2d-apprunner-role"),
+      {
+        assumedBy: new iam.ServicePrincipal("tasks.apprunner.amazonaws.com"),
+        description: "Role for the S2D API App Runner application",
+        inlinePolicies: {
+          s2dServicePolicy: s2dServicePolicyDocument,
+        },
+      }
+    );
     const secrets: { id: string; paramName: string }[] = [
       {
         id: "mrr-upload-api-key-parameter",
@@ -113,7 +103,6 @@ export class S2DAPIStack extends cdk.Stack {
         paramName: "GOOGLE_APPLICATION_CREDENTIALS_CONTENT",
       },
     ];
-
     secrets.forEach((secret) => {
       const param = StringParameter.fromSecureStringParameterAttributes(
         this,
@@ -122,80 +111,78 @@ export class S2DAPIStack extends cdk.Stack {
           parameterName: `/${props.config.appName}/${props.config.env}/s2d-api/${secret.paramName}`,
         }
       );
-      param.grantRead(autoScalingGroup);
+      param.grantRead(s2dInstanceRole);
     });
 
-    // ECS cluster with the auto scaling group as the capacity provider
-
-    const cluster = new ecs.Cluster(this, getCloudFormationID(id, "cluster"), {
-      vpc: props.vpc,
-      clusterName: getResourceName(id, "cluster"),
-    });
-    const asgCapacityProvider = new ecs.AsgCapacityProvider(
+    const appRunnerAcessRole = new iam.Role(
       this,
-      getCloudFormationID(id, "asg-capacity-provider"),
+      getCloudFormationID(id, "s2d-api-apprunner-access-role"),
       {
-        autoScalingGroup,
-        machineImageType: ecs.MachineImageType.AMAZON_LINUX_2,
-        capacityProviderName: getResourceName(id, "asg-capacity-provider"),
+        assumedBy: new iam.ServicePrincipal("build.apprunner.amazonaws.com"),
+        description: "App Runner access role for the S2D API",
+        inlinePolicies: {
+          "apprunner-access-policy": new iam.PolicyDocument({
+            statements: [
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
+                actions: ["ecr:GetAuthorizationToken"],
+                resources: ["*"],
+              }),
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
+                actions: [
+                  "ecr:BatchCheckLayerAvailability",
+                  "ecr:GetDownloadUrlForLayer",
+                  "ecr:GetRepositoryPolicy",
+                  "ecr:DescribeRepositories",
+                  "ecr:ListImages",
+                  "ecr:DescribeImages",
+                  "ecr:BatchGetImage",
+                  "ecr:ListTagsForResource",
+                  "ecr:DescribeImageScanFindings",
+                ],
+                resources: [props.ecrRepository.repositoryArn],
+              }),
+            ],
+          }),
+        },
       }
     );
-    cluster.addAsgCapacityProvider(asgCapacityProvider, {
-      canContainersAccessInstanceRole: true,
-    });
 
-    // Task definition for the s2d-api service
+    const appEnvVarsAsList = Object.entries(
+      getEnvironmentVariablesFromEnv(
+        props.config.env,
+        props.nutritionRequestQueue.queueUrl,
+        props.mainBucket.bucketName
+      )
+    ).map(([key, value]) => ({ name: key, value }));
 
-    const s2dAPIProjectPath = getRootOfExternalProject("s2d-api");
-
-    const ec2TaskDefinition = new ecs.Ec2TaskDefinition(
+    new apprunner.CfnService(
       this,
-      getCloudFormationID(id, "s2d-api-task-def"),
+      getCloudFormationID(id, "s2d-api-apprunner-service"),
       {
-        family: getResourceName(id, "s2d-api-task-def"),
-        networkMode: ecs.NetworkMode.BRIDGE,
-      }
-    );
-    ec2TaskDefinition.addContainer(
-      getCloudFormationID(id, "s2d-api-container"),
-      {
-        containerName: getResourceName(id, "s2d-api-container"),
-        image: ecs.ContainerImage.fromAsset(s2dAPIProjectPath, {
-          file: "Dockerfile",
-        }),
-        memoryLimitMiB: 1024,
-        cpu: 512,
-        portMappings: [
-          {
-            containerPort: 8080,
-            protocol: ecs.Protocol.TCP,
+        serviceName: "s2d-api-service",
+        sourceConfiguration: {
+          authenticationConfiguration: {
+            accessRoleArn: appRunnerAcessRole.roleArn,
           },
-        ],
-        logging: ecs.LogDrivers.awsLogs({
-          streamPrefix: getResourceName(id, "s2d-api"),
-        }),
-        environment: getEnvironmentVariablesFromEnv(
-          props.config.env,
-          props.nutritionRequestQueue.queueUrl,
-          props.mainBucket.bucketName
-        ),
+          autoDeploymentsEnabled: false,
+          imageRepository: {
+            imageIdentifier: props.ecrRepository.repositoryUriForTag("latest"),
+            imageRepositoryType: "ECR",
+            imageConfiguration: {
+              port: "8080",
+              runtimeEnvironmentVariables: appEnvVarsAsList,
+            },
+          },
+        },
+        instanceConfiguration: {
+          instanceRoleArn: s2dInstanceRole.roleArn,
+          cpu: "256",
+          memory: "512",
+        },
+        autoScalingConfigurationArn: props.autoScalingConfigARN,
       }
     );
-
-    // load balancer and service for the s2d-api
-
-    /* const loadBalancedEcsService =
-      new ecsPatterns.ApplicationLoadBalancedEc2Service(
-        this,
-        getCloudFormationID(id, "s2d-api-ecs-pattern"),
-        {
-          serviceName: getResourceName(id, "s2d-api-service"),
-          loadBalancerName: "s2d-api-alb",
-          cluster: cluster,
-          taskDefinition: ec2TaskDefinition,
-          desiredCount: 1,
-          publicLoadBalancer: true,
-        }
-      ); */
   }
 }

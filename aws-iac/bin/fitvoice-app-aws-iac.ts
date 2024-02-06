@@ -105,9 +105,10 @@ const fitvoiceS2DStack = new S2DAPIStack(app, fitvoiceS2DStackName, {
     account: config.accountId,
   },
   config: config,
-  vpc: fitvoiceNetworkStack.vpc,
+  autoScalingConfigARN: config.appRunnerAutoScalingConfigArn,
   mainBucket: fitvoiceStorageStack.mainBucket,
   nutritionRequestQueue: fitvoiceStorageStack.nutritionRequestQueue,
+  ecrRepository: fitvoiceS2DRepoStack.ecrRepository,
 });
 cdk.Tags.of(fitvoiceS2DStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceS2DStack).add("project:env", config.env);
