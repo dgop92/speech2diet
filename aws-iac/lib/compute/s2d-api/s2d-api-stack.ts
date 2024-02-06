@@ -76,7 +76,7 @@ export class S2DAPIStack extends cdk.Stack {
           effect: iam.Effect.ALLOW,
           actions: ["s3:PutObject", "sqs:SendMessage"],
           resources: [
-            props.mainBucket.bucketArn,
+            props.mainBucket.arnForObjects("*"),
             props.nutritionRequestQueue.queueArn,
           ],
         }),
