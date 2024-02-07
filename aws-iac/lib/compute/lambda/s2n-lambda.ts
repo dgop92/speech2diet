@@ -2,8 +2,8 @@ import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { getRootOfExternalProject } from "../../../config/utils";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 type S2NServiceConfig = {
@@ -22,6 +22,7 @@ export interface S2nLambdaProps {
   nutritionResponseQueueUrl: string;
   env: string;
   functionName: string;
+  ecrRepository: ecr.Repository;
   getSecretParamName: (name: string) => string;
 }
 
@@ -78,11 +79,10 @@ export class S2NLambda extends Construct {
 
     const s2nServiceConfig = getEnvironmentVariablesFromEnv(env);
 
-    const s2nProjectPath = getRootOfExternalProject("speech2nutrition");
     const s2nServiceLambda = new lambda.DockerImageFunction(this, id, {
       functionName: functionName,
-      code: lambda.DockerImageCode.fromImageAsset(s2nProjectPath, {
-        file: "Dockerfile.lambda",
+      code: lambda.DockerImageCode.fromEcr(props.ecrRepository, {
+        tag: "latest",
       }),
       /* 
         It takes 10 seconds roughly to init the function and the remaining time

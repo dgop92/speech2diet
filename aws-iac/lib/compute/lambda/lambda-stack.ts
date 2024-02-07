@@ -3,6 +3,7 @@ import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 import { getCloudFormationID, getResourceName } from "../../../config/utils";
 import { AwsEnvStackProps } from "../../utils/custom-types";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
@@ -13,6 +14,8 @@ export interface LambdaStackProps extends AwsEnvStackProps {
   mainBucket: s3.Bucket;
   nutritionRequestQueue: sqs.Queue;
   nutritionResponseQueue: sqs.Queue;
+  s2nEcrRepository: ecr.Repository;
+  mrrUploadEcrRepository: ecr.Repository;
 }
 
 export class LambdaStack extends cdk.Stack {
@@ -43,6 +46,7 @@ export class LambdaStack extends cdk.Stack {
       s3BucketName: mainBucket.bucketName,
       nutritionResponseQueueUrl: nutritionResponseQueue.queueUrl,
       env: props.config.env,
+      ecrRepository: props.s2nEcrRepository,
       getSecretParamName: (name: string) => {
         return `/${props.config.appName}/${props.config.env}/s2n/${name}`;
       },
@@ -62,6 +66,7 @@ export class LambdaStack extends cdk.Stack {
         functionName: getResourceName(id, "mrr-upload-service-lambda"),
         sqsEventSource: nutritionResponseEventSource,
         env: props.config.env,
+        ecrRepository: props.mrrUploadEcrRepository,
         getSecretParamName: (name: string) => {
           return `/${props.config.appName}/${props.config.env}/mrr-upload/${name}`;
         },

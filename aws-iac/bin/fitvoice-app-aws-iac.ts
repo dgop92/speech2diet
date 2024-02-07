@@ -92,6 +92,8 @@ const fitvoiceLambdaStack = new LambdaStack(app, fitvoiceLambdaStackName, {
   mainBucket: fitvoiceStorageStack.mainBucket,
   nutritionRequestQueue: fitvoiceStorageStack.nutritionRequestQueue,
   nutritionResponseQueue: fitvoiceStorageStack.nutritionResponseQueue,
+  s2nEcrRepository: fitvoiceECRRepositoryStack.s2nEcrRepository,
+  mrrUploadEcrRepository: fitvoiceECRRepositoryStack.mrrUploadEcrRepository,
 });
 cdk.Tags.of(fitvoiceLambdaStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceLambdaStack).add("project:env", config.env);

@@ -1,8 +1,8 @@
 import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { getRootOfExternalProject } from "../../../config/utils";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 type MRRUploadServiceConfig = {
@@ -15,6 +15,7 @@ export interface MRRUploadLambdaProps {
   sqsEventSource: SqsEventSource;
   env: string;
   functionName: string;
+  ecrRepository: ecr.Repository;
   getSecretParamName: (name: string) => string;
 }
 
@@ -55,11 +56,10 @@ export class MRRUploadLambda extends Construct {
 
     const mrrUploadServiceConfig = getEnvironmentVariablesFromEnv(env);
 
-    const mrrUploadProjectPath = getRootOfExternalProject("mrr-upload");
     const mrrUploadServiceLambda = new lambda.DockerImageFunction(this, id, {
       functionName: functionName,
-      code: lambda.DockerImageCode.fromImageAsset(mrrUploadProjectPath, {
-        file: "Dockerfile.lambda",
+      code: lambda.DockerImageCode.fromEcr(props.ecrRepository, {
+        tag: "latest",
       }),
       timeout: cdk.Duration.seconds(60),
       memorySize: 256,
