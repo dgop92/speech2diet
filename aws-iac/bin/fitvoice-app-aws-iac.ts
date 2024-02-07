@@ -7,7 +7,7 @@ import { StorageStack } from "../lib/storage/storage-stack";
 import { LambdaStack } from "../lib/compute/lambda/lambda-stack";
 import { NetworkStack } from "../lib/network/vpc";
 import { S2DAPIStack } from "../lib/compute/s2d-api/s2d-api-stack";
-import { S2DAPIRepoStack } from "../lib/compute/s2d-api/s2d-api-repo-stack";
+import { ECRRepositoryStack } from "../lib/storage/ecr-repository-stack";
 
 const app = new cdk.App();
 
@@ -58,6 +58,26 @@ cdk.Tags.of(fitvoiceStorageStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceStorageStack).add("project:env", config.env);
 cdk.Tags.of(fitvoiceStorageStack).add("project:stack", "storage");
 
+const fitvoiceECRRepositoryStackName = getStackName(
+  config.appName,
+  "ecr-repository",
+  config.env
+);
+const fitvoiceECRRepositoryStack = new ECRRepositoryStack(
+  app,
+  fitvoiceECRRepositoryStackName,
+  {
+    env: {
+      region: config.region,
+      account: config.accountId,
+    },
+    config: config,
+  }
+);
+cdk.Tags.of(fitvoiceECRRepositoryStack).add("project:name", config.appName);
+cdk.Tags.of(fitvoiceECRRepositoryStack).add("project:env", config.env);
+cdk.Tags.of(fitvoiceECRRepositoryStack).add("project:stack", "ecr-repository");
+
 const fitvoiceLambdaStackName = getStackName(
   config.appName,
   "lambda",
@@ -77,23 +97,6 @@ cdk.Tags.of(fitvoiceLambdaStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceLambdaStack).add("project:env", config.env);
 cdk.Tags.of(fitvoiceLambdaStack).add("project:stack", "lambda");
 
-const fitvoiceS2DRepoStackName = getStackName(
-  config.appName,
-  "s2d-api-repo",
-  config.env
-);
-const fitvoiceS2DRepoStack = new S2DAPIRepoStack(
-  app,
-  fitvoiceS2DRepoStackName,
-  {
-    env: {
-      region: config.region,
-      account: config.accountId,
-    },
-    config: config,
-  }
-);
-
 const fitvoiceS2DStackName = getStackName(
   config.appName,
   "s2d-api",
@@ -108,7 +111,7 @@ const fitvoiceS2DStack = new S2DAPIStack(app, fitvoiceS2DStackName, {
   autoScalingConfigARN: config.appRunnerAutoScalingConfigArn,
   mainBucket: fitvoiceStorageStack.mainBucket,
   nutritionRequestQueue: fitvoiceStorageStack.nutritionRequestQueue,
-  ecrRepository: fitvoiceS2DRepoStack.ecrRepository,
+  ecrRepository: fitvoiceECRRepositoryStack.s2dApiEcrRepository,
 });
 cdk.Tags.of(fitvoiceS2DStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceS2DStack).add("project:env", config.env);
