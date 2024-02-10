@@ -34,12 +34,25 @@ export class StorageStack extends cdk.Stack {
       }
     );
 
+    const nutritionRequestDeadLetterQueue = new sqs.Queue(
+      this,
+      getCloudFormationID(id, "nutrition-request-queue-dlq"),
+      {
+        queueName: getResourceName(id, "nutrition-request-queue-dlq"),
+        ...commonQueueProps,
+      }
+    );
+
     this.nutritionRequestQueue = new sqs.Queue(
       this,
       getCloudFormationID(id, "nutrition-request-queue"),
       {
         queueName: getResourceName(id, "nutrition-request-queue"),
         ...commonQueueProps,
+        deadLetterQueue: {
+          maxReceiveCount: 3,
+          queue: nutritionRequestDeadLetterQueue,
+        },
       }
     );
     this.nutritionResponseQueue = new sqs.Queue(
