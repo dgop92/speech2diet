@@ -28,22 +28,18 @@ def handler(event, context):
                 "This lambda function only supports one record per event, ignoring"
             )
         else:
-            # so far we don't have a dead letter queue, so we want to avoid infinite retries
-            # TODO: add dead letter queue
-            try:
-                body = records[0]["body"]
-                request = NutritionInformationRequest.parse_raw(body)
-                logger.info(f"processing request: {request}")
-                response = request_handler(request)
-                logger.info(f"successfully processed request: {request}")
-                response_as_json = response.json()
-                logger.info("sending response to nutrition response queue")
-                sqs_client.send_message(
-                    QueueUrl=APP_CONFIG.aws_nutrition_response_queue,
-                    MessageBody=response_as_json,
-                )
-                logger.info("response sent to nutrition response queue")
-            except Exception:
-                logger.exception("failed to process request")
+            body = records[0]["body"]
+            request = NutritionInformationRequest.parse_raw(body)
+            logger.info(f"processing request: {request}")
+            response = request_handler(request)
+            logger.info(f"successfully processed request: {request}")
+            response_as_json = response.json()
+            logger.info("sending response to nutrition response queue")
+            sqs_client.send_message(
+                QueueUrl=APP_CONFIG.aws_nutrition_response_queue,
+                MessageBody=response_as_json,
+            )
+            logger.info("response sent to nutrition response queue")
+
     else:
         logger.warning("non AWS SQS Event, ignoring")
