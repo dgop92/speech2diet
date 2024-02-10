@@ -33,7 +33,7 @@ def handler(event, context):
             logger.info(f"processing request: {request}")
             response = request_handler(request)
             logger.info(f"successfully processed request: {request}")
-            response_as_json = response.json()
+            response_as_json = response.json(ensure_ascii=False)
             logger.info("sending response to nutrition response queue")
             sqs_client.send_message(
                 QueueUrl=APP_CONFIG.aws_nutrition_response_queue,
