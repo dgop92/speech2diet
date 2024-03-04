@@ -1,15 +1,10 @@
 import argparse
 import logging
 
-import spacy
-
-from config.database import MongoDatabase
 from config.logging import config_logger
-from core.components.food_mapping.factory import build_map_food_to_nutrition
-from core.components.food_mapping.infrastructure.repositories.mongo_repository import (
-    SystemNutritionRepository,
-)
+from core.components.food_mapping.factory import food_mapping_component_factory
 from core.domain.entities.food_nutrition_request import FoodNutritionRequest
+from core.domain.entities.nutrition_information_request import DBLookupPreference
 
 
 def main() -> None:
@@ -23,7 +18,7 @@ def main() -> None:
         "name", type=str, help="Name of the food to find in the database"
     )
     parser.add_argument(
-        "description",
+        "--description",
         type=str,
         help="Description of the food to find in the database",
         default="",
@@ -35,22 +30,16 @@ def main() -> None:
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    logger.info("loading spacy model for spanish")
-    nlp = spacy.load(args.language)
-
-    logger.info("connecting to mongo database")
-    mongo_db = MongoDatabase()
-
-    repository = SystemNutritionRepository(mongo_db)
+    food_mapping_component = food_mapping_component_factory()
     fq_req = FoodNutritionRequest(
         food_name=args.name,
-        description=args.description,
+        description=args.description.split(","),
         amount=100,
         unit="g",
     )
-    food_map_func = build_map_food_to_nutrition(nlp)
-    result = food_map_func(fq_req, repository)
-    print(result.json(indent=4))
+
+    result = food_mapping_component(fq_req, DBLookupPreference.system_db, "test_user")
+    print(result.json(indent=4, ensure_ascii=False))
 
 
 if __name__ == "__main__":

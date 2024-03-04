@@ -80,6 +80,12 @@ class APPConfig(metaclass=Singleton):
         self.nutrition_db_name = ssm.get_parameter(
             Name=self.get_key_for_ssm("nutrition_db_name")
         )["Parameter"]["Value"]
+        self.nutrition_system_db_collection_name = ssm.get_parameter(
+            Name=self.get_key_for_ssm("nutrition_system_db_collection_name")
+        )["Parameter"]["Value"]
+        self.nutrition_system_db_collection_index = ssm.get_parameter(
+            Name=self.get_key_for_ssm("nutrition_system_db_collection_index")
+        )["Parameter"]["Value"]
 
         # Assumption: If we aren't using aws ssm, that means that we will not be using rabbitmq
         self.rabbitmq_url = ""
@@ -98,6 +104,12 @@ class APPConfig(metaclass=Singleton):
     def _load_secrets_from_env(self):
         self.nutrition_mongo_url = config_as_str("NUTRITION_MONGO_URL", default="")
         self.nutrition_db_name = config_as_str("NUTRITION_DB_NAME", default="")
+        self.nutrition_system_db_collection_name = config_as_str(
+            "NUTRITION_SYSTEM_DB_COLLECTION_NAME", default=""
+        )
+        self.nutrition_system_db_collection_index = config_as_str(
+            "NUTRITION_SYSTEM_DB_COLLECTION_INDEX", default=""
+        )
 
         if self.message_queue_service == "rabbitmq":
             self.rabbitmq_url = config_as_str("RABBITMQ_URL", default="")

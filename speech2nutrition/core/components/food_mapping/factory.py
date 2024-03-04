@@ -2,7 +2,6 @@ import logging
 
 import spacy
 
-from config.database import MongoDatabase
 from config.settings_v2 import APP_CONFIG
 from core.components.food_mapping.definitions.food_map_v2 import (
     MapFoodToNutritionDBComponentV2,
@@ -32,11 +31,13 @@ def food_mapping_component_factory() -> MapFoodToNutritionDBComponentV2:
         logger.info("creating mock system repository")
         system_repository = MockNutritionRepository(data=[])
     else:
-        logger.info("connecting to mongo database")
-        mongo_db = MongoDatabase()
-
         logger.info("creating system repository")
-        system_repository = SystemNutritionRepository(mongo_db)
+        system_repository = SystemNutritionRepository(
+            mongo_uri=APP_CONFIG.nutrition_mongo_url,
+            db_name=APP_CONFIG.nutrition_db_name,
+            collection_name=APP_CONFIG.nutrition_system_db_collection_name,
+            index_name=APP_CONFIG.nutrition_system_db_collection_index,
+        )
 
     logger.info("creating 'map food to nutrition db' function")
     food_mapper = FoodMapper(
