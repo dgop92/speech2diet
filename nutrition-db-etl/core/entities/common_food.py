@@ -24,6 +24,8 @@ class CommonFood(BaseModel):
     """ The main name of the food """
     other_names: List[str]
     """ Other possible names that the food is known as """
+    food_names: List[str]
+    """ All the possible names that the food is known as """
     description: List[str]
     """ attributes that describes the food, such cooked, raw, etc """
     serving_size: float = Field(gt=0)

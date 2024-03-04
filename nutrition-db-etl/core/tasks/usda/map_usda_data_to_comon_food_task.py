@@ -63,6 +63,7 @@ class MapUSDADataToCommonFoodTask(GenericTask):
                     db_source_name="usdaFoundation",
                     food_name=food["name"],
                     other_names=other_names,
+                    food_names=food["food_names"],
                     description=food["description"],
                     # sadly, the usda foundation foods do not provide a serving size
                     serving_size=100,
