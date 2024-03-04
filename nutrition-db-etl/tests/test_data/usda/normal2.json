@@ -1,0 +1,40 @@
+{
+    "id": 321611,
+    "category": "Vegetables and Vegetable Products",
+    "calories": 24.0,
+    "macro_nutrients": {
+        "protein": {
+            "amount": 1.04,
+            "unit": "g"
+        },
+        "fat": {
+            "amount": 0.39,
+            "unit": "g"
+        },
+        "carbs": {
+            "amount": 4.11,
+            "unit": "g"
+        }
+    },
+    "name": "frijoles",
+    "description": [
+        "verdes",
+        "enlatados",
+        "paquete regular",
+        "sólidos escurridos"
+    ],
+    "en_usda_description": "Beans, snap, green, canned, regular pack, drained solids",
+    "es_usda_description": "Frijoles, verdes, enlatados, paquete regular, sólidos escurridos",
+    "food_names": [
+        "frijoles",
+        "alubias"
+    ],
+    "full_description": [
+        "frijoles",
+        "alubias",
+        "verdes",
+        "enlatados",
+        "paquete regular",
+        "sólidos escurridos"
+    ]
+}

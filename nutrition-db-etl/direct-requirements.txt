@@ -1,0 +1,7 @@
+pytest==7.4.0
+pydantic==2.6.1
+prefect==2.14.21
+boto3==1.34.1
+spacy==3.7.4
+pymongo==4.4.0
+es-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.7.0/es_core_news_sm-3.7.0-py3-none-any.whl

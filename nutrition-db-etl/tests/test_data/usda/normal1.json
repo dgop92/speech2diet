@@ -1,0 +1,38 @@
+{
+    "id": 323604,
+    "category": "Dairy and Egg Products",
+    "calories": 146,
+    "macro_nutrients": {
+        "protein": {
+            "amount": 12.3,
+            "unit": "g"
+        },
+        "fat": {
+            "amount": 10.3,
+            "unit": "g"
+        },
+        "carbs": {
+            "amount": 0.91,
+            "unit": "g"
+        }
+    },
+    "name": "huevo",
+    "description": [
+        "entero",
+        "crudo",
+        "congelado",
+        "pasteurizado"
+    ],
+    "en_usda_description": "Egg, whole, raw, frozen, pasteurized",
+    "es_usda_description": "Huevo, entero, crudo, congelado, pasteurizado",
+    "food_names": [
+        "huevo"
+    ],
+    "full_description": [
+        "huevo",
+        "entero",
+        "crudo",
+        "congelado",
+        "pasteurizado"
+    ]
+}

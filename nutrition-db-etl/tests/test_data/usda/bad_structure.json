@@ -1,0 +1,75 @@
+[
+    {
+        "id": 321358,
+        "category": "Legumes and Legume Products",
+        "calories": 243,
+        "macro_nutrients": {
+            "protein": {
+                "amount": 7.35,
+                "unit": "g"
+            },
+            "fat": {
+                "amount": 17.1,
+                "unit": "g"
+            },
+            "carbs": {
+                "amount": 14.9,
+                "unit": "g"
+            }
+        },
+        "description": [
+            "comercial"
+        ],
+        "en_usda_description": "Hummus, commercial",
+        "es_usda_description": "Hummus, comercial",
+        "food_names": [
+            "hummus",
+            "puré de garbanzos",
+            "cremoso de garbanzos"
+        ],
+        "full_description": [
+            "hummus",
+            "puré de garbanzos",
+            "cremoso de garbanzos",
+            "comercial"
+        ]
+    },
+    {
+        "id": 321360,
+        "category": "Vegetables and Vegetable Products",
+        "calories": 31.0,
+        "macro_nutrients": {
+            "protein": {
+                "amount": 0.83,
+                "unit": "g"
+            },
+            "fat": {
+                "amount": 0.63,
+                "unit": "g"
+            },
+            "carbs": {
+                "amount": 5.51,
+                "unit": "g"
+            }
+        },
+        "name": "tomates",
+        "description": [
+            "uva",
+            "crudos"
+        ],
+        "en_usda_description": "Tomatoes, grape, raw",
+        "es_usda_description": "Tomates, uva, crudos",
+        "food_names": [
+            "tomates",
+            "tomateros",
+            "jitomates"
+        ],
+        "full_description": [
+            "tomates",
+            "tomateros",
+            "jitomates",
+            "uva",
+            "crudos"
+        ]
+    }
+]
