@@ -90,7 +90,7 @@ BASIC_TEST_SET: List[FoodExtractionTestCase] = [
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="jugo", description=["maracuyá"], amount=300, unit="ml"
+                    food_name="jugo de maracuyá", description=[], amount=300, unit="ml"
                 ),
                 "unit_variants": ["mililitros", "ml"],
             },

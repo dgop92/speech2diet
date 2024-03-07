@@ -50,7 +50,7 @@ python -m tests.food_extraction.execute_performance_metrics
 
 Unit tests cannot be write for this component because the results are not completely deterministic as its using LLMs.
 
-A folder in `tests\data\fe_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/food_extraction/test_sets`
+A folder in `tests/data/fe_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/food_extraction/test_sets`
 
 ## How to run
 

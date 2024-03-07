@@ -39,7 +39,7 @@ def compute_new_amount_to_grams(query: FoodUnitQuery) -> FoodUnitResponse:
                 unit_was_transformed=True,
             )
         elif query.amount == 0:
-            # case:  not unit neither amount was reported
+            # case:  neither unit nor amount was reported
             return FoodUnitResponse(
                 amount=query.food.portion_reference,
                 unit_was_transformed=True,

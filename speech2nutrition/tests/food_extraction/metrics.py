@@ -87,7 +87,7 @@ def unit_metric(unit: str, valid_units: List[str]) -> int:
     """
     Given a food unit and a list of valid units, compute a metric that is 1 if at least one of the units is the same and 0 otherwise. Valid units is required to overcome the issue of same units, different ways of writing them (e.g. g, gr, grams)
     """
-    return 1 if unit in valid_units else 0
+    return 1 if unit.lower() in valid_units else 0
 
 
 def amount_metric(amount: float, expected_amount: float) -> int:

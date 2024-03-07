@@ -98,8 +98,9 @@ def main() -> None:
             all_results.append((test_set_id, loaded_results))
 
     all_individual_metrics = []
+    total = 0
     for test_set_id, results in all_results:
-        total = 0
+        current_total = 0
         for result in results:
             test_id_total = result["total"]
             logger.info(f"test set id: '{test_set_id}' - total: {test_id_total}")
@@ -109,10 +110,15 @@ def main() -> None:
                 [{**m, "test_set_id": test_set_id} for m in ind_metrics]
             )
 
-            total += test_id_total
+            current_total += test_id_total
+
+        logger.info(
+            f"--> test set id: '{test_set_id}' - total: {current_total} / {len(results)}"
+        )
+        total += current_total
 
     logger.info(f"number of tests: {n_tests}")
-    logger.info(f"total score: {total}")
+    logger.info(f"total score: {total} / {n_tests}")
     logger.info("Saving individual metrics")
     save_results("individual_metrics", all_individual_metrics)
 
