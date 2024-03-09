@@ -34,7 +34,7 @@ def main() -> None:
     )
 
     parser.add_argument(
-        "--test_set_id",
+        "--test-set-id",
         type=str,
         help="The id of the test set to execute. use all to get all test sets",
         default="check",

@@ -75,7 +75,10 @@ UNCONTABLES_TEST_SET: List[FoodExtractionTestCase] = [
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="papas", description=["francesa"], amount=40, unit="g"
+                    food_name="papas a la francesa",
+                    description=[],
+                    amount=40,
+                    unit="g",
                 ),
                 "unit_variants": ["g", "gr", "gramo", "gramos"],
             },

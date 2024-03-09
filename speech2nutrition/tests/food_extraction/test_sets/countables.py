@@ -46,8 +46,8 @@ COUNTABLES_TEST_SET: List[FoodExtractionTestCase] = [
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="papas",
-                    description=["cocidas, blancas"],
+                    food_name="papas blancas",
+                    description=["cocidas"],
                     amount=2,
                     unit="",
                 ),
@@ -60,7 +60,7 @@ COUNTABLES_TEST_SET: List[FoodExtractionTestCase] = [
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
-                    food_name="helado", description=["vainilla"], amount=1, unit=""
+                    food_name="helado de vainilla", description=[], amount=1, unit=""
                 ),
                 "unit_variants": [],
             },
@@ -71,7 +71,7 @@ COUNTABLES_TEST_SET: List[FoodExtractionTestCase] = [
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
-                    food_name="tomates", description=["rojos"], amount=2, unit=""
+                    food_name="tomates rojos", description=[], amount=2, unit=""
                 ),
                 "unit_variants": [],
             },

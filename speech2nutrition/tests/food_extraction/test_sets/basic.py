@@ -38,13 +38,13 @@ BASIC_TEST_SET: List[FoodExtractionTestCase] = [
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
-                    food_name="galletas", description=["soda"], amount=2, unit=""
+                    food_name="galletas de soda", description=[], amount=2, unit=""
                 ),
                 "unit_variants": [],
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="jugo", description=["fresa"], amount=0, unit=""
+                    food_name="jugo de fresa", description=[], amount=0, unit=""
                 ),
                 "unit_variants": [],
             },

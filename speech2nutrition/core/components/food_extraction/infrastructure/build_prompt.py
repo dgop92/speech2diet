@@ -6,26 +6,31 @@ from core.components.food_extraction.infrastructure.prompts import (
 
 examples = [
     {
-        "text": "Estoy comiendo 100 gramos de arroz blanco cocido y una manzana",
+        "text": "Estoy comiendo 100 gramos de arroz blanco cocido y una pera",
         "result": [
             {
-                "food_name": "arroz",
-                "description": "blanco,cocido",
+                "food_name": "arroz blanco",
+                "description": "cocido",
                 "amount": 100,
                 "unit": "gramos",
             },
-            {"food_name": "manzana", "description": "", "amount": 1, "unit": ""},
+            {"food_name": "pera", "description": "", "amount": 1, "unit": ""},
         ],
     },
     {
-        "text": "Disfruto de dos panes franceses con una taza de café negro",
+        "text": "Disfruto de dos croquetas de pollo con una taza de café negro",
         "result": [
-            {"food_name": "panes", "description": "franceses", "amount": 2, "unit": ""},
             {
-                "food_name": "café",
-                "description": "negro",
-                "amount": 100,
-                "unit": "gramos",
+                "food_name": "croquetas de pollo",
+                "description": "",
+                "amount": 2,
+                "unit": "",
+            },
+            {
+                "food_name": "café negro",
+                "description": "",
+                "amount": 1,
+                "unit": "taza",
             },
         ],
     },
@@ -33,6 +38,23 @@ examples = [
         "text": "Mi cena de hoy fueron espaguetis",
         "result": [
             {"food_name": "espaguetis", "description": "", "amount": 0, "unit": ""},
+        ],
+    },
+    {
+        "text": "Hoy almorzé 50G carne de conejo asada, acompañado de un croissant",
+        "result": [
+            {
+                "food_name": "carne de conejo",
+                "description": "asada",
+                "amount": 50,
+                "unit": "g",
+            },
+            {
+                "food_name": "croissant",
+                "description": "",
+                "amount": 1,
+                "unit": "",
+            },
         ],
     },
     {

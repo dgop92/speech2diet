@@ -18,8 +18,8 @@ CHECK_TEST_SET: List[FoodExtractionTestCase] = [
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="arroz",
-                    description=["integral"],
+                    food_name="arroz integral",
+                    description=[],
                     amount=120,
                     unit="gramos",
                 ),
