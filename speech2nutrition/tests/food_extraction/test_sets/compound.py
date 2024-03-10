@@ -83,10 +83,10 @@ COMPOUND_TEST_SET: List[FoodExtractionTestCase] = [
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
-                    food_name="barra de chocolate oscuro",
+                    food_name="chocolate oscuro",
                     description=[],
                     amount=1,
-                    unit="",
+                    unit="barra",
                 ),
                 "unit_variants": [],
             },

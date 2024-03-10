@@ -41,6 +41,12 @@ examples = [
         ],
     },
     {
+        "text": "Han sido días difíciles y estoy comiendo lata y media de atún",
+        "result": [
+            {"food_name": "atún", "description": "", "amount": 1.5, "unit": "lata"},
+        ],
+    },
+    {
         "text": "Hoy almorzé 50G carne de conejo asada, acompañado de un croissant",
         "result": [
             {
