@@ -52,6 +52,14 @@ Unit tests cannot be write for this component because the results are not comple
 
 A folder in `tests/data/fe_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/food_extraction/test_sets`
 
+- Speech 2 Text: To get the component performance metrics, run the following command.
+
+```bash
+python -m tests.speech2text.execute_performance_metrics
+```
+
+A folder in `tests/data/s2t_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/speech2text/test_sets`
+
 ## How to run
 
 You can execute this service in different ways:

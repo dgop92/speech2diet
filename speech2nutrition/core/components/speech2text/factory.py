@@ -34,7 +34,6 @@ def speech2text_component_factory() -> Speech2TextComponent:
         speech2text_model = DeepgramWhisperSpeech2TextModel(
             api_key=APP_CONFIG.deepgram_key
         )
-        logger.info("creating chatgpt food extraction service")
 
     logger.info("creating speech2text service")
     s2t = Speech2TextService(audio_storage, speech2text_model)
