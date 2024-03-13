@@ -9,31 +9,21 @@ logger = logging.getLogger(__name__)
 
 
 def system_db_data_to_food(document: Dict[str, Any]) -> Food:
-    _id = document["id"]
-    food_name = document["food_name"]
-    other_names = document["other_names"]
-    description = document["description"]
-    full_description = document["search_keywords"]
-    portion_reference = document["portion_size"]
-    portion_unit = document["portion_size_unit"]
-    food_source = FoodSource.system_db
-    calories = document["calories"]
-    protein = document["protein"]
-    fat = document["fat"]
-    carbs = document["carbohydrates"]
     return Food(
-        id=_id,
-        food_name=food_name,
-        other_names=other_names,
-        description=description,
-        full_description=full_description,
-        portion_reference=portion_reference,
-        portion_unit=portion_unit,
-        food_source=food_source,
-        calories=calories,
-        protein=protein,
-        fat=fat,
-        carbohydrates=carbs,
+        id=document["id"],
+        food_name=document["food_name"],
+        other_names=document["other_names"],
+        description=document["description"],
+        full_description=document["search_keywords"],
+        portion_size=document["portion_size"],
+        portion_size_unit=document["portion_size_unit"],
+        serving_size=document["serving_size"],
+        serving_size_unit=document["serving_size_unit"],
+        food_source=FoodSource.system_db,
+        calories=document["calories"],
+        protein=document["protein"],
+        fat=document["fat"],
+        carbohydrates=document["carbohydrates"],
     )
 
 

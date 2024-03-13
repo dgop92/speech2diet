@@ -35,6 +35,8 @@ def create_food(raw_data: Dict[str, Any]) -> Food:
     full_description = raw_data.get("full_description", [])
     portion_reference = raw_data.get("portion_reference", 100)
     portion_unit = raw_data.get("portion_unit", "g")
+    serving_size = raw_data.get("serving_size", 100)
+    serving_size_unit = raw_data.get("serving_size_unit", "g")
     food_source = raw_data.get("food_source", "system_db")
     calories = raw_data.get("calories", 0)
     protein = raw_data.get("protein", 0)
@@ -46,8 +48,10 @@ def create_food(raw_data: Dict[str, Any]) -> Food:
         other_names=other_names,
         description=description,
         full_description=full_description,
-        portion_reference=portion_reference,
-        portion_unit=portion_unit,
+        portion_size=portion_reference,
+        portion_size_unit=portion_unit,
+        serving_size=serving_size,
+        serving_size_unit=serving_size_unit,
         food_source=food_source,
         calories=calories,
         protein=protein,
