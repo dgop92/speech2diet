@@ -12,7 +12,9 @@ export interface FoodCreateInput {
   foodSource: 'user_db' | 'system_db';
   id: string;
   otherNames: string[];
-  portionReference: number;
-  portionUnit: string;
+  portionSize: number;
+  portionSizeUnit: string;
   protein: number;
+  servingSize: number;
+  servingSizeUnit: string;
 }

@@ -9,8 +9,10 @@ interface Food {
   other_names: string[];
   description: string[];
   full_description: string[];
-  portion_reference: number;
-  portion_unit: string;
+  serving_size: number;
+  serving_size_unit: string;
+  portion_size: number;
+  portion_size_unit: string;
   food_source: FoodSource;
   calories: number;
   protein: number;
