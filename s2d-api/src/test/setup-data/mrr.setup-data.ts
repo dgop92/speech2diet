@@ -1,16 +1,21 @@
 import { FoodSource } from "@features/foodlog/entities/food";
 import { DBLookupPreference } from "@features/foodlog/entities/meal-report-review";
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
-import { MealReportReviewCreateInput } from "@features/foodlog/schema-types";
+import {
+  FoodCreateInput,
+  MealReportReviewCreateInput,
+} from "@features/foodlog/schema-types";
 
-const fakeFoods = [
+const fakeFoods: FoodCreateInput[] = [
   {
     id: "1",
     foodName: "Crunchy Delight",
     otherNames: ["Crispy Joy", "Snacktastic"],
     description: ["Cooked", "crunchy", "flavorful"],
-    portionReference: 50,
-    portionUnit: "grams",
+    portionSize: 50,
+    portionSizeUnit: "grams",
+    servingSize: 90,
+    servingSizeUnit: "grams",
     foodSource: FoodSource.SYSTEM_DB,
     calories: 200,
     protein: 4,
@@ -22,8 +27,10 @@ const fakeFoods = [
     foodName: "Zesty Zoodle Bowl",
     otherNames: ["Spicy Noodle Delight", "Veggie Zing"],
     description: ["Raw zucchini noodles with a tangy sauce"],
-    portionReference: 150,
-    portionUnit: "grams",
+    portionSize: 150,
+    portionSizeUnit: "grams",
+    servingSize: 200,
+    servingSizeUnit: "grams",
     foodSource: FoodSource.USER_DB,
     calories: 120,
     protein: 3,
@@ -35,8 +42,10 @@ const fakeFoods = [
     foodName: "Creamy Dream Cake",
     otherNames: ["Velvet Bliss", "Dessert Supreme"],
     description: ["Rich and creamy cake with layers of frosting"],
-    portionReference: 100,
-    portionUnit: "grams",
+    portionSize: 100,
+    portionSizeUnit: "grams",
+    servingSize: 150,
+    servingSizeUnit: "grams",
     foodSource: FoodSource.SYSTEM_DB,
     calories: 350,
     protein: 5,

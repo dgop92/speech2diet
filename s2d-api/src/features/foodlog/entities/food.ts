@@ -15,9 +15,13 @@ export interface Food {
   /** Attributes that describe the food, such as cooked, raw, etc */
   description: string[];
   /** the portion reference, that is the amount of the food that the nutrition information is based on, for example 100 grams */
-  portionReference: number;
+  portionSize: number;
   /** The unit of the portion reference, For USDA Foundation food units are in grams */
-  portionUnit: string;
+  portionSizeUnit: string;
+  /** The recommended amount of food to be consumed */
+  servingSize: number;
+  /** The unit of the serving size */
+  servingSizeUnit: string;
   /** The source of the food, either from the user database or the system database */
   foodSource: FoodSource;
   /** The amount of calories in grams */
@@ -35,8 +39,10 @@ export const FoodCreateInputSchema = Joi.object({
   foodName: Joi.string().required(),
   otherNames: Joi.array().items(Joi.string()).required(),
   description: Joi.array().items(Joi.string()).required(),
-  portionReference: Joi.number().positive().required(),
-  portionUnit: Joi.string().required(),
+  portionSize: Joi.number().positive().required(),
+  portionSizeUnit: Joi.string().required(),
+  servingSize: Joi.number().positive().required(),
+  servingSizeUnit: Joi.string().required(),
   calories: Joi.number().min(0).required(),
   protein: Joi.number().min(0).required(),
   fat: Joi.number().min(0).required(),

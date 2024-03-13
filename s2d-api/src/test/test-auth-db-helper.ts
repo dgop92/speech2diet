@@ -20,7 +20,7 @@ export class TestAuthDBHelper {
 
   async setupTestAuthDB() {
     console.log("setupTestDB");
-    const firebaseApp = getTestFirebaseApp();
+    const firebaseApp = await getTestFirebaseApp();
     this.authFirebaseClient = getTestAuthFirebaseClient(firebaseApp);
   }
 

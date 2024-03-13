@@ -20,7 +20,7 @@ export class TestDBHelper {
 
   async setupTestDB() {
     console.log("setupTestDB");
-    const firebaseApp = getTestFirebaseApp();
+    const firebaseApp = await getTestFirebaseApp();
     this.firestoreClient = getTestFirestoreClient(firebaseApp);
   }
 
