@@ -31,10 +31,10 @@ Finally, for me, the best way to learn is by building projects and so far, this 
 
 Some abbreviations are used in the documentation and code to avoid long names.
 
-_mrr:_  meal report review
-_frr:_ food report review
-_s2n:_ Speech 2 Nutrition
-_s2d-api:_ Speech 2 Diet API
+* _mrr:_  meal report review
+* _frr:_ food report review
+* _s2n:_ Speech 2 Nutrition
+* _s2d-api:_ Speech 2 Diet API
 
 **¿What are meal report reviews?**
 
@@ -46,8 +46,8 @@ To keep it simple, it's just a report containing all the foods you consumed in a
 
 **App section:**
 
-- API Gateway: Handle security, monitoring, and rate limits to prevent abuse of internal services.
-- ECS - Speech 2 Diet API: Manage profile user data and meal report reviews. 
+- Mobile App: The user interacts with the Flutter app.
+- App Runner - Speech 2 Diet API: Manage profile user data and meal report reviews. 
 - Firebase Authentication: Handle user authentication.
 - Firestore: NoSQL database to store profile user data and meal report reviews.
 
