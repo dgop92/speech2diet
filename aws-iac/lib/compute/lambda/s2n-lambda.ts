@@ -108,6 +108,14 @@ export class S2NLambda extends Construct {
     const secrets: { id: string; paramName: string }[] = [
       { id: "nutrition-mongo-url-parameter", paramName: "nutrition_mongo_url" },
       { id: "nutrition-db-name-parameter", paramName: "nutrition_db_name" },
+      {
+        id: "nutrition-system-db-collection-name",
+        paramName: "nutrition_system_db_collection_name",
+      },
+      {
+        id: "nutrition-system-db-collection-index",
+        paramName: "nutrition_system_db_collection_index",
+      },
       { id: "open-ai-engine-parameter", paramName: "open_ai_engine" },
       { id: "open-ai-key-parameter", paramName: "open_ai_key" },
       { id: "deepgram-key-parameter", paramName: "deepgram_key" },
