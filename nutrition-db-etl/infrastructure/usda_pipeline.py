@@ -8,11 +8,19 @@ from core.data_exporters.mongo_repository import NutritionMongoRepository
 from core.data_loaders.s3_usda_repository import USDAS3Repository
 from core.entities.clean_food import CleanKeywordFood
 from core.entities.common_food import CommonFood
+from core.lib.llm.serving_size_extractor import ServingSizeExtractionService
 from core.tasks.common.create_clean_food_task import CreateCleanFoodTask
 from core.tasks.common.save_in_dest_db_task import SaveFoodsInDestTask
 from core.tasks.usda.map_usda_data_to_comon_food_task import MapUSDADataToCommonFoodTask
+from core.tasks.usda.map_usda_data_to_comon_food_task_with_serving import (
+    MapUSDADataToCommonFoodTaskWithServing,
+)
 from core.tasks.usda.retrieve_usda_data_task import RetrieveUSDADataTask
 from infrastructure.utils import build_clean_function
+
+
+def get_secret(envname: str, secret_name: str) -> str:
+    return Secret.load(f"{envname}-{secret_name}").get()
 
 
 @task(retries=2)
@@ -36,8 +44,23 @@ def map_usda_data_to_comon_food_task(
 ) -> List[CommonFood]:
     logger: logging.Logger = get_run_logger()
     env_name: str = variables.get("environment")
-    core_task = MapUSDADataToCommonFoodTask(logger=logger, env_name=env_name)
-    return core_task.map_usda_data_to_common_food(usda_data=usda_data)
+    map_usda_type = variables.get("map_usda_type")
+
+    if map_usda_type == "with-serving":
+        sse = ServingSizeExtractionService(
+            openai_key=get_secret(env_name, "openai-key"),
+            engine=get_secret(env_name, "openai-engine"),
+            logger=logger,
+        )
+        core_task = MapUSDADataToCommonFoodTaskWithServing(
+            logger=logger, env_name=env_name, serving_size_func=sse
+        )
+        results = core_task.map_usda_data_to_common_food(usda_data=usda_data)
+    else:
+        core_task = MapUSDADataToCommonFoodTask(logger=logger, env_name=env_name)
+        results = core_task.map_usda_data_to_common_food(usda_data=usda_data)
+
+    return results
 
 
 @task(retries=1)

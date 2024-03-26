@@ -56,6 +56,7 @@ def test_search_keywords_attribute_without_other_names(
     data = {
         "db_source_name": "testSource",
         "food_name": "papa",
+        "food_names": ["papa"],
         "other_names": [],
         "description": ["cocinada"],
         **basic_portion_serving_data(),
@@ -74,6 +75,7 @@ def test_search_keywords_attribute_with_other_names(
     data = {
         "db_source_name": "testSource",
         "food_name": "papa",
+        "food_names": ["papa"],
         "other_names": ["patata"],
         "description": ["cocinada"],
         **basic_portion_serving_data(),

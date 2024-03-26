@@ -34,6 +34,7 @@ class CommonFoodTests(unittest.TestCase):
         data = {
             "db_source_name": "testSource",
             "food_name": "potato",
+            "food_names": ["potato"],
             "other_names": [],
             "description": ["test"],
             **basic_portion_serving_data(),
@@ -50,6 +51,7 @@ class CommonFoodTests(unittest.TestCase):
         data = {
             "db_source_name": "test/Source",
             "food_name": "potato",
+            "food_names": ["potato"],
             "other_names": [],
             "description": ["test"],
             **basic_portion_serving_data(),
@@ -62,6 +64,7 @@ class CommonFoodTests(unittest.TestCase):
         data = {
             "db_source_name": "testSource",
             "food_name": "potato",
+            "food_names": ["potato"],
             "other_names": [],
             "description": ["test"],
             "serving_size": 50,
@@ -77,6 +80,7 @@ class CommonFoodTests(unittest.TestCase):
         data = {
             "db_source_name": "testSource",
             "food_name": "potato",
+            "food_names": ["potato"],
             "other_names": [],
             "description": ["", "cooked"],
             **basic_portion_serving_data(),
@@ -89,6 +93,7 @@ class CommonFoodTests(unittest.TestCase):
         data = {
             "db_source_name": "testSource",
             "food_name": "meat",
+            "food_names": ["meat"],
             "other_names": ["", "beef"],
             "description": ["test"],
             **basic_portion_serving_data(),
