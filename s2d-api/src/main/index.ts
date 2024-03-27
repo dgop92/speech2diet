@@ -17,6 +17,7 @@ import {
   getFirebaseApp,
   getFirestoreClient,
 } from "./firebase-app";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 export async function startApp() {
   const firebaseApp = await getFirebaseApp();
@@ -36,6 +37,18 @@ export async function startApp() {
   app.enableCors({
     origin: APP_ENV_VARS.cors.allowOrigins,
   });
+
+  if (!APP_ENV_VARS.isProduction) {
+    const config = new DocumentBuilder()
+      .setTitle("Speech 2 Diet API")
+      .setDescription("The Speech 2 Diet API")
+      .setVersion("1.0")
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup("api", app, document);
+  }
+
   await app.listen(APP_ENV_VARS.port);
 
   myLogger.info("app started");

@@ -1,7 +1,7 @@
 import { AppUser } from "./app-user";
 import { AuthUser } from "./auth-user";
 
-export interface User {
+export class User {
   authUser: AuthUser;
   appUser: AppUser;
 }

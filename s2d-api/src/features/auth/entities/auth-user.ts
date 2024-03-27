@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export interface AuthUser {
+export class AuthUser {
   id: string;
   email: string;
 }

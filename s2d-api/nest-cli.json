@@ -8,7 +8,14 @@
                 "name": "@nestjs/swagger",
                 "options": {
                     "classValidatorShim": false,
-                    "introspectComments": true
+                    "introspectComments": true,
+                    "dtoFileNameSuffix": [
+                        ".dto.ts",
+                        "app-user.ts",
+                        "auth-user.ts",
+                        "health-data",
+                        "user.ts"
+                    ]
                 }
             }
         ]

@@ -2,7 +2,7 @@ import Joi from "joi";
 
 import { HealthData } from "./health-data";
 
-export interface AppUser {
+export class AppUser {
   id: string;
   firstName: string;
   lastName: string;

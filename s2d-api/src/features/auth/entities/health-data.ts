@@ -2,12 +2,14 @@ import Joi from "joi";
 
 export type Gender = "male" | "female";
 
-export interface HealthData {
+export class HealthData {
+  /** gender of the person, male or female */
   gender?: Gender;
+  /** age in years */
   age?: number;
-  /* height in cm */
+  /** height in cm */
   height?: number;
-  /* weight in kg */
+  /** weight in kg */
   weight?: number;
 }
 
