@@ -14,7 +14,11 @@
                         "app-user.ts",
                         "auth-user.ts",
                         "health-data",
-                        "user.ts"
+                        "user.ts",
+                        "food.ts",
+                        "food-item.ts",
+                        "food-report-review.ts",
+                        "meal-report-review.ts"
                     ]
                 }
             }

@@ -5,11 +5,6 @@ import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-review.use-case.definition";
 import {
-  MealReportReviewCreateInput,
-  MealReportReviewSearchInput,
-  MealReportReviewUpdateInput,
-} from "@features/foodlog/schema-types";
-import {
   Controller,
   Get,
   UseGuards,
@@ -22,17 +17,28 @@ import {
   Post,
 } from "@nestjs/common";
 import { SimpleApiKeyGuard } from "../../guards/simple-apikey.guard";
+import {
+  CreateMealReportReviewDTO,
+  MRRQueryParamsDTO,
+  MRRQueryParamsPaginationDTO,
+  MealReportReviewUpdateDTO,
+} from "./controller-dtos/mrr.dto";
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+import { CommonErrorResponse } from "@common/nest/api-error.dto";
+import { MealReportReview } from "@features/foodlog/entities/meal-report-review";
 
-type CreateMealReportReviewRequest = MealReportReviewCreateInput["data"];
-
-type QueryParams = MealReportReviewSearchInput["searchBy"] &
-  MealReportReviewSearchInput["options"];
-
-type QueryParamsWithPagination = QueryParams &
-  MealReportReviewSearchInput["pagination"];
-
-type UpdateMealReportReviewRequest = MealReportReviewUpdateInput["data"];
-
+@ApiTags("mrr")
 @Controller({
   path: "mrr",
   version: "1",
@@ -46,7 +52,20 @@ export class MealReportReviewControllerV1 {
 
   @UseGuards(SimpleApiKeyGuard)
   @Post()
-  createMealReportReview(@Body() requestData: CreateMealReportReviewRequest) {
+  @ApiHeader({
+    name: "X-API-KEY",
+    description: "the api key required to save the meal report review",
+  })
+  @ApiCreatedResponse({ type: MealReportReview })
+  @ApiBadRequestResponse({
+    type: CommonErrorResponse,
+  })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary:
+      "Create a meal report review. This endpoint is not intended to be used by the mobile app, but by an internal service.",
+  })
+  createMealReportReview(@Body() requestData: CreateMealReportReviewDTO) {
     return this.mealReportReviewUseCase.create({
       data: requestData,
     });
@@ -54,9 +73,15 @@ export class MealReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Get()
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MealReportReview, isArray: true })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Get all meal report reviews from the authenticated user",
+  })
   getMealReportReviews(
     @GetUser() user: User,
-    @Query() query: QueryParamsWithPagination
+    @Query() query: MRRQueryParamsPaginationDTO
   ) {
     // TODO: Implement sort by date option
     return this.mealReportReviewUseCase.getManyBy(
@@ -77,12 +102,18 @@ export class MealReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Get(":id")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MealReportReview })
+  @ApiNotFoundResponse({ type: CommonErrorResponse })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Get a meal report review by id",
+  })
   async getMealReportReview(
     @GetUser() user: User,
-    @Query() query: QueryParams,
+    @Query() query: MRRQueryParamsDTO,
     @Param("id") id: string
   ) {
-    // TODO: Implement user id filter
     const mrr = await this.mealReportReviewUseCase.getOneBy(
       {
         options: {
@@ -107,9 +138,17 @@ export class MealReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Patch(":id")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MealReportReview })
+  @ApiBadRequestResponse({ type: CommonErrorResponse })
+  @ApiNotFoundResponse({ type: CommonErrorResponse })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Update a meal report review by id",
+  })
   updateMealReportReview(
     @GetUser() user: User,
-    @Body() requestData: UpdateMealReportReviewRequest,
+    @Body() requestData: MealReportReviewUpdateDTO,
     @Param("id") id: string
   ) {
     // TODO: Implement user id filter
@@ -129,6 +168,13 @@ export class MealReportReviewControllerV1 {
   @UseGuards(UserGuard)
   @HttpCode(204)
   @Delete(":id")
+  @ApiBearerAuth()
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse({ type: CommonErrorResponse })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Delete a meal report review by id",
+  })
   deleteMealReportReview(@GetUser() user: User, @Param("id") id: string) {
     // TODO: Implement user id filter
     return this.mealReportReviewUseCase.delete(

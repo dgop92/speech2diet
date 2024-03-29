@@ -11,7 +11,7 @@ export enum DBLookupPreference {
   SYSTEM_DB = "system-db",
 }
 
-export interface MealReportReview {
+export class MealReportReview {
   id: string;
   appUserId: string;
   audioId: string;

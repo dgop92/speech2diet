@@ -1,7 +1,7 @@
 import { FoodItem, FoodItemCreateInputSchema } from "./food-item";
 import Joi from "joi";
 
-export interface UserReport {
+export class UserReport {
   /** The name of the food that the user reported */
   foodName: string;
   /** The description of the food that the user reported */
@@ -12,12 +12,12 @@ export interface UserReport {
   unit: string;
 }
 
-export interface SystemResult {
+export class SystemResult {
   foundFoodItem: FoodItem | null;
   suggestions: FoodItem[];
 }
 
-export interface FoodReportReview {
+export class FoodReportReview {
   id: string;
   userReport: UserReport;
   systemResult: SystemResult;

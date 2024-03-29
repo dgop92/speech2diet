@@ -6,7 +6,6 @@ import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory
 import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-report-review.factory";
 import { IFoodItemUseCase } from "@features/foodlog/ports/food-item.use-case.definition";
 import { IFoodReportReviewUseCase } from "@features/foodlog/ports/food-report-review.use-case.definition";
-import { FoodItemUpdateInput } from "@features/foodlog/schema-types";
 import {
   Controller,
   Get,
@@ -18,17 +17,25 @@ import {
   Patch,
   Body,
 } from "@nestjs/common";
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+import {
+  FRRQueryParamsDTO,
+  FoodItemQueryParamsDTO,
+  FoodItemUpdateInputDTO,
+} from "./controller-dtos/frr.dto";
+import { FoodReportReview } from "@features/foodlog/entities/food-report-review";
+import { CommonErrorResponse } from "@common/nest/api-error.dto";
 
-type QueryParams = {
-  mrrId: string;
-};
-
-type FoodItemQueryParams = QueryParams & {
-  suggestionId: string;
-};
-
-type UpdateFoodItemReviewRequest = FoodItemUpdateInput["data"];
-
+@ApiTags("frr")
 @Controller({
   path: "frr",
   version: "1",
@@ -46,7 +53,20 @@ export class FoodReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Get()
-  getFoodReportReviews(@GetUser() user: User, @Query() query: QueryParams) {
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: FoodReportReview, isArray: true })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiNotFoundResponse({
+    type: CommonErrorResponse,
+    description: "if no meal report review is found",
+  })
+  @ApiOperation({
+    summary: "Get all food report reviews from the meal report review",
+  })
+  getFoodReportReviews(
+    @GetUser() user: User,
+    @Query() query: FRRQueryParamsDTO
+  ) {
     return this.foodReportReviewUseCase.getManyBy(
       {
         searchBy: {
@@ -59,9 +79,19 @@ export class FoodReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Get(":id")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: FoodReportReview })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiNotFoundResponse({
+    type: CommonErrorResponse,
+    description: "if the meal report review or food report review is not found",
+  })
+  @ApiOperation({
+    summary: "Get a food report review from a meal report review",
+  })
   async getFoodReportReview(
     @GetUser() user: User,
-    @Query() query: QueryParams,
+    @Query() query: FRRQueryParamsDTO,
     @Param("id") id: string
   ) {
     const frr = await this.foodReportReviewUseCase.getOneBy(
@@ -76,7 +106,7 @@ export class FoodReportReviewControllerV1 {
 
     if (!frr) {
       throw new PresentationError(
-        "food Report Review not found",
+        "food report review not found",
         ErrorCode.NOT_FOUND
       );
     }
@@ -87,9 +117,19 @@ export class FoodReportReviewControllerV1 {
   @UseGuards(UserGuard)
   @HttpCode(204)
   @Delete(":id")
+  @ApiBearerAuth()
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse({
+    type: CommonErrorResponse,
+    description: "if the meal report review or food report review is not found",
+  })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Delete a food report review from a meal report review",
+  })
   deleteFoodReportReview(
     @GetUser() user: User,
-    @Query() query: QueryParams,
+    @Query() query: FRRQueryParamsDTO,
     @Param("id") id: string
   ) {
     return this.foodReportReviewUseCase.delete(
@@ -105,9 +145,21 @@ export class FoodReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Patch(":id/change-food")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: FoodReportReview })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiNotFoundResponse({
+    type: CommonErrorResponse,
+    description:
+      "if the meal report review, food report review or suggestion is not found",
+  })
+  @ApiOperation({
+    summary:
+      "Change the found food of the food report review by one of the suggestions",
+  })
   changeFoundFoodTo(
     @GetUser() user: User,
-    @Query() query: FoodItemQueryParams,
+    @Query() query: FoodItemQueryParamsDTO,
     @Param("id") id: string
   ) {
     return this.foodItemUseCase.changeFoundFoodBySuggestion(
@@ -124,10 +176,22 @@ export class FoodReportReviewControllerV1 {
 
   @UseGuards(UserGuard)
   @Patch(":id/found-food")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: FoodReportReview })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiBadRequestResponse({ type: CommonErrorResponse })
+  @ApiNotFoundResponse({
+    type: CommonErrorResponse,
+    description:
+      "if the meal report review, food report review or the found food is not found",
+  })
+  @ApiOperation({
+    summary: "Update the found food of the food report review",
+  })
   updateFoundFood(
     @GetUser() user: User,
-    @Query() query: FoodItemQueryParams,
-    @Body() requestData: UpdateFoodItemReviewRequest,
+    @Query() query: FRRQueryParamsDTO,
+    @Body() requestData: FoodItemUpdateInputDTO,
     @Param("id") id: string
   ) {
     return this.foodItemUseCase.updateFoundFood(

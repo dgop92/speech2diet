@@ -2,7 +2,7 @@ import { Food } from "./food";
 import Joi from "joi";
 import { FoodCreateInputSchema } from "./food";
 
-export interface FoodItem {
+export class FoodItem {
   /** the id that identifies the food item */
   id: string;
   /** The food object */

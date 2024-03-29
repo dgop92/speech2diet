@@ -5,7 +5,7 @@ export enum FoodSource {
   SYSTEM_DB = "system_db",
 }
 
-export interface Food {
+export class Food {
   /** The id from the source database */
   id: string;
   /** The main name of the food */
