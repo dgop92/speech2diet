@@ -15,7 +15,20 @@ import { myNutritionRequestPublisherFactory } from "@features/foodlog/factories/
 import { INutritionRequestPublisher } from "@features/foodlog/ports/nutrition-request-publisher.definition";
 import { myAudioStorageFactory } from "@features/foodlog/factories/audio-storage.factory";
 import { IAudioStorage } from "@features/foodlog/ports/audio-storage.definition";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
+} from "@nestjs/swagger";
+import { AudioFileUploadDTO } from "./controller-dtos/audio.dto";
+import { CommonErrorResponse } from "@common/nest/api-error.dto";
 
+@ApiTags("audio")
 @Controller({
   path: "report",
   version: "1",
@@ -34,6 +47,25 @@ export class AudioControllerV1 {
   @UseGuards(UserGuard)
   @Post("/upload")
   @UseInterceptors(FileInterceptor("file"))
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    description:
+      "audio file to be uploaded in of the following formats: mp3, mpeg",
+    type: AudioFileUploadDTO,
+  })
+  @ApiCreatedResponse({
+    description: "The audio file was successfully uploaded",
+  })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiUnprocessableEntityResponse({
+    description:
+      "the audio file does not have the correct format or is larger than 5MB",
+    type: CommonErrorResponse,
+  })
+  @ApiOperation({
+    summary: "Upload an audio file and send it to the nutrition request queue",
+  })
   async uploadFile(
     @UploadedFile(
       new ParseFilePipeBuilder()
