@@ -11,13 +11,13 @@ UNCONTABLES_TEST_SET: List[FoodExtractionTestCase] = [
                 "food": FoodNutritionRequest(
                     food_name="papas", description=[], amount=150, unit="gramos"
                 ),
-                "unit_variants": ["g", "gr", "gramo", "gramos"],
+                "unit_variants": ["g", "gr", "gramo"],
             },
             {
                 "food": FoodNutritionRequest(
                     food_name="carne de ternero", description=[], amount=80, unit="g"
                 ),
-                "unit_variants": ["g", "gr", "gramo", "gramos"],
+                "unit_variants": ["g", "gr", "gramo"],
             },
         ],
     },
@@ -31,7 +31,7 @@ UNCONTABLES_TEST_SET: List[FoodExtractionTestCase] = [
                     amount=20,
                     unit="gramos",
                 ),
-                "unit_variants": ["g", "gr", "gramo", "gramos"],
+                "unit_variants": ["g", "gr", "gramo"],
             },
             {
                 "food": FoodNutritionRequest(
@@ -40,7 +40,7 @@ UNCONTABLES_TEST_SET: List[FoodExtractionTestCase] = [
                     amount=100,
                     unit="ml",
                 ),
-                "unit_variants": ["ml", "mililitro", "mililitros"],
+                "unit_variants": ["mililitro", "mililitros"],
             },
         ],
     },

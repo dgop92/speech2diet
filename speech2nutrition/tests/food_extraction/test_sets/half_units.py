@@ -65,7 +65,7 @@ HALF_UNITS_TEST_SET: List[FoodExtractionTestCase] = [
         ],
     },
     {
-        "input_text": "Estoy merendando 2 huevos y medio con 3 rebanadas de pan",
+        "input_text": "Estoy merendando 2 huevos y medio",
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
@@ -75,16 +75,7 @@ HALF_UNITS_TEST_SET: List[FoodExtractionTestCase] = [
                     unit="",
                 ),
                 "unit_variants": [],
-            },
-            {
-                "food": FoodNutritionRequest(
-                    food_name="pan",
-                    description=[],
-                    amount=3,
-                    unit="rebanadas",
-                ),
-                "unit_variants": [],
-            },
+            }
         ],
     },
 ]

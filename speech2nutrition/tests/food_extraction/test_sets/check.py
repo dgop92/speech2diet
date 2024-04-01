@@ -14,7 +14,7 @@ CHECK_TEST_SET: List[FoodExtractionTestCase] = [
                     amount=80,
                     unit="gramos",
                 ),
-                "unit_variants": ["g", "gr"],
+                "unit_variants": ["g", "gr", "gramo"],
             },
             {
                 "food": FoodNutritionRequest(
@@ -23,7 +23,7 @@ CHECK_TEST_SET: List[FoodExtractionTestCase] = [
                     amount=120,
                     unit="gramos",
                 ),
-                "unit_variants": ["g", "gr"],
+                "unit_variants": ["g", "gr", "gramo"],
             },
         ],
     }

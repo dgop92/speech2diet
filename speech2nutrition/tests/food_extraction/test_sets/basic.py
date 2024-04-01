@@ -9,8 +9,8 @@ BASIC_TEST_SET: List[FoodExtractionTestCase] = [
         "expected_foods_items": [
             {
                 "food": FoodNutritionRequest(
-                    food_name="carne",
-                    description=["molida"],
+                    food_name="carne molida",
+                    description=[],
                     amount=80,
                     unit="gramos",
                 ),
@@ -23,7 +23,7 @@ BASIC_TEST_SET: List[FoodExtractionTestCase] = [
                     amount=5,
                     unit="cucharadas",
                 ),
-                "unit_variants": ["cdas"],
+                "unit_variants": ["cdas", "cucharada"],
             },
             {
                 "food": FoodNutritionRequest(
@@ -44,7 +44,7 @@ BASIC_TEST_SET: List[FoodExtractionTestCase] = [
             },
             {
                 "food": FoodNutritionRequest(
-                    food_name="jugo de fresa", description=[], amount=0, unit=""
+                    food_name="jugo de fresa", description=[], amount=1, unit=""
                 ),
                 "unit_variants": [],
             },

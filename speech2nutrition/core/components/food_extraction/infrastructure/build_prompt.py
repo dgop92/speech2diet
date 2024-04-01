@@ -18,11 +18,11 @@ examples = [
         ],
     },
     {
-        "text": "Disfruto de dos croquetas de pollo con una taza de café negro",
+        "text": "Disfruto de dos piernas de pollo asada y sin grasa con una taza de café negro",
         "result": [
             {
-                "food_name": "croquetas de pollo",
-                "description": "",
+                "food_name": "piernas de pollo",
+                "description": "asada, sin grasa",
                 "amount": 2,
                 "unit": "",
             },
@@ -41,25 +41,42 @@ examples = [
         ],
     },
     {
-        "text": "Han sido días difíciles y estoy comiendo lata y media de atún",
+        "text": "Han sido días difíciles y estoy comiendo una lata de atún",
         "result": [
-            {"food_name": "atún", "description": "", "amount": 1.5, "unit": "lata"},
+            {"food_name": "lata de atún", "description": "", "amount": 1, "unit": ""},
         ],
     },
     {
-        "text": "Hoy almorzé 50G carne de conejo asada, acompañado de un croissant",
+        "text": "Hoy almorzé una libra y media de carne de conejo frita, acompañado de medio croissant",
         "result": [
             {
                 "food_name": "carne de conejo",
-                "description": "asada",
-                "amount": 50,
-                "unit": "g",
+                "description": "frita",
+                "amount": 1.5,
+                "unit": "lb",
             },
             {
                 "food_name": "croissant",
                 "description": "",
-                "amount": 1,
+                "amount": 0.5,
                 "unit": "",
+            },
+        ],
+    },
+    {
+        "text": "Desayuné 3 laminas de queso y dos vasos de jugo de naranja",
+        "result": [
+            {
+                "food_name": "laminas de queso",
+                "description": "",
+                "amount": 3,
+                "unit": "",
+            },
+            {
+                "food_name": "jugo de naranja",
+                "description": "",
+                "amount": 2,
+                "unit": "vaso",
             },
         ],
     },

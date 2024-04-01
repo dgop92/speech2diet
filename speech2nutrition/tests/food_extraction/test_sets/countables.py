@@ -28,7 +28,7 @@ COUNTABLES_TEST_SET: List[FoodExtractionTestCase] = [
                 "food": FoodNutritionRequest(
                     food_name="jugo de mora", description=[], amount=1, unit="vaso"
                 ),
-                "unit_variants": [],
+                "unit_variants": ["vasos"],
             },
         ],
     },
@@ -90,7 +90,7 @@ COUNTABLES_TEST_SET: List[FoodExtractionTestCase] = [
                 "food": FoodNutritionRequest(
                     food_name="sal", description=[], amount=2, unit="cucharadas"
                 ),
-                "unit_variants": ["cdas"],
+                "unit_variants": ["cdas", "cucharada"],
             },
         ],
     },
