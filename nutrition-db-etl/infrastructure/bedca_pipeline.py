@@ -5,17 +5,15 @@ from prefect import flow, get_run_logger, task, variables
 from prefect.blocks.system import Secret
 
 from core.data_exporters.mongo_repository import NutritionMongoRepository
-from core.data_loaders.s3_repository import USDAS3Repository
+from core.data_loaders.s3_repository import BedcaS3Repository
 from core.entities.clean_food import CleanKeywordFood
 from core.entities.common_food import CommonFood
-from core.lib.llm.serving_size_extractor import ServingSizeExtractionService
+from core.tasks.bedca.map_bedca_data_to_comon_food_task import (
+    MapBedcaDataToCommonFoodTask,
+)
+from core.tasks.bedca.retrieve_bedca_data_task import RetrieveBedcaDataTask
 from core.tasks.common.create_clean_food_task import CreateCleanFoodTask
 from core.tasks.common.save_in_dest_db_task import SaveFoodsInDestTask
-from core.tasks.usda.map_usda_data_to_comon_food_task import MapUSDADataToCommonFoodTask
-from core.tasks.usda.map_usda_data_to_comon_food_task_with_serving import (
-    MapUSDADataToCommonFoodTaskWithServing,
-)
-from core.tasks.usda.retrieve_usda_data_task import RetrieveUSDADataTask
 from infrastructure.utils import build_clean_function
 
 
@@ -24,41 +22,29 @@ def get_secret(envname: str, secret_name: str) -> str:
 
 
 @task(retries=2)
-def retrieve_usda_data_task() -> List[Dict[str, Any]]:
+def retrieve_bedca_data_task() -> List[Dict[str, Any]]:
     logger: logging.Logger = get_run_logger()
     env_name: str = variables.get("environment")
-    core_task = RetrieveUSDADataTask(logger=logger, env_name=env_name)
+    core_task = RetrieveBedcaDataTask(logger=logger, env_name=env_name)
     bucket_name: str = Secret.load("s3-bucket-name").get()
     acess_key: str = Secret.load("s3-aws-access-key").get()
     secret_key: str = Secret.load("s3-aws-secret-key").get()
-    key = get_secret(env_name, "usda-s3-key")
-    repo = USDAS3Repository(
+    key = get_secret(env_name, "bedca-s3-key")
+    repo = BedcaS3Repository(
         bucket_name=bucket_name, access_key=acess_key, secret_key=secret_key
     )
-    return core_task.get_raw_usda_foods(repository=repo, key=key)
+    return core_task.get_raw_bedca_foods(repository=repo, key=key)
 
 
 @task(retries=1)
-def map_usda_data_to_comon_food_task(
-    usda_data: List[Dict[str, Any]]
+def map_bedca_data_to_comon_food_task(
+    bedca_data: List[Dict[str, Any]]
 ) -> List[CommonFood]:
     logger: logging.Logger = get_run_logger()
     env_name: str = variables.get("environment")
-    map_usda_type = variables.get("map_usda_type")
 
-    if map_usda_type == "with-serving":
-        sse = ServingSizeExtractionService(
-            openai_key=get_secret(env_name, "openai-key"),
-            engine=get_secret(env_name, "openai-engine"),
-            logger=logger,
-        )
-        core_task = MapUSDADataToCommonFoodTaskWithServing(
-            logger=logger, env_name=env_name, serving_size_func=sse
-        )
-        results = core_task.map_usda_data_to_common_food(usda_data=usda_data)
-    else:
-        core_task = MapUSDADataToCommonFoodTask(logger=logger, env_name=env_name)
-        results = core_task.map_usda_data_to_common_food(usda_data=usda_data)
+    core_task = MapBedcaDataToCommonFoodTask(logger=logger, env_name=env_name)
+    results = core_task.map_bedca_data_to_common_food(bedca_data=bedca_data)
 
     return results
 
@@ -89,14 +75,14 @@ def save_in_dest_db_task(foods: List[CleanKeywordFood]) -> None:
     core_task.save_foods(repository=repo, foods=foods)
 
 
-@flow(name="usda_pipeline")
-def usda_pipeline() -> None:
+@flow(name="bedca_pipeline")
+def bedca_pipeline() -> None:
     logger = get_run_logger()
-    logger.info("starting USDA pipeline")
-    logger.info("retrieving raw usda data")
-    usda_data = retrieve_usda_data_task()
-    logger.info("mapping usda data to common food model")
-    common_foods = map_usda_data_to_comon_food_task(usda_data=usda_data)
+    logger.info("starting bedca pipeline")
+    logger.info("retrieving raw bedca data")
+    bedca_data = retrieve_bedca_data_task()
+    logger.info("mapping bedca data to common food model")
+    common_foods = map_bedca_data_to_comon_food_task(bedca_data=bedca_data)
     logger.info("creating clean food model")
     clean_foods = create_clean_food_task(common_foods=common_foods)
     logger.info("saving clean food model in destination db")
@@ -104,4 +90,4 @@ def usda_pipeline() -> None:
 
 
 if __name__ == "__main__":
-    usda_pipeline()
+    bedca_pipeline()
