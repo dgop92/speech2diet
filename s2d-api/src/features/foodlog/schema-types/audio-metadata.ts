@@ -5,6 +5,6 @@
 
 export interface AudioMetadataCreateInput {
   data: {
-    mimeType: 'audio/mp3' | 'audio/mpeg';
+    mimeType: 'audio/mp3' | 'audio/mpeg' | 'audio/m4a' | 'audio/mp4';
   };
 }

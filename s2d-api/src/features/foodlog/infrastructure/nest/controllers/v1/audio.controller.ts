@@ -51,7 +51,7 @@ export class AudioControllerV1 {
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     description:
-      "audio file to be uploaded in of the following formats: mp3, mpeg",
+      "audio file to be uploaded in of the following formats: mp3, mpeg, m4a, mp4",
     type: AudioFileUploadDTO,
   })
   @ApiCreatedResponse({
@@ -69,7 +69,7 @@ export class AudioControllerV1 {
   async uploadFile(
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({ fileType: /^audio\/(mp3|mpeg)$/ })
+        .addFileTypeValidator({ fileType: /^audio\/(mp3|mpeg|m4a|mp4)$/ })
         .addMaxSizeValidator({ maxSize: 1024 * 1024 * 5 })
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
     )

@@ -1,7 +1,11 @@
 import Joi from "joi";
 
-export const ALLOWED_AUDIO_MIME_TYPES = ["audio/mp3", "audio/mpeg"];
-export const ALLOWED_AUDIO_MIME_FORMATS = ["mp3", "mpeg"];
+export const ALLOWED_AUDIO_MIME_TYPES = [
+  "audio/mp3",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/mp4",
+];
 
 export interface AudioMetadataInput {
   mimeType: string;
