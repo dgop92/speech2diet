@@ -22,6 +22,12 @@ export class FoodItemCreateDTO {
   food: FoodCreateDTO;
   score: number;
   unitWasTransformed: boolean;
+  servingSizeWasUsed: boolean;
+  unitTransformationInfo: {
+    originalUnit: string;
+    finalUnit: string;
+    transformationFactor: number;
+  } | null;
 }
 
 export class FoodReportReviewCreateDTO {

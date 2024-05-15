@@ -9,6 +9,8 @@ export interface FoodItemCreateInput {
   amount: number;
   food: FoodCreateInput;
   score: number;
+  servingSizeWasUsed: boolean;
+  unitTransformationInfo: UnitTransformationInfo | null;
   unitWasTransformed: boolean;
 }
 
@@ -28,4 +30,10 @@ export interface FoodItemUpdateInput {
     foodReportReviewId: string;
     mealReportReviewId: string;
   };
+}
+
+export interface UnitTransformationInfo {
+  finalUnit: string;
+  originalUnit: string;
+  transformationFactor: number;
 }

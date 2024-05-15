@@ -32,6 +32,8 @@ export function createInputTestFoodItem(): FoodItemCreateInput {
     food: createInputTestFood(),
     score: 0.9,
     unitWasTransformed: false,
+    servingSizeWasUsed: false,
+    unitTransformationInfo: null,
   };
 }
 
