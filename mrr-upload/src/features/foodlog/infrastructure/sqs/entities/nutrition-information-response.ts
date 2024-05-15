@@ -20,11 +20,19 @@ interface Food {
   carbohydrates: number;
 }
 
+interface UnitTransformationInfo {
+  original_unit: string;
+  final_unit: string;
+  transformation_factor: number;
+}
+
 export interface FoodRecord {
   food: Food;
   score: number;
   amount: number;
   unit_was_transformed: boolean;
+  serving_size_was_used: boolean;
+  unit_transformation_info: UnitTransformationInfo | null;
 }
 
 export interface FoodNutritionResponse {

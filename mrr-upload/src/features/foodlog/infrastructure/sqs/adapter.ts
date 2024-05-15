@@ -1,6 +1,7 @@
 import {
   MealReportReviewCreateInput,
   FoodItemCreateInput,
+  UnitTransformationInfo,
 } from "@features/foodlog/schema-types";
 import {
   FoodRecord,
@@ -49,6 +50,15 @@ export function fromNutritionInformationResponseToMealReportReviewCreateInput(
 function fromFoodRecordToFoodItemCreateInput(
   fr: FoodRecord
 ): FoodItemCreateInput {
+  let uti: UnitTransformationInfo | null = null;
+  if (fr.unit_transformation_info !== null) {
+    uti = {
+      originalUnit: fr.unit_transformation_info.original_unit,
+      finalUnit: fr.unit_transformation_info.final_unit,
+      transformationFactor: fr.unit_transformation_info.transformation_factor,
+    };
+  }
+
   return {
     amount: fr.amount,
     food: {
@@ -68,5 +78,7 @@ function fromFoodRecordToFoodItemCreateInput(
     },
     score: fr.score,
     unitWasTransformed: fr.unit_was_transformed,
+    servingSizeWasUsed: fr.serving_size_was_used,
+    unitTransformationInfo: uti,
   };
 }
