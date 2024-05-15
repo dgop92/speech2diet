@@ -15,6 +15,7 @@ from core.domain.entities.food_nutrition_request import FoodNutritionRequest
 from core.domain.entities.food_nutrition_response import (
     FoodNutritionResponse,
     FoodRecord,
+    UnitTransformationInfo,
 )
 from core.domain.entities.nutrition_information_request import DBLookupPreference
 
@@ -77,6 +78,7 @@ class FoodMapper:
                     score=score,
                     amount=0,
                     unit_was_transformed=False,
+                    serving_size_was_used=False,
                 )
             )
 
@@ -99,12 +101,23 @@ class FoodMapper:
 
         final_food_records: List[FoodRecord] = []
         for food_record, unit_response in zip(best_food_records, unit_responses):
+
+            unit_trans_info = None
+            if unit_response.unit_transformation_info is not None:
+                unit_trans_info = UnitTransformationInfo(
+                    original_unit=unit_response.unit_transformation_info.original_unit,
+                    final_unit=unit_response.unit_transformation_info.final_unit,
+                    transformation_factor=unit_response.unit_transformation_info.transformation_factor,
+                )
+
             final_food_records.append(
                 FoodRecord(
                     food=food_record.food,
                     score=food_record.score,
                     amount=unit_response.amount,
                     unit_was_transformed=unit_response.unit_was_transformed,
+                    serving_size_was_used=unit_response.serving_size_was_used,
+                    unit_transformation_info=unit_trans_info,
                 )
             )
 

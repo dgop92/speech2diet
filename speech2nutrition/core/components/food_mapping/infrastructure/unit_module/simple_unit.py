@@ -3,6 +3,7 @@ import logging
 from core.components.food_mapping.definitions.food_map_v2 import (
     FoodUnitQuery,
     FoodUnitResponse,
+    UnitTransformationInfo,
 )
 
 logger = logging.getLogger(__name__)
@@ -38,6 +39,12 @@ def compute_new_amount_to_grams(query: FoodUnitQuery) -> FoodUnitResponse:
             return FoodUnitResponse(
                 amount=amount,
                 unit_was_transformed=True,
+                unit_transformation_info=UnitTransformationInfo(
+                    original_unit="",
+                    final_unit="g",
+                    transformation_factor=query.food.serving_size,
+                ),
+                serving_size_was_used=False,
             )
         elif query.amount == 0:
             # case:  neither unit nor amount was reported
@@ -45,6 +52,7 @@ def compute_new_amount_to_grams(query: FoodUnitQuery) -> FoodUnitResponse:
             return FoodUnitResponse(
                 amount=query.food.serving_size,
                 unit_was_transformed=True,
+                serving_size_was_used=True,
             )
         else:
             raise ValueError(
@@ -59,6 +67,12 @@ def compute_new_amount_to_grams(query: FoodUnitQuery) -> FoodUnitResponse:
             return FoodUnitResponse(
                 amount=amount,
                 unit_was_transformed=True,
+                unit_transformation_info=UnitTransformationInfo(
+                    original_unit=query.unit,
+                    final_unit="g",
+                    transformation_factor=BASIC_UNITS_TO_GRAMS[query.unit],
+                ),
+                serving_size_was_used=False,
             )
         else:
             # case: unit is not known, so we can't transform it to grams,
@@ -69,4 +83,5 @@ def compute_new_amount_to_grams(query: FoodUnitQuery) -> FoodUnitResponse:
             return FoodUnitResponse(
                 amount=query.food.serving_size,
                 unit_was_transformed=True,
+                serving_size_was_used=True,
             )

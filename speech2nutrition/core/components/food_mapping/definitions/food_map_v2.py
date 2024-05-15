@@ -37,6 +37,17 @@ class FoodUnitQuery:
 
 
 @dataclass
+class UnitTransformationInfo:
+    original_unit: str
+    """ The original unit, the reported unit by the user. if unit is empty, the user did not report a unit """
+    final_unit: str
+    """ The final unit, the unit given by the food portion unit """
+    transformation_factor: float
+    """ The factor used to transform the original unit to the final unit. 
+    (factor * final unit) / original unit = final amount"""
+
+
+@dataclass
 class FoodUnitResponse:
     amount: float
     """
@@ -45,10 +56,18 @@ class FoodUnitResponse:
     unit_was_transformed: bool
     """
     Whether the unit was transformed from the user's unit to the 
-    food portion reference unit
+    food portion reference unit. DEPRECATED: unit transformation info should be used instead
+    """
+    serving_size_was_used: bool
+    """
+    Whether the serving size was used as the amount of the food
     """
     # TODO: instead of a boolean flag, we should return an object with data about
     # the transformation, so the user can see how the amount was transformed
+    unit_transformation_info: UnitTransformationInfo | None = None
+    """
+    Information about the transformation of the unit
+    """
 
 
 FoodUnitFunction = Callable[[FoodUnitQuery], FoodUnitResponse]
