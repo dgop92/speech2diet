@@ -74,6 +74,10 @@ export const MealReportReviewSearchInputSchema = Joi.object({
   sortBy: Joi.object({
     createdAt: Joi.string().valid("asc", "desc").optional(),
   }).optional(),
+  filterBy: Joi.object({
+    mealRecordedStart: Joi.date().iso().optional(),
+    mealRecordedEnd: Joi.date().iso().optional(),
+  }).optional(),
   pagination: MealReportReviewPaginationSchema,
   options: MealReportReviewOptionsSchema,
 }).meta({ className: "MealReportReviewSearchInput" });

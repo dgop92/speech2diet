@@ -402,6 +402,100 @@ describe("meal report review repository", () => {
       expect(results[0].id).toBe(mealReportReview3.id);
     });
 
+    it("should get all meal report reviews created after a certain date", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedStart: new Date(2023, 2, 10),
+        },
+      });
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(mealReportReview3.id);
+    });
+    it("should get zero meal report reviews created after a certain date", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedStart: new Date(2025, 2, 10),
+        },
+      });
+      expect(results).toHaveLength(0);
+    });
+    it("should get all meal report reviews created before a certain date", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedEnd: new Date(2023, 2, 5),
+        },
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(mealReportReview2.id);
+    });
+    it("should get zero meal report reviews created before a certain date", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedEnd: new Date(2022, 4, 5),
+        },
+      });
+      expect(results).toHaveLength(0);
+    });
+    it("should get all meal report reviews between two dates", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedStart: new Date(2023, 1, 1),
+          mealRecordedEnd: new Date(2023, 9, 9),
+        },
+      });
+      expect(results).toHaveLength(2);
+      const expectedIds = new Set([mealReportReview2.id, mealReportReview3.id]);
+      const resultIds = new Set(results.map((result) => result.id));
+      expect(resultIds).toEqual(expectedIds);
+    });
+    it("should get all meal report reviews between two dates and sorted by 'meal recorded at' ascending", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+        },
+        filterBy: {
+          mealRecordedStart: new Date(2023, 1, 1),
+          mealRecordedEnd: new Date(2023, 9, 9),
+        },
+        sortBy: {
+          createdAt: "asc",
+        },
+      });
+      expect(results).toHaveLength(2);
+      expect(results[0].id).toBe(mealReportReview2.id);
+      expect(results[1].id).toBe(mealReportReview3.id);
+    });
+    it("should get all meal report reviews between two dates with true pending status", async () => {
+      const results = await mealReportReviewRepository.getManyBy({
+        searchBy: {
+          appUserId: mealReportReview2.appUserId,
+          pending: true,
+        },
+        filterBy: {
+          mealRecordedStart: new Date(2023, 1, 1),
+          mealRecordedEnd: new Date(2023, 9, 9),
+        },
+      });
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(mealReportReview2.id);
+    });
+
     it("should get all pending meal report reviews of an app user", async () => {
       const results = await mealReportReviewRepository.getManyBy({
         searchBy: {

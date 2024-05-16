@@ -60,6 +60,8 @@ export class MRRQueryParamsPaginationDTO {
   pending?: boolean;
   fetchFoodReports?: boolean;
   limit?: number;
+  mealRecordedEnd?: string;
+  mealRecordedStart?: string;
 }
 
 export class MealReportReviewUpdateDTO {

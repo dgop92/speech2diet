@@ -149,7 +149,11 @@ export class MealReportReviewUseCase implements IMealReportReviewUseCase {
     );
     return this.repository.getManyBy({
       ...newInput,
-      searchBy: { ...newInput.searchBy, appUserId: appUser.id },
+      searchBy: {
+        ...newInput.searchBy,
+        ...newInput.filterBy,
+        appUserId: appUser.id,
+      },
     });
   }
 

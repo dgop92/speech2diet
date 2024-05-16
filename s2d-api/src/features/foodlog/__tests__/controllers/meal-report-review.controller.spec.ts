@@ -316,6 +316,51 @@ describe("meal report review (e2e)", () => {
           expect(res.body[0].id).toEqual(mealReportReview3.id);
         });
     });
+    it("should get all meal report reviews of a user after a certain date", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      await request(app.getHttpServer())
+        .get("/mrr?mealRecordedStart=2023-03-10T03:25:32")
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(1);
+          expect(res.body[0].id).toEqual(mealReportReview3.id);
+        });
+    });
+    it("should get all meal report reviews of a user before a certain date", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      await request(app.getHttpServer())
+        .get("/mrr?mealRecordedEnd=2023-03-10T03:25:32")
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(1);
+          expect(res.body[0].id).toEqual(mealReportReview2.id);
+        });
+    });
+    it("should get all pending meal report reviews of a user after a certain date ", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      await request(app.getHttpServer())
+        .get("/mrr?mealRecordedStart=2023-01-02T03:25:32&pending=true")
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveLength(1);
+          expect(res.body[0].id).toEqual(mealReportReview2.id);
+        });
+    });
 
     // invalid query parameters
 

@@ -28,6 +28,10 @@ export interface MealReportReviewPagination {
 }
 
 export interface MealReportReviewSearchInput {
+  filterBy?: {
+    mealRecordedEnd?: Date;
+    mealRecordedStart?: Date;
+  };
   options?: MealReportReviewOptions;
   pagination?: MealReportReviewPagination;
   searchBy?: {

@@ -197,11 +197,16 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
     const appUserId = input.searchBy?.appUserId;
     const sortByMealRecordedAt = input.sortBy?.createdAt ?? "desc";
 
+    const mealRecordedStart = input.filterBy?.mealRecordedStart;
+    const mealRecordedEnd = input.filterBy?.mealRecordedEnd;
+
     myLogger.debug("getting meal report reviews", {
       pending,
       limit,
       sortBycreatedAt: sortByMealRecordedAt,
       fetchFoodReports,
+      mealRecordedStart,
+      mealRecordedEnd,
     });
 
     shouldThrowTransactionError(transactionManager);
@@ -221,6 +226,14 @@ export class MealReportReviewRepository implements IMealReportReviewRepository {
 
     if (appUserId !== undefined) {
       query = query.where("appUserId", "==", appUserId);
+    }
+
+    if (mealRecordedStart !== undefined) {
+      query = query.where("mealRecordedAt", ">=", mealRecordedStart);
+    }
+
+    if (mealRecordedEnd !== undefined) {
+      query = query.where("mealRecordedAt", "<=", mealRecordedEnd);
     }
 
     query = query.orderBy("mealRecordedAt", sortByMealRecordedAt);

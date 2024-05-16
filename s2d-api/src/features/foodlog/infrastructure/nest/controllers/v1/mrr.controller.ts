@@ -95,6 +95,14 @@ export class MealReportReviewControllerV1 {
         searchBy: {
           pending: query?.pending,
         },
+        filterBy: {
+          // TODO: modify the type for MealReportReviewSearchInput and
+          // create a different for the repository layer
+          // @ts-ignore: a quick fix,
+          mealRecordedEnd: query?.mealRecordedEnd,
+          // @ts-ignore
+          mealRecordedStart: query?.mealRecordedStart,
+        },
       },
       user.appUser
     );
