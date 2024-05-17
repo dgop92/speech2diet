@@ -9,3 +9,4 @@ export * from './food-report-review';
 export * from './food';
 export * from './meal-report-review';
 export * from './nutrition-request-message';
+export * from './nutritional-info';

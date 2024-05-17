@@ -8,6 +8,29 @@ import {
 } from "@features/foodlog/schema-types";
 import { v4 as uuidv4 } from "uuid";
 
+export function createInputTestFoodWithInfo(nutrientInfo: {
+  calories: number;
+  protein: number;
+  fat: number;
+  carbohydrates: number;
+}): FoodCreateInput {
+  return {
+    id: uuidv4(),
+    foodName: "Crunchy Delight",
+    otherNames: ["Crispy Joy", "Snacktastic"],
+    description: ["Cooked", "crunchy", "flavorful"],
+    portionSize: 100,
+    portionSizeUnit: "grams",
+    servingSize: 90,
+    servingSizeUnit: "grams",
+    foodSource: FoodSource.SYSTEM_DB,
+    calories: nutrientInfo.calories,
+    protein: nutrientInfo.protein,
+    fat: nutrientInfo.fat,
+    carbohydrates: nutrientInfo.carbohydrates,
+  };
+}
+
 export function createInputTestFood(): FoodCreateInput {
   return {
     id: uuidv4(),
@@ -30,6 +53,20 @@ export function createInputTestFoodItem(): FoodItemCreateInput {
   return {
     amount: 64,
     food: createInputTestFood(),
+    score: 0.9,
+    unitWasTransformed: false,
+    servingSizeWasUsed: false,
+    unitTransformationInfo: null,
+  };
+}
+
+export function createInputTestFoodItemWithInfo(
+  amount: number,
+  food: FoodCreateInput
+): FoodItemCreateInput {
+  return {
+    amount: amount,
+    food: food,
     score: 0.9,
     unitWasTransformed: false,
     servingSizeWasUsed: false,
