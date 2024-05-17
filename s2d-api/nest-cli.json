@@ -18,7 +18,8 @@
                         "food.ts",
                         "food-item.ts",
                         "food-report-review.ts",
-                        "meal-report-review.ts"
+                        "meal-report-review.ts",
+                        "nutritional-info.ts"
                     ]
                 }
             }

@@ -19,6 +19,7 @@ import {
 import { SimpleApiKeyGuard } from "../../guards/simple-apikey.guard";
 import {
   CreateMealReportReviewDTO,
+  MRRNutritionQueryParamsDTO,
   MRRQueryParamsDTO,
   MRRQueryParamsPaginationDTO,
   MealReportReviewUpdateDTO,
@@ -37,6 +38,11 @@ import {
 } from "@nestjs/swagger";
 import { CommonErrorResponse } from "@common/nest/api-error.dto";
 import { MealReportReview } from "@features/foodlog/entities/meal-report-review";
+import { NutritionalInfoUseCase } from "@features/foodlog/use-cases/nutritional-info.use-case";
+import {
+  MealReportReviewWithNutritionalInfo,
+  NutritionalInfo,
+} from "@features/foodlog/entities/nutritional-info";
 
 @ApiTags("mrr")
 @Controller({
@@ -45,9 +51,12 @@ import { MealReportReview } from "@features/foodlog/entities/meal-report-review"
 })
 export class MealReportReviewControllerV1 {
   private readonly mealReportReviewUseCase: IMealReportReviewUseCase;
+  private readonly nutritionInfoUseCase: NutritionalInfoUseCase;
   constructor() {
-    const { mealReportReviewUseCase } = myMealReportReviewFactory();
+    const { mealReportReviewUseCase, nutritionInfoUseCase } =
+      myMealReportReviewFactory();
     this.mealReportReviewUseCase = mealReportReviewUseCase;
+    this.nutritionInfoUseCase = nutritionInfoUseCase;
   }
 
   @UseGuards(SimpleApiKeyGuard)
@@ -106,6 +115,51 @@ export class MealReportReviewControllerV1 {
       },
       user.appUser
     );
+  }
+
+  @UseGuards(UserGuard)
+  @Get("nutrition")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: NutritionalInfo })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Get all nutrition info from meal report reviews between dates",
+  })
+  async getNutritionInfoBetweenDates(
+    @GetUser() user: User,
+    @Query() query: MRRNutritionQueryParamsDTO
+  ) {
+    const result =
+      await this.nutritionInfoUseCase.getNutritionalInfoBetweenDates(
+        query.mealRecordedStart,
+        query.mealRecordedEnd,
+        user.appUser
+      );
+
+    return result;
+  }
+
+  @UseGuards(UserGuard)
+  @Get("nutrition/:id")
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MealReportReviewWithNutritionalInfo })
+  @ApiNotFoundResponse({ type: CommonErrorResponse })
+  @ApiUnauthorizedResponse({ type: CommonErrorResponse })
+  @ApiOperation({
+    summary: "Get a meal report review with nutrition info by id",
+    description:
+      "Get a meal report review with nutrition info by id. the meal report review already fetches the food reports.",
+  })
+  async getMealReportReviewWithNutrition(
+    @GetUser() user: User,
+    @Param("id") id: string
+  ) {
+    const result = await this.nutritionInfoUseCase.getNutritionalInfo(
+      id,
+      user.appUser
+    );
+
+    return result;
   }
 
   @UseGuards(UserGuard)

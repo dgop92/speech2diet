@@ -1,14 +1,14 @@
 import Joi from "joi";
 import { MealReportReview } from "./meal-report-review";
 
-export interface NutritionalInfo {
+export class NutritionalInfo {
   calories: number;
   fat: number;
   protein: number;
   carbohydrates: number;
 }
 
-export interface MealReportReviewWithNutritionalInfo {
+export class MealReportReviewWithNutritionalInfo {
   mrr: MealReportReview;
   nutritionalInfo: NutritionalInfo;
 }

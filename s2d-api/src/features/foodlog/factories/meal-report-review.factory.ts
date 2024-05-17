@@ -9,12 +9,15 @@ import {
 } from "@common/firebase/utils";
 import { MealReportReviewRepository } from "../infrastructure/firestore/repositories/meal-report-review.repository";
 import { MealReportReviewUseCase } from "../use-cases/meal-report-review.use-case";
+import { NutritionalInfoUseCase } from "../use-cases/nutritional-info.use-case";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
 let mealReportReviewRepository: IMealReportReviewRepository;
 let mealReportReviewUseCase: IMealReportReviewUseCase;
 let mealReportReviewCollection: FirestoreCollection<FirestoreMealReportReview>;
+
+let nutritionInfoUseCase: NutritionalInfoUseCase;
 
 export const myMealReportReviewFactory = (firestore?: Firestore) => {
   myLogger.info("calling mealReportReviewFactory");
@@ -40,9 +43,16 @@ export const myMealReportReviewFactory = (firestore?: Firestore) => {
     myLogger.info("mealReportReviewUseCase created");
   }
 
+  if (nutritionInfoUseCase === undefined) {
+    myLogger.info("creating nutritionInfoUseCase");
+    nutritionInfoUseCase = new NutritionalInfoUseCase(mealReportReviewUseCase);
+    myLogger.info("nutritionInfoUseCase created");
+  }
+
   return {
     mealReportReviewRepository,
     mealReportReviewUseCase,
     mealReportReviewCollection,
+    nutritionInfoUseCase,
   };
 };

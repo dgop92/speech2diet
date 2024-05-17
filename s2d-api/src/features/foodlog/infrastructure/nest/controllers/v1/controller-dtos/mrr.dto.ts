@@ -67,3 +67,8 @@ export class MRRQueryParamsPaginationDTO {
 export class MealReportReviewUpdateDTO {
   pending: boolean;
 }
+
+export class MRRNutritionQueryParamsDTO {
+  mealRecordedEnd: string;
+  mealRecordedStart: string;
+}

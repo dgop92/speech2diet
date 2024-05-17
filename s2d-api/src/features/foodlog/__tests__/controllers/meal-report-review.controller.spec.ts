@@ -12,7 +12,9 @@ import { MealReportReview } from "@features/foodlog/entities/meal-report-review"
 import {
   createInputMealReportReview,
   createInputTestFoodItem,
+  createInputTestFoodItemWithInfo,
   createInputTestFoodReport,
+  createInputTestFoodWithInfo,
 } from "../test-utils/mrr-input-test-data";
 import {
   WinstonLogger,
@@ -511,6 +513,104 @@ describe("meal report review (e2e)", () => {
       await request(app.getHttpServer())
         .get(`/mrr/${mealReportReview1.id}`)
         .expect(401);
+    });
+  });
+
+  describe("GET /mrr/nutrition", () => {
+    let mealReportReview1: MealReportReview;
+
+    beforeAll(async () => {
+      await deleteAllRecords();
+      /*
+      All nutriounal Information for mrr1 is as follows:
+        180 calories, 30 fat, 12 protein, 36 carbohydrates
+        75 calories, 15 fat, 1.25 protein, 2.5 carbohydrates
+
+        Total:
+        255 calories, 45 fat, 13.25 protein, 38.5 carbohydrates
+      */
+      const mealReportReviewInput1 = createInputMealReportReview({
+        appUserId: user2.appUser.id,
+        audioId: "audioId-2",
+        foodReports: [
+          createInputTestFoodReport({
+            foundFoodItem: createInputTestFoodItemWithInfo(
+              120,
+              createInputTestFoodWithInfo({
+                calories: 150,
+                fat: 25,
+                protein: 10,
+                carbohydrates: 30,
+              })
+            ),
+            suggestions: [],
+          }),
+          createInputTestFoodReport({
+            foundFoodItem: createInputTestFoodItemWithInfo(
+              25,
+              createInputTestFoodWithInfo({
+                calories: 300,
+                fat: 60,
+                protein: 5,
+                carbohydrates: 10,
+              })
+            ),
+            suggestions: [],
+          }),
+        ],
+        mealRecordedAt: new Date("2023-01-10T14:23:03.000Z"),
+      });
+      mealReportReview1 = await mealReportReviewUseCase.create(
+        mealReportReviewInput1
+      );
+      await mealReportReviewUseCase.update(
+        {
+          data: {
+            pending: false,
+          },
+          searchBy: {
+            id: mealReportReview1.id,
+          },
+        },
+        user2.appUser
+      );
+    });
+
+    it("should get final nutritional info of a meal report review", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      await request(app.getHttpServer())
+        .get(`/mrr/nutrition/${mealReportReview1.id}`)
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.nutritionalInfo.calories).toBeCloseTo(255);
+          expect(res.body.nutritionalInfo.fat).toBeCloseTo(45);
+          expect(res.body.nutritionalInfo.protein).toBeCloseTo(13.25);
+          expect(res.body.nutritionalInfo.carbohydrates).toBeCloseTo(38.5);
+        });
+    });
+    it("should get final nutritional info of all meal report reviews of of 2023-01-10 that are not pending", async () => {
+      const token = await TestAuthDBHelper.instance.getAuthTokenForUser(
+        user2.authUser.id
+      );
+      await request(app.getHttpServer())
+        .get(
+          "/mrr/nutrition?mealRecordedStart=2023-01-10T00:00:00.000Z&mealRecordedEnd=2023-01-10T23:59:59.999Z"
+        )
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.calories).toBeCloseTo(255);
+          expect(res.body.fat).toBeCloseTo(45);
+          expect(res.body.protein).toBeCloseTo(13.25);
+          expect(res.body.carbohydrates).toBeCloseTo(38.5);
+        });
     });
   });
 
