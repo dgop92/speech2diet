@@ -6,12 +6,12 @@ import { getCloudFormationID, getResourceName } from "../../config/utils";
 import { AwsEnvStackProps } from "../utils/custom-types";
 
 const commonQueueProps: sqs.QueueProps = {
-  retentionPeriod: cdk.Duration.minutes(15),
+  retentionPeriod: cdk.Duration.hours(1),
   visibilityTimeout: cdk.Duration.seconds(300),
   deliveryDelay: cdk.Duration.seconds(0),
   receiveMessageWaitTime: cdk.Duration.seconds(20),
-  // 10 KB
-  maxMessageSizeBytes: 10240,
+  // 100 KB
+  maxMessageSizeBytes: 102400,
 };
 
 export class StorageStack extends cdk.Stack {
