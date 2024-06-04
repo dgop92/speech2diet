@@ -1,9 +1,6 @@
 from typing import List
 
-from tests.speech2text.test_sets.definitions import (
-    ExpectedS2TFoodKeywordsCase,
-    ExpectedS2TFoodUnitAmountCase,
-)
+from tests.speech2text.test_sets.definitions import ExpectedS2TFood
 
 
 def keyword_metric(real_keywords: List[str], expected_keywords: List[str]) -> float:
@@ -39,37 +36,22 @@ def unit_amount_metric(
     return int(any(results))
 
 
-def evaluate_test_case_keywords(
-    test_case: ExpectedS2TFoodKeywordsCase,
-    raw_transcription: str,
-):
-    """
-    Evaluate a keywords test case, keyword_metric is between 0 and 1
-    """
-    raw_transcription = raw_transcription.lower()
-
-    real_keywords = raw_transcription.split(" ")
-    expected_keywords = test_case["keywords"]
-
-    return {
-        "keyword_metric": keyword_metric(real_keywords, expected_keywords),
-    }
-
-
-def evaluate_test_case_amount_unit(
-    test_case: ExpectedS2TFoodUnitAmountCase,
+def evaluate_test_case(
+    test_case: ExpectedS2TFood,
     raw_transcription: str,
 ):
     """
     Evaluate a unit and amount test case, unit_metric and amount_metric are 0 or 1
     """
     raw_transcription = raw_transcription.lower()
-
     real_keywords = raw_transcription.split(" ")
+
     expected_units = test_case["possible_units"]
     expected_amounts = test_case["possible_amounts"]
+    expected_keywords = test_case["keywords"]
 
     return {
         "unit_metric": unit_amount_metric(expected_units, real_keywords),
         "amount_metric": unit_amount_metric(expected_amounts, real_keywords),
+        "keyword_metric": keyword_metric(real_keywords, expected_keywords),
     }

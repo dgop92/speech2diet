@@ -1,0 +1,5 @@
+MILLILITERS = ["ml", "mililitros", "mililitro"]
+LITERS = ["l", "litro", "litros"]
+GRAMS = ["g", "gr", "gramo", "gramos"]
+KILOGRAMS = ["kg", "kilo", "kilos", "kilogramo", "kilogramos"]
+POUNDS = ["lb", "libra", "libras"]

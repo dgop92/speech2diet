@@ -6,15 +6,9 @@ from typing import Any, Dict, List, Tuple
 
 from config.logging import config_logger
 from core.components.speech2text.factory import speech2text_component_factory
-from tests.speech2text.cases import KEYWORD_TEST_SETS, UNIT_AMOUNT_TEST_SETS
-from tests.speech2text.metrics import (
-    evaluate_test_case_amount_unit,
-    evaluate_test_case_keywords,
-)
-from tests.speech2text.test_sets.definitions import (
-    ExpectedS2TFoodKeywordsCase,
-    ExpectedS2TFoodUnitAmountCase,
-)
+from tests.speech2text.cases import TEST_SETS
+from tests.speech2text.metrics import evaluate_test_case
+from tests.speech2text.test_sets.definitions import ExpectedS2TFood
 
 
 def save_results(test_set_id: str, results: List[Dict[str, Any]]) -> None:
@@ -49,30 +43,14 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    id_test_set_list: List[
-        Tuple[
-            str, List[ExpectedS2TFoodKeywordsCase] | List[ExpectedS2TFoodUnitAmountCase]
-        ]
-    ] = []
+    id_test_set_list: List[Tuple[str, List[ExpectedS2TFood]]] = []
     if args.test_set_id != "all":
-        keyword_test_set_case = KEYWORD_TEST_SETS.get(args.test_set_id, None)
-        amount_unit_test_set_case = UNIT_AMOUNT_TEST_SETS.get(args.test_set_id, None)
-
-        if keyword_test_set_case is not None:
-            id_test_set_list.append((args.test_set_id, keyword_test_set_case))
-
-        if amount_unit_test_set_case is not None:
-            id_test_set_list.append((args.test_set_id, amount_unit_test_set_case))
-
-        if keyword_test_set_case is None and amount_unit_test_set_case is None:
-            raise ValueError(
-                f"test set id {args.test_set_id} not found in any test set"
-            )
+        test_set_case = TEST_SETS.get(args.test_set_id, None)
+        if test_set_case is None:
+            raise ValueError(f"test set id {args.test_set_id} not found")
+        id_test_set_list.append((args.test_set_id, test_set_case))
     else:
-        id_test_set_list = [
-            *list(KEYWORD_TEST_SETS.items()),
-            *list(UNIT_AMOUNT_TEST_SETS.items()),
-        ]
+        id_test_set_list = list(TEST_SETS.items())
 
     logger.info("creating speech2text component")
     speech2text_component = speech2text_component_factory()
@@ -99,14 +77,9 @@ def main() -> None:
                     )
                     raw_transcription = ""
 
-                if "keywords" in test_case:
-                    result = evaluate_test_case_keywords(
-                        raw_transcription=raw_transcription, test_case=test_case
-                    )
-                else:
-                    result = evaluate_test_case_amount_unit(
-                        raw_transcription=raw_transcription, test_case=test_case
-                    )
+                result = evaluate_test_case(
+                    raw_transcription=raw_transcription, test_case=test_case
+                )
 
                 results.append(
                     {
@@ -124,26 +97,17 @@ def main() -> None:
 
     all_individual_metrics = []
     for test_set_id, results in all_results:
-        current_description_score = 0
-        current_amount_score = 0
-        current_unit_score = 0
         for result in results:
-            current_description_score += result.get("keyword_metric", 0)
-            current_amount_score += result.get("amount_metric", 0)
-            current_unit_score += result.get("unit_metric", 0)
-
-        all_individual_metrics.append(
-            {
-                "test_set_id": test_set_id,
-                "n_tests": len(results),
-                "description_score": current_description_score / len(results),
-                "amount_score": current_amount_score / len(results),
-                "unit_score": current_unit_score / len(results),
-            }
-        )
+            all_individual_metrics.append(
+                {
+                    "test_set_id": test_set_id,
+                    "description_score": result.get("keyword_metric", 0),
+                    "amount_score": result.get("amount_metric", 0),
+                    "unit_score": result.get("unit_metric", 0),
+                }
+            )
 
     logger.info(f"number of tests: {n_tests}")
-    logger.info(json.dumps(all_individual_metrics, indent=4, ensure_ascii=False))
     save_results("individual_metrics", all_individual_metrics)
 
 
