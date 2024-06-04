@@ -22,3 +22,5 @@ tests/
 scripts/
 
 zip_source.py
+env_examples/
+docs/

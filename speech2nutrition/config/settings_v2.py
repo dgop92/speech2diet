@@ -42,9 +42,10 @@ class APPConfig(metaclass=Singleton):
 
         self.aws_region = config_as_str("AWS_REGION", default="us-east-1")
         self.aws_nutrition_response_queue = config_as_str(
-            "AWS_NUTRITION_RESPONSE_QUEUE_URL"
+            "AWS_NUTRITION_RESPONSE_QUEUE_URL",
+            default=""
         )
-        self.aws_s3_bucket = config_as_str("AWS_S3_BUCKET")
+        self.aws_s3_bucket = config_as_str("AWS_S3_BUCKET", default="")
 
         self.aws_nutrition_request_queue = config_as_str(
             "AWS_NUTRITION_REQUEST_QUEUE_URL", default=""
