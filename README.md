@@ -11,6 +11,8 @@ This a mono repo containing all the necessary services for the app’s backend. 
 
 _Note: I'm still working on the project and improving the documentation for all the services._
 
+_Note 2: Remember to check other folders in the repository for specific information about each service._
+
 ## Motivation
 
 It all started because I wanted an application to record my food intake with ease. Manually entering the information is tedious and time-consuming. Barcode scanning methods don't work well in my country. I decided to create this application with two novel techniques to improve the limitations of current solutions.
@@ -109,3 +111,9 @@ For more information about the libraries used in the project, please check the p
 The following diagram shows the fundamental workflow of the app across the different services.
 
 ![Fundamental workflow](docs/fundamental-workflow.png)
+
+## Cost and estimation
+
+I have created a spreadsheet with the estimated monthly cost to run the application using almost all the services presented in the architecture. It is not perfect, and there is still room for improvement, but at least it gives an idea of the costs. [Check the spreadsheet](https://docs.google.com/spreadsheets/d/1blzDJJsWrhdH5BCE4t44qQLebUJpDHwN/edit?usp=sharing&ouid=100712408483574036417&rtpof=true&sd=true)
+
+For example, while doing the estimation, I discovered that the most expensive external service is Deepgram Whisper. With this information in mind, we should look for better alternatives or self-host the service because Whisper is open source.

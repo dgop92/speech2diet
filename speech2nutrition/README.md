@@ -85,6 +85,13 @@ To test it locally you can use docker
 docker build -f Dockerfile.lambda -t speech2nutrition .
 docker run --env-file .env speech2nutrition
 ```
+## Performance Metrics Results
+
+For the Food Extraction Component, 45 unit tests were developed, classified into different categories reflecting the various ways of describing a meal. The results indicated an overall accuracy of 92.51%. Specifically, the detection of food names achieved an accuracy of 86.66%, the description of food 85.55%, and the combination of name and description 99.25%. As for quantities and units, an accuracy of 95.55% was achieved.
+
+Regarding the Speech-to-Text component, 20 unit tests were performed to evaluate the model's ability to transcribe units and keywords (food names). The results showed an accuracy of 98.75% in the transcription of keywords and 100% in the transcription of units.
+
+_Extracted from the original Paper_
 
 ## Extras
 
