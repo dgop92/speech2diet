@@ -4,6 +4,7 @@ import { Request } from "express";
 import { ErrorCode, PresentationError } from "@common/errors";
 import { myAppUserFactory } from "@features/auth/factories/app-user.factory";
 import { myAuthUserFactory } from "@features/auth/factories/auth-user.factory";
+import { ThrottlerGuard } from "@nestjs/throttler";
 
 const myLogger = AppLogger.getAppLogger().createFileLogger(__filename);
 
@@ -94,5 +95,17 @@ export class UserGuard implements CanActivate {
     };
 
     return true;
+  }
+}
+/**
+ * Guard that throttles requests by user id. Must be used after AuthUserGuard.
+ */
+@Injectable()
+export class UserThrottlerGuard extends ThrottlerGuard {
+  protected async getTracker(req: Record<string, any>): Promise<string> {
+    // throttle by user id, user id will always be present in the request
+    // because the UserGuard set it
+    const authUser = req?.user?.authUser ?? req?.authuser;
+    return authUser.id;
   }
 }
