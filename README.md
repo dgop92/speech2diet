@@ -117,3 +117,18 @@ The following diagram shows the fundamental workflow of the app across the diffe
 I have created a spreadsheet with the estimated monthly cost to run the application using almost all the services presented in the architecture. It is not perfect, and there is still room for improvement, but at least it gives an idea of the costs. [Check the spreadsheet](https://docs.google.com/spreadsheets/d/1blzDJJsWrhdH5BCE4t44qQLebUJpDHwN/edit?usp=sharing&ouid=100712408483574036417&rtpof=true&sd=true)
 
 For example, while doing the estimation, I discovered that the most expensive external service is Deepgram Whisper. With this information in mind, we should look for better alternatives or self-host the service because Whisper is open source.
+
+## Extras
+
+This app was my end of career project. Read the paper [here](http://hdl.handle.net/10584/11936). 
+
+In addition, one of my team members [@KemJiga](https://github.com/KemJiga) develop a prototype in Flutter to show the main features of this application:
+
+![Mobile App 1](docs/mobile-1.jpg)
+![Mobile App 2](docs/mobile-2.jpg)
+![Mobile App 3](docs/mobile-3.jpg)
+![Mobile App 4](docs/mobile-4.jpg)
+![Mobile App 5](docs/mobile-5.jpg)
+![Mobile App 6](docs/mobile-6.jpg)
+
+
