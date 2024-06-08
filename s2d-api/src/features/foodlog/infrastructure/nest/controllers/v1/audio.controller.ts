@@ -1,6 +1,9 @@
 import { User } from "@features/auth/entities/user";
 import { GetUser } from "@features/auth/infrastructure/nest/custom-decorators";
-import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import {
+  UserGuard,
+  UserThrottlerGuard,
+} from "@features/auth/infrastructure/nest/guards/users.guard";
 import {
   Controller,
   Post,
@@ -27,6 +30,7 @@ import {
 } from "@nestjs/swagger";
 import { AudioFileUploadDTO } from "./controller-dtos/audio.dto";
 import { CommonErrorResponse } from "@common/nest/api-error.dto";
+import { Throttle, hours } from "@nestjs/throttler";
 
 @ApiTags("audio")
 @Controller({
@@ -44,8 +48,9 @@ export class AudioControllerV1 {
     this.audioStorage = audioStorage;
   }
 
-  @UseGuards(UserGuard)
   @Post("/upload")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle({ default: { limit: 15, ttl: hours(24) } })
   @UseInterceptors(FileInterceptor("file"))
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")

@@ -1,7 +1,10 @@
 import { ErrorCode, PresentationError } from "@common/errors";
 import { User } from "@features/auth/entities/user";
 import { GetUser } from "@features/auth/infrastructure/nest/custom-decorators";
-import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import {
+  UserGuard,
+  UserThrottlerGuard,
+} from "@features/auth/infrastructure/nest/guards/users.guard";
 import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory";
 import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-report-review.factory";
 import { IFoodItemUseCase } from "@features/foodlog/ports/food-item.use-case.definition";
@@ -34,6 +37,8 @@ import {
 } from "./controller-dtos/frr.dto";
 import { FoodReportReview } from "@features/foodlog/entities/food-report-review";
 import { CommonErrorResponse } from "@common/nest/api-error.dto";
+import { COMMON_FRR_ACTIONS_LIMITS } from "../../rate-limit.config";
+import { Throttle } from "@nestjs/throttler";
 
 @ApiTags("frr")
 @Controller({
@@ -51,8 +56,9 @@ export class FoodReportReviewControllerV1 {
     this.foodReportReviewUseCase = foodReportReviewUseCase;
   }
 
-  @UseGuards(UserGuard)
   @Get()
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_FRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: FoodReportReview, isArray: true })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })
@@ -77,8 +83,9 @@ export class FoodReportReviewControllerV1 {
     );
   }
 
-  @UseGuards(UserGuard)
   @Get(":id")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_FRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: FoodReportReview })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })
@@ -114,9 +121,10 @@ export class FoodReportReviewControllerV1 {
     return frr;
   }
 
-  @UseGuards(UserGuard)
-  @HttpCode(204)
   @Delete(":id")
+  @HttpCode(204)
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_FRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiNoContentResponse()
   @ApiNotFoundResponse({
@@ -143,8 +151,9 @@ export class FoodReportReviewControllerV1 {
     );
   }
 
-  @UseGuards(UserGuard)
   @Patch(":id/change-food")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_FRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: FoodReportReview })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })
@@ -174,8 +183,9 @@ export class FoodReportReviewControllerV1 {
     );
   }
 
-  @UseGuards(UserGuard)
   @Patch(":id/found-food")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_FRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: FoodReportReview })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })

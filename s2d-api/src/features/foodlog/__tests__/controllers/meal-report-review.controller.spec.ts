@@ -23,6 +23,7 @@ import {
 import { AppLogger } from "@common/logging/logger";
 import { APP_FILTER } from "@nestjs/core";
 import { AllExceptionsFilter } from "main/nest/general-exception-filter";
+import { ThrottlerModule } from "@nestjs/throttler";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -68,7 +69,10 @@ describe("meal report review (e2e)", () => {
     });
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [FoodLogModule],
+      imports: [
+        FoodLogModule,
+        ThrottlerModule.forRoot([{ ttl: 1000, limit: 100 }]),
+      ],
       providers: [
         {
           provide: APP_FILTER,

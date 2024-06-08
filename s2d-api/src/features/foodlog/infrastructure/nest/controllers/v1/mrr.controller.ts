@@ -1,7 +1,10 @@
 import { ErrorCode, PresentationError } from "@common/errors";
 import { User } from "@features/auth/entities/user";
 import { GetUser } from "@features/auth/infrastructure/nest/custom-decorators";
-import { UserGuard } from "@features/auth/infrastructure/nest/guards/users.guard";
+import {
+  UserGuard,
+  UserThrottlerGuard,
+} from "@features/auth/infrastructure/nest/guards/users.guard";
 import { myMealReportReviewFactory } from "@features/foodlog/factories/meal-report-review.factory";
 import { IMealReportReviewUseCase } from "@features/foodlog/ports/meal-report-review.use-case.definition";
 import {
@@ -43,6 +46,8 @@ import {
   MealReportReviewWithNutritionalInfo,
   NutritionalInfo,
 } from "@features/foodlog/entities/nutritional-info";
+import { COMMON_MRR_ACTIONS_LIMITS } from "../../rate-limit.config";
+import { Throttle } from "@nestjs/throttler";
 
 @ApiTags("mrr")
 @Controller({
@@ -80,8 +85,9 @@ export class MealReportReviewControllerV1 {
     });
   }
 
-  @UseGuards(UserGuard)
   @Get()
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: MealReportReview, isArray: true })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })
@@ -117,8 +123,9 @@ export class MealReportReviewControllerV1 {
     );
   }
 
-  @UseGuards(UserGuard)
   @Get("nutrition")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: NutritionalInfo })
   @ApiUnauthorizedResponse({ type: CommonErrorResponse })
@@ -139,8 +146,9 @@ export class MealReportReviewControllerV1 {
     return result;
   }
 
-  @UseGuards(UserGuard)
   @Get("nutrition/:id")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: MealReportReviewWithNutritionalInfo })
   @ApiNotFoundResponse({ type: CommonErrorResponse })
@@ -162,8 +170,9 @@ export class MealReportReviewControllerV1 {
     return result;
   }
 
-  @UseGuards(UserGuard)
   @Get(":id")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: MealReportReview })
   @ApiNotFoundResponse({ type: CommonErrorResponse })
@@ -198,8 +207,9 @@ export class MealReportReviewControllerV1 {
     return mrr;
   }
 
-  @UseGuards(UserGuard)
   @Patch(":id")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiOkResponse({ type: MealReportReview })
   @ApiBadRequestResponse({ type: CommonErrorResponse })
@@ -227,9 +237,10 @@ export class MealReportReviewControllerV1 {
     );
   }
 
-  @UseGuards(UserGuard)
-  @HttpCode(204)
   @Delete(":id")
+  @HttpCode(204)
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_MRR_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiNoContentResponse()
   @ApiNotFoundResponse({ type: CommonErrorResponse })
