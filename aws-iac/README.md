@@ -41,3 +41,11 @@ cdk synth fitvoice-app-s2d-api-dev-stack -c config=dev
 cdk diff fitvoice-app-s2d-api-dev-stack -c config=dev
 cdk deploy fitvoice-app-s2d-api-dev-stack -c config=dev
 ```
+
+S2N-DEMO Stack in dev environment
+
+```bash
+cdk synth fitvoice-app-s2n-demo-dev-stack -c config=dev
+cdk diff fitvoice-app-s2n-demo-dev-stack -c config=dev
+cdk deploy fitvoice-app-s2n-demo-dev-stack -c config=dev
+```

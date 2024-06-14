@@ -20,7 +20,6 @@ def core_factory() -> HTTPDemoRequestHandler:
         logger.info("creating mock speech2text model")
         speech2text_model = MockSpeech2TextToModel()
     else:
-        logger.info("creating s3 audio storage")
         logger.info("creating deepgram whisper speech2text model")
         speech2text_model = DeepgramWhisperSpeech2TextModel(
             api_key=APP_CONFIG.deepgram_key

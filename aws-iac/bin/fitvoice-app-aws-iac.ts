@@ -8,6 +8,7 @@ import { LambdaStack } from "../lib/compute/lambda/lambda-stack";
 import { NetworkStack } from "../lib/network/vpc";
 import { S2DAPIStack } from "../lib/compute/s2d-api/s2d-api-stack";
 import { ECRRepositoryStack } from "../lib/storage/ecr-repository-stack";
+import { S2NSDemotack } from "../lib/compute/demo-s2n-stack";
 
 const app = new cdk.App();
 
@@ -118,3 +119,21 @@ const fitvoiceS2DStack = new S2DAPIStack(app, fitvoiceS2DStackName, {
 cdk.Tags.of(fitvoiceS2DStack).add("project:name", config.appName);
 cdk.Tags.of(fitvoiceS2DStack).add("project:env", config.env);
 cdk.Tags.of(fitvoiceS2DStack).add("project:stack", "s2d-api");
+
+// S2N Demo Stack
+
+const fitvoiceS2NDemoStackName = getStackName(
+  config.appName,
+  "s2n-demo",
+  config.env
+);
+const fitvoiceS2NDemoStack = new S2NSDemotack(app, fitvoiceS2NDemoStackName, {
+  env: {
+    region: config.region,
+    account: config.accountId,
+  },
+  config: config,
+});
+cdk.Tags.of(fitvoiceS2NDemoStack).add("project:name", config.appName);
+cdk.Tags.of(fitvoiceS2NDemoStack).add("project:env", config.env);
+cdk.Tags.of(fitvoiceS2NDemoStack).add("project:stack", "s2n-demo");

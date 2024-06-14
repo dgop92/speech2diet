@@ -41,16 +41,35 @@ def handler(event, context):
         content_type = event["headers"]["content-type"]
         logger.info(f"parsing body with content type: {content_type}")
         audio_content, metadata = parse_base64_body(body, content_type)
+
+        # if audio content is greater than 1MB, return an error
+        if len(audio_content) > 1_000_000:
+            return {
+                "statusCode": 413,
+                "headers": {
+                    "Content-Type": "application/json",
+                },
+                "body": json.dumps(
+                    {"error": "Audio content too large"}, ensure_ascii=False
+                ),
+            }
+
         logger.info(f"processing audio content with metadata: {metadata}")
         response = request_handler(audio_content, metadata)
         logger.info(f"successfully processed request")
         return {
             "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+            },
             "body": response.json(ensure_ascii=False),
         }
     else:
         logger.warning("non HTTP Event, ignoring")
         return {
             "statusCode": 400,
+            "headers": {
+                "Content-Type": "application/json",
+            },
             "body": json.dumps({"error": "Invalid request"}, ensure_ascii=False),
         }
