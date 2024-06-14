@@ -27,6 +27,7 @@ import { myFoodReportReviewFactory } from "@features/foodlog/factories/food-repo
 import { FoodReportReviewUseCase } from "@features/foodlog/use-cases/food-report-review.use-case";
 import { myFoodItemFactory } from "@features/foodlog/factories/food-item.factory";
 import { FoodItemUseCase } from "@features/foodlog/use-cases/food-item.use-case";
+import { ThrottlerModule } from "@nestjs/throttler";
 
 const logger = createTestLogger();
 const winstonLogger = new WinstonLogger(logger);
@@ -89,7 +90,10 @@ describe("food report review (e2e)", () => {
     });
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [FoodLogModule],
+      imports: [
+        FoodLogModule,
+        ThrottlerModule.forRoot([{ ttl: 1000, limit: 100 }]),
+      ],
       providers: [
         {
           provide: APP_FILTER,

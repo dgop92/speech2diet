@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from "./general-exception-filter";
 import { LoggerMiddleware } from "./logger-middleware";
 import { FoodLogModule } from "@features/foodlog/infrastructure/nest/foodlog.module";
 import { HealthController } from "./health.controller";
+import { ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { HealthController } from "./health.controller";
         module: FoodLogModule,
       },
     ]),
+    // Generic configuration, make sure to override it in the specific endpoints
+    ThrottlerModule.forRoot([{ ttl: 1000, limit: 10 }]),
   ],
   providers: [
     {

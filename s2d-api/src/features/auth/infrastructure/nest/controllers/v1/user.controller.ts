@@ -16,7 +16,11 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { GetAuthUser, GetUser } from "../../custom-decorators";
-import { AuthUserGuard, UserGuard } from "../../guards/users.guard";
+import {
+  AuthUserGuard,
+  UserGuard,
+  UserThrottlerGuard,
+} from "../../guards/users.guard";
 import {
   CreateUserDTO,
   UpdateHealthDTO,
@@ -25,6 +29,8 @@ import {
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AppUser } from "@features/auth/entities/app-user";
 import { CommonErrorResponse } from "@common/nest/api-error.dto";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
+import { COMMON_ACCOUNT_ACTIONS_LIMITS } from "../../rate-limit.config";
 
 @ApiTags("users")
 @Controller({
@@ -42,6 +48,8 @@ export class UserControllerV1 {
   }
 
   @Post()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @UseGuards(ThrottlerGuard)
   @ApiResponse({ type: User, status: 201 })
   @ApiResponse({
     type: CommonErrorResponse,
@@ -65,8 +73,9 @@ export class UserControllerV1 {
     });
   }
 
-  @UseGuards(UserGuard)
   @Get("/me")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_ACCOUNT_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiResponse({ type: User, status: 200 })
   @ApiResponse({ type: CommonErrorResponse, status: 401 })
@@ -74,8 +83,9 @@ export class UserControllerV1 {
     return user;
   }
 
-  @UseGuards(UserGuard)
   @Patch("/me")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_ACCOUNT_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiResponse({ type: AppUser, status: 200 })
   @ApiResponse({ type: CommonErrorResponse, status: 400 })
@@ -87,8 +97,9 @@ export class UserControllerV1 {
     });
   }
 
-  @UseGuards(UserGuard)
   @Patch("/me/health-data")
+  @UseGuards(UserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_ACCOUNT_ACTIONS_LIMITS)
   @ApiBearerAuth()
   @ApiResponse({ type: AppUser, status: 200 })
   @ApiResponse({ type: CommonErrorResponse, status: 400 })
@@ -100,8 +111,9 @@ export class UserControllerV1 {
     });
   }
 
-  @UseGuards(AuthUserGuard)
   @Delete("/me")
+  @UseGuards(AuthUserGuard, UserThrottlerGuard)
+  @Throttle(COMMON_ACCOUNT_ACTIONS_LIMITS)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @ApiResponse({ status: 204 })
