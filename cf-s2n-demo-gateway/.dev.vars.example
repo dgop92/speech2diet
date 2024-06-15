@@ -1,0 +1,3 @@
+TARGET_URL = "your_url"
+RATELIMIT_SERVER_URL = "your_url"
+RATELIMIT_SERVER_KEY = "key"

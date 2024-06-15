@@ -1,0 +1,12 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "s2n-demo-cf-gateway"
+main = "src/index.ts"
+compatibility_date = "2024-05-02"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ALLOWED_ORIGIN = "https://s2n-demo.pages.dev"
+GENERIC_REQ_PER_DAY = 5
+
+[triggers]
+crons = ["0 1 * * *"]
