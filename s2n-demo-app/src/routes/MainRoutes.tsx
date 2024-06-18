@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { HomePage } from "../pages/Home/Home";
+import { HomePage } from "../pages/Home";
 import { NotFoundPage } from "../pages/NotFound";
 
 export default function MainRoutes() {

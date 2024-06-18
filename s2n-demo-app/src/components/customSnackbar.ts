@@ -4,7 +4,7 @@ type SnackbarOptions = Parameters<EnqueueSnackbar>[1];
 
 export const ERROR_SNACKBAR_OPTIONS: SnackbarOptions = {
   variant: "error",
-  autoHideDuration: 6000,
+  autoHideDuration: 4000,
   anchorOrigin: { vertical: "bottom", horizontal: "right" },
 };
 
