@@ -1,16 +1,26 @@
 import { useState } from "react";
 import { FullPageBox } from "../../components/Layout/FullPageBox";
 import { MainSection } from "./MainSection";
+import { NutritionInformationResponse } from "../../entities/nutrition-information-response";
+import { ResultsSection } from "./ResultsSection/ResultsSection";
 
 export function HomePage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<NutritionInformationResponse | null>(
+    null
+  );
 
   console.log(results);
 
   return (
     <FullPageBox justifyContent="center" alignItems="center">
-      <MainSection setResults={setResults} />
+      {results !== null ? (
+        <ResultsSection
+          nutritionInformationResponse={results}
+          goToHome={() => setResults(null)}
+        />
+      ) : (
+        <MainSection setResults={setResults} />
+      )}
     </FullPageBox>
   );
 }

@@ -91,7 +91,12 @@ export function MainSection({ setResults }: MainSectionProps) {
   return (
     <Container
       maxWidth="xl"
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        my: 4,
+      }}
     >
       <Box>
         <Typography
