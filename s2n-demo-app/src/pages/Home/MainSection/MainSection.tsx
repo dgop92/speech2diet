@@ -112,10 +112,10 @@ export function MainSection({ setResults }: MainSectionProps) {
           Fitvoice / Speech 2 Diet
         </Typography>
         <Typography variant="body1" textAlign="center" sx={{ mt: 2 }}>
-          Graba una descripción de una comida. Ejemplos: “Estoy comiendo una
-          taza de arroz de coco con 50 gramos de salmón”, “Almorcé 150 g de
-          arroz blanco con 120 gramos de carne de res y una papa cocida”,
-          “Desayuno de 2 huevos y medio. Además una taza de café”
+          Presiona el botón y graba una descripción de una comida. Ejemplos:
+          “Estoy comiendo una taza de arroz de coco con 50 gramos de salmón”,
+          “Almorcé 150 g de arroz blanco con 120 gramos de carne de res y una
+          papa cocida”, “Desayuno de 2 huevos y medio. Además una taza de café”
         </Typography>
       </Box>
       <Box my={5}>

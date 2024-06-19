@@ -35,7 +35,7 @@ export function FoodCard({
         />
         <AttrTypography
           attrName="Descripción"
-          attrValue={foodNutritionRequest.description.join("-")}
+          attrValue={foodNutritionRequest.description.join(",")}
           defaultValue="Sin descripción"
         />
         <AttrTypography
@@ -72,25 +72,25 @@ export function FoodCard({
             />
             <AttrTypography
               attrName="Calorías"
-              attrValue={foodItem.food.calories.toString()}
+              attrValue={`${foodItem.food.calories} kcal`}
             />
             <AttrTypography
               attrName="Grasas"
-              attrValue={foodItem.food.fat.toString()}
+              attrValue={`${foodItem.food.fat} g`}
             />
             <AttrTypography
               attrName="Proteínas"
-              attrValue={foodItem.food.protein.toString()}
+              attrValue={`${foodItem.food.protein} g`}
             />
             <AttrTypography
               attrName="Carbohidratos"
-              attrValue={foodItem.food.carbohydrates.toString()}
+              attrValue={`${foodItem.food.carbohydrates} g`}
             />
           </Stack>
           <Stack mb={1}>
             <CardHeader title="Cantidad final" />
             <AttrTypography
-              attrName="Total"
+              attrName="Total consumido"
               attrValue={`${foodItem.amount} g/ml`}
             />
             <AttrTypography
