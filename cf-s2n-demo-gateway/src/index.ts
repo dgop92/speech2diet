@@ -7,46 +7,46 @@ const getCorsHeaders = (allowedOrigin: string) => ({
 	"Access-Control-Max-Age": "86400",
 });
 
-async function handleOptions(request: Request, env: Env): Promise<Response> {
-	const corsHeaders = getCorsHeaders(env.ALLOWED_ORIGIN);
+/**
+ * Check the origin for this request
+ * If it is included in our set of known and allowed origins, return it, otherwise
+ * return a known, good origin. This effectively does not allow browsers to
+ * continue requests if the origin they're requesting from doesn't match.
+ */
+const checkOrigin = (request: Request, allowedOrigins: string[]) => {
+	const origin = request.headers.get("Origin");
 
-	if (
-		request.headers.get("Origin") !== null &&
-		request.headers.get("Access-Control-Request-Method") !== null &&
-		request.headers.get("Access-Control-Request-Headers") !== null
-	) {
-		return new Response(null, {
-			headers: {
-				...corsHeaders,
-				// @ts-ignore
-				"Access-Control-Allow-Headers": request.headers.get(
-					"Access-Control-Request-Headers"
-				),
-			},
-		});
-	} else {
-		// Handle standard OPTIONS request.
-		return new Response(null, {
-			headers: {
-				Allow: corsHeaders["Access-Control-Allow-Methods"],
-			},
-		});
+	if (origin === null) {
+		return allowedOrigins[0];
 	}
+	const foundOrigin = allowedOrigins.find((allowedOrigin) =>
+		allowedOrigin.includes(origin)
+	);
+
+	return foundOrigin ? foundOrigin : allowedOrigins[0];
+};
+
+async function handleOptions(request: Request, env: Env): Promise<Response> {
+	const allowedOrigins = env.ALLOWED_ORIGIN.split(",");
+
+	const allowedOrigin = checkOrigin(request, allowedOrigins);
+	return new Response("OK", { headers: getCorsHeaders(allowedOrigin) });
 }
 
 async function handleRequestWithCors(request: Request, env: Env): Promise<Response> {
 	if (request.method === "OPTIONS") {
 		return handleOptions(request, env);
 	} else {
-		const corsHeaders = getCorsHeaders(env.ALLOWED_ORIGIN);
+		const allowedOrigins = env.ALLOWED_ORIGIN.split(",");
+		const allowedOrigin = checkOrigin(request, allowedOrigins);
+		const corsHeaders = getCorsHeaders(allowedOrigin);
 
 		let response = await handleRequest(request, env);
 
-		response.headers.set("Access-Control-Allow-Origin", env.ALLOWED_ORIGIN);
-		response.headers.set(
-			"Access-Control-Allow-Methods",
-			corsHeaders["Access-Control-Allow-Methods"]
-		);
+		for (const [header, value] of Object.entries(corsHeaders)) {
+			response.headers.set(header, value);
+		}
+
 		// @ts-ignore
 		return Promise.resolve(response);
 	}

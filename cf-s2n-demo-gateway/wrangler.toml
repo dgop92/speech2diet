@@ -5,8 +5,8 @@ compatibility_date = "2024-05-02"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-ALLOWED_ORIGIN = "https://s2n-demo.pages.dev"
-GENERIC_REQ_PER_DAY = 5
+ALLOWED_ORIGIN = "https://speech2diet.pages.dev,https://fitvoice.dgop92.me"
+GENERIC_REQ_PER_DAY = 6
 
 [triggers]
 crons = ["0 1 * * *"]
