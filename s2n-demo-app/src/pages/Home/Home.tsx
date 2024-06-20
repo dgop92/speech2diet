@@ -21,8 +21,6 @@ export function HomePage() {
     }
   }, []);
 
-  console.log("render");
-
   return (
     <FullPageBox justifyContent="center" alignItems="center">
       {results !== null ? (

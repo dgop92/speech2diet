@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import {
   FoodNutritionRequest,
   FoodNutritionResponse,
@@ -7,6 +7,9 @@ import { AttrTypography } from "./AttrTypography";
 import { CardHeader } from "./CardHeader";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
 import { getTransformationMessage } from "./utils";
+import { useState } from "react";
+import { SuggestionModal } from "./SuggestionModal";
+import { FoodItemContent } from "./FoodItemContent";
 
 export interface FoodCardProps {
   foodNutritionRequest: FoodNutritionRequest;
@@ -17,6 +20,8 @@ export function FoodCard({
   foodNutritionRequest,
   foodNutritionResponse,
 }: FoodCardProps) {
+  const [suggestionModal, setSuggestionModal] = useState(false);
+
   const foodItem = foodNutritionResponse.food_record ?? null;
 
   return (
@@ -53,41 +58,10 @@ export function FoodCard({
       {foodItem !== null && (
         <>
           <Stack>
-            <CardHeader title="Mejor match en la DB" />
-            <AttrTypography
-              attrName="Nombre"
-              attrValue={foodItem.food.food_name}
-            />
-            <AttrTypography
-              attrName="Descripción"
-              attrValue={foodItem.food.description.join(", ")}
-            />
-            <AttrTypography
-              attrName="Porción"
-              attrValue={`${foodItem.food.portion_size} ${foodItem.food.portion_size_unit}`}
-            />
-            <AttrTypography
-              attrName="Ración"
-              attrValue={`${foodItem.food.serving_size} ${foodItem.food.serving_size_unit}`}
-            />
-            <AttrTypography
-              attrName="Calorías"
-              attrValue={`${foodItem.food.calories} kcal`}
-            />
-            <AttrTypography
-              attrName="Grasas"
-              attrValue={`${foodItem.food.fat} g`}
-            />
-            <AttrTypography
-              attrName="Proteínas"
-              attrValue={`${foodItem.food.protein} g`}
-            />
-            <AttrTypography
-              attrName="Carbohidratos"
-              attrValue={`${foodItem.food.carbohydrates} g`}
-            />
+            <CardHeader title="Información nutricional" />
+            <FoodItemContent foodItem={foodItem} />
           </Stack>
-          <Stack mb={1}>
+          <Stack>
             <CardHeader title="Cantidad final" />
             <AttrTypography
               attrName="Total consumido"
@@ -101,6 +75,22 @@ export function FoodCard({
               )}
             />
           </Stack>
+          <Stack mb={1}>
+            <CardHeader title="Sugerencias" />
+            <Button
+              color="primary"
+              variant="text"
+              sx={{ mt: 1 }}
+              onClick={() => setSuggestionModal(true)}
+            >
+              Ver sugerencias
+            </Button>
+          </Stack>
+          <SuggestionModal
+            open={suggestionModal}
+            onClose={() => setSuggestionModal(false)}
+            suggestions={foodNutritionResponse.suggestions}
+          />
         </>
       )}
 

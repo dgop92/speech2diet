@@ -60,6 +60,12 @@ export function MainSection({ setResults }: MainSectionProps) {
           );
           return;
         }
+        if (error.response?.status === 413) {
+          enqueueSnackbar(
+            "El archivo de audio es muy grande, por favor intenta de nuevo con un archivo más pequeño",
+            ERROR_SNACKBAR_OPTIONS
+          );
+        }
       }
       enqueueSnackbar(
         "Ocurrió un error inesperado. Por favor, intenta de nuevo",
@@ -160,7 +166,18 @@ export function MainSection({ setResults }: MainSectionProps) {
         <audio controls ref={audioRef} style={{ width: "100%" }}></audio>
       </Box>
       {mutation.isPending ? (
-        <LinearProgress sx={{ width: "100%", mt: 4 }} />
+        <>
+          <LinearProgress sx={{ width: "100%", mt: 4 }} />
+          <Typography
+            variant="body2"
+            textAlign="center"
+            sx={{ color: "text.secondary", mt: 1 }}
+          >
+            Esto puede tardar de 8 a 30 segundos. Si los servidores de Deepgram
+            están saturados la capa gratuita no es priorizada lo que aumenta el
+            tiempo de respuesta de esta petición.
+          </Typography>
+        </>
       ) : (
         <PrimaryButton size="small" onClick={onAccept} sx={{ px: 6, mt: 4 }}>
           Aceptar y ver resultados

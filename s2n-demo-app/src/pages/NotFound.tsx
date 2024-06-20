@@ -30,7 +30,7 @@ export function NotFoundPage() {
           onClick={() => navigate("/")}
           sx={{ px: 6 }}
         >
-          Go to Home
+          Ir al inicio
         </PrimaryButton>
       </Container>
     </FullPageBox>
