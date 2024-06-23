@@ -13,6 +13,12 @@ _Note: I'm still working on the project and improving the documentation for all 
 
 _Note 2: Remember to check other folders in the repository for specific information about each service._
 
+## Demo
+
+Check out the demo of the main service: [Speech 2 Nutrition Demo App](https://fitvoice.dgop92.me)
+
+Learn more about the demo inside `./s2n-demo-app` folder.
+
 ## Motivation
 
 It all started because I wanted an application to record my food intake with ease. Manually entering the information is tedious and time-consuming. Barcode scanning methods don't work well in my country. I decided to create this application with two novel techniques to improve the limitations of current solutions.
