@@ -1,0 +1,84 @@
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-decouple = "^3.8"
+pydantic = "^1.10.9"
+spacy = "^3.5.3"
+es-core-news-sm = {url = "https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.5.0/es_core_news_sm-3.5.0-py3-none-any.whl"}
+pymongo = "^4.4.0"
+Levenshtein = "^0.21.1"
+openai = "^1.3.7"
+deepgram-sdk = "^2.12.0"
+boto3 = "^1.34.1"
+pika = "^1.3.2"
+requests-toolbelt = "^1.0.0"
+# by default poetry install numpy 2.0 which is incompatible with spacy
+numpy = "1.25.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pre-commit = "^1.7.1"
+ruff = "^0.5.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+    # raise-vanilla-args
+    "TRY003",
+    # deprecated-import, TODO: fix related problems in the future
+    "UP035",
+    "UP006",
+]
+
+[tool.ruff.format]
+preview = true
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

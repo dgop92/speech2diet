@@ -1,4 +1,5 @@
 import logging
+import unittest
 
 import pytest
 
@@ -14,6 +15,8 @@ from core.domain.entities.nutrition_information_request import DBLookupPreferenc
 from tests.food_mapping.utils import create_foods
 
 logger = logging.getLogger(__name__)
+
+assertions = unittest.TestCase()
 
 
 @pytest.fixture
@@ -61,8 +64,8 @@ def test_match_in_user_db_and_not_in_system_db(
         system_repository=repository1,
         user_repository=repository2,
     )
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "2"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "2")
 
 
 def test_match_not_in_user_db_but_in_system_db(
@@ -83,8 +86,8 @@ def test_match_not_in_user_db_but_in_system_db(
         user_repository=repository3,
     )
 
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "1"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "1")
 
 
 def test_match_in_system_db_and_not_in_user_db(
@@ -105,8 +108,8 @@ def test_match_in_system_db_and_not_in_user_db(
         user_repository=repository2,
     )
 
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "1"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "1")
 
 
 def test_match_not_in_system_db_but_in_user_db(
@@ -127,8 +130,8 @@ def test_match_not_in_system_db_but_in_user_db(
         user_repository=repository1,
     )
 
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "1"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "1")
 
 
 def test_match_in_user_db(
@@ -148,8 +151,8 @@ def test_match_in_user_db(
         user_repository=repository2,
     )
 
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "2"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "2")
 
 
 def test_no_match_in_user_db(
@@ -169,7 +172,7 @@ def test_no_match_in_user_db(
         user_repository=repository3,
     )
 
-    assert len(response.foods) == 0
+    assertions.assertEqual(len(response.foods), 0)
 
 
 def test_match_in_system_db(
@@ -189,8 +192,8 @@ def test_match_in_system_db(
         user_repository=repository2,
     )
 
-    assert len(response.foods) == 1
-    assert response.foods[0].id == "1"
+    assertions.assertEqual(len(response.foods), 1)
+    assertions.assertEqual(response.foods[0].id, "1")
 
 
 def test_no_match_in_system_db(
@@ -210,4 +213,4 @@ def test_no_match_in_system_db(
         user_repository=repository1,
     )
 
-    assert len(response.foods) == 0
+    assertions.assertEqual(len(response.foods), 0)

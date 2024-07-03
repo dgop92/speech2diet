@@ -35,7 +35,8 @@ class S3AudioStorage:
             content = response["Body"].read()
             metadata = {"mime_type": response["ContentType"]}
             logger.info(f"metadata for audio {audio_id} is {metadata}")
-            return content, metadata
         except Exception as e:
-            logger.exception(f"Failed to read audio from storage: {e}")
-            raise ServiceException("Failed to read audio from storage", "S3")
+            logger.exception("Failed to read audio from storage")
+            raise ServiceException("Failed to read audio from storage", "S3") from e
+        else:
+            return content, metadata

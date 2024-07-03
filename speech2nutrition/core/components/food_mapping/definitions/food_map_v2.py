@@ -43,7 +43,7 @@ class UnitTransformationInfo:
     final_unit: str
     """ The final unit, the unit given by the food portion unit """
     transformation_factor: float
-    """ The factor used to transform the original unit to the final unit. 
+    """ The factor used to transform the original unit to the final unit.
     (factor * final unit) / original unit = final amount"""
 
 
@@ -55,7 +55,7 @@ class FoodUnitResponse:
     """
     unit_was_transformed: bool
     """
-    Whether the unit was transformed from the user's unit to the 
+    Whether the unit was transformed from the user's unit to the
     food portion reference unit. DEPRECATED: unit transformation info should be used instead
     """
     serving_size_was_used: bool

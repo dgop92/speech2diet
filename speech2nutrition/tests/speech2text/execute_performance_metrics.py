@@ -26,7 +26,7 @@ def load_results(test_set_id: str) -> List[Dict[str, Any]] | None:
     )
     if not os.path.exists(results_path):
         return None
-    with open(results_path, "r", encoding="utf-8") as f:
+    with open(results_path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -70,7 +70,7 @@ def main() -> None:
                 try:
                     final_id = f"test-audios/{test_set_id}/{test_case['audio_id']}.mp3"
                     raw_transcription = speech2text_component(final_id)
-                except Exception as e:
+                except Exception:
                     logger.warning(
                         f"error executing test case {test_case['audio_id']}",
                         exc_info=True,
@@ -81,13 +81,11 @@ def main() -> None:
                     raw_transcription=raw_transcription, test_case=test_case
                 )
 
-                results.append(
-                    {
-                        "test_case_id": test_case["audio_id"],
-                        "raw_transcription": raw_transcription,
-                        **result,
-                    }
-                )
+                results.append({
+                    "test_case_id": test_case["audio_id"],
+                    "raw_transcription": raw_transcription,
+                    **result,
+                })
 
             save_results(test_set_id, results)
             all_results.append((test_set_id, results))
@@ -98,14 +96,12 @@ def main() -> None:
     all_individual_metrics = []
     for test_set_id, results in all_results:
         for result in results:
-            all_individual_metrics.append(
-                {
-                    "test_set_id": test_set_id,
-                    "description_score": result.get("keyword_metric", 0),
-                    "amount_score": result.get("amount_metric", 0),
-                    "unit_score": result.get("unit_metric", 0),
-                }
-            )
+            all_individual_metrics.append({
+                "test_set_id": test_set_id,
+                "description_score": result.get("keyword_metric", 0),
+                "amount_score": result.get("amount_metric", 0),
+                "unit_score": result.get("unit_metric", 0),
+            })
 
     logger.info(f"number of tests: {n_tests}")
     save_results("individual_metrics", all_individual_metrics)

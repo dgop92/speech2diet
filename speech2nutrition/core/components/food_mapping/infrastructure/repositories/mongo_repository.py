@@ -44,16 +44,14 @@ class SystemNutritionRepository:
         """
         collection = self.mongo_db.get_collection(self.collection_name)
         logger.info(f"searching for food with name: {name}")
-        result = collection.aggregate(
-            [
-                {
-                    "$search": {
-                        "index": self.index_name,
-                        "text": {"query": name, "path": {"wildcard": "*"}},
-                    }
+        result = collection.aggregate([
+            {
+                "$search": {
+                    "index": self.index_name,
+                    "text": {"query": name, "path": {"wildcard": "*"}},
                 }
-            ]
-        )
+            }
+        ])
         # TODO: limit the number of results in the query
         result = list(result)
         logger.info(f"number of results with name: {name} are equal to {len(result)}")

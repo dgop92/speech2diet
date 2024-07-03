@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 def core_factory() -> HTTPDemoRequestHandler:
-
     if APP_CONFIG.mock_services:
         logger.info("creating mock speech2text model")
         speech2text_model = MockSpeech2TextToModel()

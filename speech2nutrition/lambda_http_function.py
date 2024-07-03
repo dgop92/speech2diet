@@ -27,7 +27,7 @@ def parse_base64_body(
     for part in multipart_data.parts:
         audio_content = part.content
         headers = part.headers
-        mime_type: str = headers[b"Content-Type"].decode("utf-8")  # type: ignore
+        mime_type: str = headers[b"Content-Type"].decode("utf-8")  #  pyright: ignore [reportArgumentType]
         metadata = {"mime_type": mime_type}
         return audio_content, metadata
 
@@ -56,7 +56,7 @@ def handler(event, context):
 
         logger.info(f"processing audio content with metadata: {metadata}")
         response = request_handler(audio_content, metadata)
-        logger.info(f"successfully processed request")
+        logger.info("successfully processed request")
         return {
             "statusCode": 200,
             "headers": {

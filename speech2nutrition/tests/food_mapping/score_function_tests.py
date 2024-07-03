@@ -1,4 +1,5 @@
 import logging
+import unittest
 
 import pytest
 import spacy
@@ -12,6 +13,8 @@ from tests.food_mapping.utils import create_food
 
 logger = logging.getLogger(__name__)
 
+assertions = unittest.TestCase()
+
 
 @pytest.fixture(scope="module")
 def nlp():
@@ -23,15 +26,15 @@ def test_score_food_by_exact_fuzzy_matches_exact_match(nlp: Language):
     """Should compute a score of 4 for two exact matches"""
 
     query = FoodScoreQuery(
-        food=create_food(
-            {"full_description": ["arroz", "blanco", "cocido", "sin", "sal"]}
-        ),
+        food=create_food({
+            "full_description": ["arroz", "blanco", "cocido", "sin", "sal"]
+        }),
         food_description=["blanco"],
         food_name="arroz",
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 4
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_fuzzy_match(nlp: Language):
@@ -44,7 +47,7 @@ def test_score_food_by_exact_fuzzy_matches_fuzzy_match(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 1
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches(nlp: Language):
@@ -57,7 +60,7 @@ def test_score_food_by_exact_fuzzy_matches(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 3
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_zero_match(nlp: Language):
@@ -70,7 +73,7 @@ def test_score_food_by_exact_fuzzy_matches_zero_match(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 0
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_multiple_words_1(nlp: Language):
@@ -86,7 +89,7 @@ def test_score_food_by_exact_fuzzy_matches_multiple_words_1(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 4
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_multiple_words_2(nlp: Language):
@@ -102,7 +105,7 @@ def test_score_food_by_exact_fuzzy_matches_multiple_words_2(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 5
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_multiple_words_3(nlp: Language):
@@ -117,7 +120,7 @@ def test_score_food_by_exact_fuzzy_matches_multiple_words_3(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 6
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_multiple_words_4(nlp: Language):
@@ -131,7 +134,7 @@ def test_score_food_by_exact_fuzzy_matches_multiple_words_4(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 4
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)
 
 
 def test_score_food_by_exact_fuzzy_matches_plurals(nlp: Language):
@@ -144,4 +147,4 @@ def test_score_food_by_exact_fuzzy_matches_plurals(nlp: Language):
     )
     score = score_food_by_exact_fuzzy_matches(query, nlp)
     expected_score = 1
-    assert score == expected_score
+    assertions.assertEqual(score, expected_score)

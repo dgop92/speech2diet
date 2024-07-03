@@ -6,7 +6,7 @@ from config.utils import Singleton
 
 
 def config_as_str(key: str, **kwargs) -> str:
-    return config(key, **kwargs)  # type: ignore
+    return config(key, **kwargs)  # pyright: ignore [reportReturnType]
 
 
 def config_as_bool(key: str, **kwargs) -> bool:
@@ -42,8 +42,7 @@ class APPConfig(metaclass=Singleton):
 
         self.aws_region = config_as_str("AWS_REGION", default="us-east-1")
         self.aws_nutrition_response_queue = config_as_str(
-            "AWS_NUTRITION_RESPONSE_QUEUE_URL",
-            default=""
+            "AWS_NUTRITION_RESPONSE_QUEUE_URL", default=""
         )
         self.aws_s3_bucket = config_as_str("AWS_S3_BUCKET", default="")
 

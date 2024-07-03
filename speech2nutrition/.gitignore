@@ -8,5 +8,7 @@ zip_source.py
 source_code.zip
 .vscode
 
+.ruff_cache
+
 tests/data/fe_results
 tests/data/s2t_results

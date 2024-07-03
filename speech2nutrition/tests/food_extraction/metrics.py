@@ -172,7 +172,9 @@ def evaluate_test_case(
 
     if length_different == 0:
         individual_metrics: List[Dict[str, float]] = []
-        for real_food, expected_food_item in zip(real_foods, expected_food_items):
+        for real_food, expected_food_item in zip(
+            real_foods, expected_food_items, strict=True
+        ):
             ind_metric = individual_performance_metric(
                 nlp, real_food, expected_food_item
             )

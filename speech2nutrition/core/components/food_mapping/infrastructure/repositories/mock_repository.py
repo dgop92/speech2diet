@@ -17,7 +17,7 @@ class MockNutritionRepository:
         logger.info(f"searching for food with name: {name}")
         results: List[Food] = []
         for food in self.data:
-            possible_names = [food.food_name] + food.other_names
+            possible_names = [food.food_name, *food.other_names]
             lower_names = [n.lower() for n in possible_names]
             if name.lower() in lower_names:
                 results.append(food)

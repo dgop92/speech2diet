@@ -15,7 +15,7 @@ def score_food_by_exact_match(query: FoodScoreQuery) -> float:
     target_description = query.food.full_description
 
     user_description = query.food_description
-    full_user_description = [query.food_name] + user_description
+    full_user_description = [query.food_name, *user_description]
 
     number_of_matches = len(
         set(full_user_description).intersection(set(target_description))

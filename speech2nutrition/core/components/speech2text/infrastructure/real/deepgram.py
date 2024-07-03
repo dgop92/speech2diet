@@ -46,8 +46,10 @@ class DeepgramWhisperSpeech2TextModel:
         # it takes more than 15 seconds to respond
         try:
             response = self.deepgram.transcription.sync_prerecorded(
-                source, self.options, timeout=180  # type: ignore
+                source,  # pyright: ignore [reportArgumentType]
+                self.options,  # pyright: ignore [reportArgumentType]
+                timeout=180,
             )
-            return response["results"]["channels"][0]["alternatives"][0]["transcript"]
+            return response["results"]["channels"][0]["alternatives"][0]["transcript"]  # pyright: ignore [reportTypedDictNotRequiredAccess]
         except Exception as e:
             raise ServiceException("could not transcribe audio", "deepgram") from e

@@ -11,7 +11,7 @@ class UnitTransformationInfo(BaseModel):
     final_unit: str
     """ The final unit, the unit given by the food portion unit """
     transformation_factor: float
-    """ The factor used to transform the original unit to the final unit. 
+    """ The factor used to transform the original unit to the final unit.
     (factor * final unit) / original unit = final amount"""
 
 

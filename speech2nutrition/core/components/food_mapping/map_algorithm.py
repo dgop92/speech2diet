@@ -71,7 +71,7 @@ class FoodMapper:
 
         logger.debug("creating the food records without unit information")
         food_records: List[FoodRecord] = []
-        for food, score in zip(repo_foods_response.foods, scores):
+        for food, score in zip(repo_foods_response.foods, scores, strict=True):
             food_records.append(
                 FoodRecord(
                     food=food,
@@ -100,8 +100,9 @@ class FoodMapper:
         ]
 
         final_food_records: List[FoodRecord] = []
-        for food_record, unit_response in zip(best_food_records, unit_responses):
-
+        for food_record, unit_response in zip(
+            best_food_records, unit_responses, strict=True
+        ):
             unit_trans_info = None
             if unit_response.unit_transformation_info is not None:
                 unit_trans_info = UnitTransformationInfo(

@@ -24,16 +24,18 @@ class SQSConsumer:
         self,
         queue_url,
         sqs_client,
-        attribute_names=[],
-        message_attribute_names=[],
+        attribute_names=None,
+        message_attribute_names=None,
         batch_size=1,
         wait_time_seconds=1,
         visibility_timeout_seconds=None,
         polling_wait_time_ms=0,
     ):
         self.queue_url = queue_url
-        self.attribute_names = attribute_names
-        self.message_attribute_names = message_attribute_names
+        self.attribute_names = attribute_names if attribute_names is not None else []
+        self.message_attribute_names = (
+            message_attribute_names if message_attribute_names is not None else []
+        )
 
         if not 1 <= batch_size <= 10:
             raise ValueError("Batch size should be between 1 and 10, both inclusive")
@@ -151,8 +153,8 @@ class SQSConsumer:
             self.sqs_client.delete_message(
                 QueueUrl=self.queue_url, ReceiptHandle=message.ReceiptHandle
             )
-        except Exception:
-            raise SQSException("Failed to delete message")
+        except Exception as e:
+            raise SQSException("Failed to delete message") from e
 
     def _delete_message_batch(self, messages: List[SQSMessage]):
         try:
@@ -163,8 +165,8 @@ class SQSConsumer:
                     for message in messages
                 ],
             )
-        except Exception:
-            raise SQSException("Failed to delete message batch")
+        except Exception as e:
+            raise SQSException("Failed to delete message batch") from e
 
     @property
     def _sqs_client_params(self):

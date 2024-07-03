@@ -43,18 +43,16 @@ class FoodMapperTest(unittest.TestCase):
             amount=50,
             unit="g",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-                {
-                    "food_name": "carne de res",
-                    "full_description": ["sin grasa", "cocida"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+            {
+                "food_name": "carne de res",
+                "full_description": ["sin grasa", "cocida"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -75,30 +73,28 @@ class FoodMapperTest(unittest.TestCase):
             amount=50,
             unit="g",
         )
-        data = create_foods(
-            [
-                {
-                    "id": "1",
-                    "food_name": "carne",
-                    "full_description": ["res", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "2",
-                    "food_name": "carne",
-                    "full_description": ["cerdo", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "3",
-                    "food_name": "carne",
-                    "full_description": ["pollo", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "4",
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "id": "1",
+                "food_name": "carne",
+                "full_description": ["res", "sin grasa", "cocida"],
+            },
+            {
+                "id": "2",
+                "food_name": "carne",
+                "full_description": ["cerdo", "sin grasa", "cocida"],
+            },
+            {
+                "id": "3",
+                "food_name": "carne",
+                "full_description": ["pollo", "sin grasa", "cocida"],
+            },
+            {
+                "id": "4",
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -124,40 +120,38 @@ class FoodMapperTest(unittest.TestCase):
             amount=50,
             unit="g",
         )
-        data = create_foods(
-            [
-                {
-                    "id": "1",
-                    "food_name": "carne",
-                    "full_description": ["res", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "2",
-                    "food_name": "carne",
-                    "full_description": ["cerdo", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "3",
-                    "food_name": "carne",
-                    "full_description": ["pollo", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "4",
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-                {
-                    "id": "5",
-                    "food_name": "carne",
-                    "full_description": ["vacuna", "sin grasa", "cocida"],
-                },
-                {
-                    "id": "6",
-                    "food_name": "carne",
-                    "full_description": ["generica", "sin grasa", "cocida"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "id": "1",
+                "food_name": "carne",
+                "full_description": ["res", "sin grasa", "cocida"],
+            },
+            {
+                "id": "2",
+                "food_name": "carne",
+                "full_description": ["cerdo", "sin grasa", "cocida"],
+            },
+            {
+                "id": "3",
+                "food_name": "carne",
+                "full_description": ["pollo", "sin grasa", "cocida"],
+            },
+            {
+                "id": "4",
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+            {
+                "id": "5",
+                "food_name": "carne",
+                "full_description": ["vacuna", "sin grasa", "cocida"],
+            },
+            {
+                "id": "6",
+                "food_name": "carne",
+                "full_description": ["generica", "sin grasa", "cocida"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -180,14 +174,12 @@ class FoodMapperTest(unittest.TestCase):
             amount=80,
             unit="g",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -208,16 +200,14 @@ class FoodMapperTest(unittest.TestCase):
             amount=80,
             unit="g",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                    "portion_unit": "oz",
-                    "portion_reference": 4,
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+                "portion_unit": "oz",
+                "portion_reference": 4,
+            },
+        ])
         repository = MockNutritionRepository(data)
         with self.assertRaises(ValueError) as e:
             map_food(request, repository)
@@ -237,14 +227,12 @@ class FoodMapperTest(unittest.TestCase):
             amount=1,
             unit="taza",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -262,14 +250,12 @@ class FoodMapperTest(unittest.TestCase):
             amount=1,
             unit="tazon",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -287,14 +273,12 @@ class FoodMapperTest(unittest.TestCase):
             amount=0,
             unit="",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "arroz",
-                    "full_description": ["integral", "cocido"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "arroz",
+                "full_description": ["integral", "cocido"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 
@@ -312,14 +296,12 @@ class FoodMapperTest(unittest.TestCase):
             amount=2,
             unit="",
         )
-        data = create_foods(
-            [
-                {
-                    "food_name": "manzana",
-                    "full_description": ["cruda"],
-                },
-            ]
-        )
+        data = create_foods([
+            {
+                "food_name": "manzana",
+                "full_description": ["cruda"],
+            },
+        ])
         repository = MockNutritionRepository(data)
         response = map_food(request, repository)
 

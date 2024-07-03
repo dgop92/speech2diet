@@ -24,7 +24,7 @@ def load_results(test_set_id: str) -> List[Dict[str, Any]] | None:
     results_path = os.path.join("tests/data", "fe_results", f"test--{test_set_id}.json")
     if not os.path.exists(results_path):
         return None
-    with open(results_path, "r", encoding="utf-8") as f:
+    with open(results_path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -70,7 +70,7 @@ def main() -> None:
 
                 try:
                     found_foods = food_extraction_component(test_case["input_text"])
-                except Exception as e:
+                except Exception:
                     logger.warning(
                         f"Error executing test case {test_case['input_text']}",
                         exc_info=True,
@@ -80,17 +80,15 @@ def main() -> None:
                 test_case_results = evaluate_test_case(
                     spacy_language, test_case, found_foods
                 )
-                results.append(
-                    {
-                        "test_case_input_text": test_case["input_text"],
-                        "test_case": [
-                            food_item["food"].dict()
-                            for food_item in test_case["expected_foods_items"]
-                        ],
-                        "found_foods": [food.dict() for food in found_foods],
-                        **test_case_results,
-                    }
-                )
+                results.append({
+                    "test_case_input_text": test_case["input_text"],
+                    "test_case": [
+                        food_item["food"].dict()
+                        for food_item in test_case["expected_foods_items"]
+                    ],
+                    "found_foods": [food.dict() for food in found_foods],
+                    **test_case_results,
+                })
             save_results(test_set_id, results)
             all_results.append((test_set_id, results))
         else:
@@ -106,9 +104,9 @@ def main() -> None:
             logger.info(f"test set id: '{test_set_id}' - total: {test_id_total}")
 
             ind_metrics = result["individual_metrics"].copy()
-            all_individual_metrics.extend(
-                [{**m, "test_set_id": test_set_id} for m in ind_metrics]
-            )
+            all_individual_metrics.extend([
+                {**m, "test_set_id": test_set_id} for m in ind_metrics
+            ])
 
             current_total += test_id_total
 

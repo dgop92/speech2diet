@@ -37,5 +37,5 @@ if __name__ == "__main__":
         )
         response = request_handler(request)
         logger.info(f"response: {response.json(ensure_ascii=False)}")
-    except Exception as e:
-        logger.exception(f"error handling nutrition request: {e}")
+    except Exception:
+        logger.exception("error handling nutrition request")
