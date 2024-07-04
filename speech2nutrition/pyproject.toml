@@ -19,7 +19,6 @@ numpy = "1.25.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
-pre-commit = "^1.7.1"
 ruff = "^0.5.0"
 
 [tool.pytest.ini_options]
