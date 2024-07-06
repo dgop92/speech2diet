@@ -12,15 +12,23 @@
 .DS_Store
 .git/
 __pycache__
-Dockerfile
-# mine
-.venv
-*.env
-.pytest_cache
-.vscode
-tests/
-scripts/
 
+# cache
+.pytest_cache
+.ruff_cache
+
+# mine
+
+Dockerfile
+Dockerfile.*
+.github
 zip_source.py
 env_examples/
 docs/
+
+# dev/test files
+.vscode
+tests/
+scripts/
+.venv
+*.env
