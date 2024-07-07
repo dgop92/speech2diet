@@ -9,6 +9,7 @@ on:
       - "!speech2nutrition/docs/**"
       - "!speech2nutrition/env_examples/**"
     types: [opened, synchronize, reopened, ready_for_review]
+  workflow_call:
 
 
 defaults:
@@ -49,6 +50,7 @@ jobs:
         with:
           python-version: "3.10"
           poetry-version: "1.8.3"
+          working-directory: ./speech2nutrition
 
       - name: Run tests
         run: |

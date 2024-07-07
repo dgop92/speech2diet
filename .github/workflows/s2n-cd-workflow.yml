@@ -1,0 +1,57 @@
+name: Main CD Workflow
+
+on:
+  push:
+    branches: [speech2nutrition]
+    paths:
+      - "speech2nutrition/**"
+      - "!speech2nutrition/README.md"
+      - "!speech2nutrition/docs/**"
+      - "!speech2nutrition/env_examples/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./speech2nutrition
+
+jobs:
+  ci:
+    uses: ./.github/workflows/s2n-ci-workflow.yml
+  deploy:
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up the environment with python and poetry
+        uses: ./.github/actions/setup-poetry-env
+        with:
+          python-version: "3.10"
+          poetry-version: "1.8.3"
+          working-directory: ./speech2nutrition
+      
+      # Building aws lambda docker image with poetry is complex, 
+      # so we will use the traditional way with requirements.txt
+      - name: Export dependencies
+        run: poetry export -f requirements.txt --output requirements.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_S2N_DEMO_REPO }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_S2N_DEMO_REPO }}
+          aws-region: us-east-1
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.S2N_DEMO_ECR_REPOSITORY }}
+          IMAGE_TAG: latest
+        run: |
+          docker build -f Dockerfile.http_demo.lambda -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
