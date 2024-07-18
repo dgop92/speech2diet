@@ -17,5 +17,5 @@
     "^@features/(.*)$": "<rootDir>/src/features/$1",
     "^@common/(.*)$": "<rootDir>/src/common/$1"
   },
-  "testTimeout": 7000
+  "testTimeout": 20000
 }

@@ -1,0 +1,63 @@
+name: Speech 2 Diet API CI Workflow
+
+on:
+  pull_request:
+    branches: [s2d-api]
+    paths:
+      - "s2d-api/src/**"
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_call:
+
+
+defaults:
+  run:
+    working-directory: ./s2d-api
+
+jobs:    
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up java for firebase emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install firebase emulator
+        run: npm install -g firebase-tools
+
+      - name: Run tests
+        run: firebase emulators:exec --project $FIREBASE_TEST_PROJECT 'npm test > jest-test-logs.txt'
+        env:
+          NODE_ENV: test
+          SECRETS_FROM: env
+          APP_PORT: 8080
+          AWS_REGION: us-east-1
+          LOG_LEVEL: debug
+          MRR_UPLOAD_API_KEY: dummy
+          GOOGLE_APPLICATION_CREDENTIALS_CONTENT: ${{ secrets.FIREBASE_TEST_CREDENTIALS_CONTENT }}
+          # these values are necessary for getting id tokens from firebase auth emulator
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_TEST_API_KEY }}
+          FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+          FIRESTORE_EMULATOR_HOST: 127.0.0.1:9098
+          FIREBASE_TEST_PROJECT: ${{ vars.FIREBASE_TEST_PROJECT }}
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: ./s2d-api/jest-test-logs.txt
+          if-no-files-found: error
+          retention-days: 1
