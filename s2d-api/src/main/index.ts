@@ -20,6 +20,8 @@ import {
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 export async function startApp() {
+  myLogger.info("starting app");
+
   const firebaseApp = await getFirebaseApp();
   const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
   const firestoreClient = getFirestoreClient(firebaseApp);
