@@ -10,6 +10,7 @@
     "dev:nest-server": "cross-env NODE_ENV=dev nest start --watch",
     "dev:server": "ts-node-dev -r ./scripts/dev-setup.ts --respawn src/main/index.ts",
     "dev:id-token": "ts-node-dev -r ./scripts/dev-setup.ts ./scripts/generate-id-token.ts",
+    "api-docs": "cross-env NODE_ENV=test nest start --config nest-cli.docs.json",
     "test:server": "ts-node-dev -r ./scripts/test-setup.ts --respawn src/test/test-server.ts",
     "test:id-token": "ts-node-dev -r ./scripts/test-setup.ts ./scripts/generate-id-token.ts",
     "test": "jest -c ./jest.unit.json --verbose --runInBand",

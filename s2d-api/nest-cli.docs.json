@@ -1,0 +1,28 @@
+{
+    "collection": "@nestjs/schematics",
+    "sourceRoot": "src",
+    "entryFile": "main/create-swagger-spec",
+    "compilerOptions": {
+        "plugins": [
+            {
+                "name": "@nestjs/swagger",
+                "options": {
+                    "classValidatorShim": false,
+                    "introspectComments": true,
+                    "dtoFileNameSuffix": [
+                        ".dto.ts",
+                        "app-user.ts",
+                        "auth-user.ts",
+                        "health-data",
+                        "user.ts",
+                        "food.ts",
+                        "food-item.ts",
+                        "food-report-review.ts",
+                        "meal-report-review.ts",
+                        "nutritional-info.ts"
+                    ]
+                }
+            }
+        ]
+    }
+}

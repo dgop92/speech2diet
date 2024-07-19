@@ -6,46 +6,21 @@ try {
 
 import { AppLogger } from "@common/logging/logger";
 import { WinstonLogger, createDevLogger } from "@common/logging/winston-logger";
-import { HttpAdapterHost, NestFactory } from "@nestjs/core";
-import { VersioningType } from "@nestjs/common";
-import { AppModule } from "./nest/app.module";
-import { AllExceptionsFilter } from "./nest/general-exception-filter";
-import { setupFactories } from "./setup-factories";
 import { APP_ENV_VARS } from "@common/config/app-env-vars";
+import { SwaggerModule } from "@nestjs/swagger";
 import {
-  getAuthFirebaseClient,
-  getFirebaseApp,
-  getFirestoreClient,
-} from "./firebase-app";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+  createNestApp,
+  initializeFactories,
+  createSwaggerDocument,
+} from "./nest-app";
 
 export async function startApp() {
-  const firebaseApp = await getFirebaseApp();
-  const authFirebaseClient = getAuthFirebaseClient(firebaseApp);
-  const firestoreClient = getFirestoreClient(firebaseApp);
+  await initializeFactories();
 
-  setupFactories(authFirebaseClient, firestoreClient);
-
-  const app = await NestFactory.create(AppModule);
-  const httpAdapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
-  app.setGlobalPrefix("api");
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: "1",
-  });
-  app.enableCors({
-    origin: APP_ENV_VARS.cors.allowOrigins,
-  });
+  const app = await createNestApp();
 
   if (!APP_ENV_VARS.isProduction) {
-    const config = new DocumentBuilder()
-      .setTitle("Speech 2 Diet API")
-      .setDescription("The Speech 2 Diet API")
-      .setVersion("1.0")
-      .addBearerAuth()
-      .build();
-    const document = SwaggerModule.createDocument(app, config);
+    const document = createSwaggerDocument(app);
     SwaggerModule.setup("api", app, document);
   }
 
