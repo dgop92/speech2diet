@@ -5,6 +5,7 @@ on:
     branches: [s2d-api]
     paths:
       - "s2d-api/src/**"
+  workflow_dispatch:
 
 defaults:
   run:
