@@ -7,6 +7,13 @@ on:
       - "s2d-api/src/**"
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_call:
+    secrets:
+      FIREBASE_TEST_API_KEY:
+        description: 'firebase test project api key'
+        required: true
+      FIREBASE_TEST_CREDENTIALS_CONTENT:
+        description: 'credentials for test project'
+        required: true
 
 
 defaults:

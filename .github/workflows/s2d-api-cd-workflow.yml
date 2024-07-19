@@ -14,6 +14,9 @@ defaults:
 jobs:    
   ci:
     uses: ./.github/workflows/s2d-api-ci-workflow.yml
+    secrets:
+      FIREBASE_TEST_API_KEY: ${{ secrets.FIREBASE_TEST_API_KEY }}
+      FIREBASE_TEST_CREDENTIALS_CONTENT: ${{ secrets.FIREBASE_TEST_CREDENTIALS_CONTENT }}
   generate-api-docs:
     runs-on: ubuntu-latest
     needs: ci
