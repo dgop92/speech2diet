@@ -8,10 +8,12 @@ from core.domain.errors import ServiceException
 
 logger = logging.getLogger(__name__)
 
+SUPPORTED_EXTENSIONS = ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"]
+
 
 class OpenAIWhisperSpeech2TextModel:
     def __init__(self, api_key: str):
-        self.client = OpenAI(api_key=api_key, timeout=10)
+        self.client = OpenAI(api_key=api_key, timeout=20)
 
     def transcribe(self, audio: bytes, metadata: Dict[str, Any]) -> str:
         """
@@ -34,7 +36,29 @@ class OpenAIWhisperSpeech2TextModel:
             f"transcribing audio with openai whisper using mime type {metadata['mime_type']}"
         )
 
-        file_extension = metadata["mime_type"].split("/")[1]
+        mime_type: str | None = metadata["mime_type"]
+
+        if mime_type is None:
+            raise ServiceException(
+                "mime type is required to transcribe audio", "openai_whisper"
+            )
+
+        # if mime type is not supported, raise an error
+        file_extension: str | None = None
+        for supported_extensions in SUPPORTED_EXTENSIONS:
+            if supported_extensions in mime_type:
+                file_extension = supported_extensions
+                break
+
+        if file_extension is None:
+            raise ServiceException(
+                f"mime type {mime_type} is not supported", "openai_whisper"
+            )
+
+        logger.info(
+            f"transcribing audio with openai whisper using extension {file_extension}"
+        )
+        print(file_extension)
 
         # openai requires a BufferedReader object
         audio_bytes_io = BytesIO(audio)
