@@ -70,6 +70,7 @@ ignore = [
     "E731",
     # raise-vanilla-args
     "TRY003",
+    "TRY300",
     # deprecated-import, TODO: fix related problems in the future
     "UP035",
     "UP006",
