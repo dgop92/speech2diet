@@ -72,6 +72,8 @@ export function MainSection({ setResults }: MainSectionProps) {
         ERROR_SNACKBAR_OPTIONS
       );
     },
+    // to avoid 500 error while the lambda is cold
+    retry: 2,
   });
 
   const onAccept = async () => {
