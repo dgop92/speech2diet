@@ -12,6 +12,8 @@ When a message is received, the initial processing responsibility falls on the "
 
 1. It is recommend to use Python 3.10.9
 
+### Option 1: Using pip (Traditional approach)
+
 2. Create a virtual environment:
 
 ```bash
@@ -32,6 +34,30 @@ You can also activate the virtual environment using VSCode. Just select the Pyth
 pip install -r requirements.txt
 ```
 
+### Option 2: Using Poetry (Recommended)
+
+Poetry handles the creation of virtual environments and dependency installation automatically from the `pyproject.toml` file.
+
+2. Install the dependencies using Poetry:
+
+```bash
+poetry install
+```
+
+3. Activate the Poetry environment:
+
+```bash
+poetry shell
+```
+
+Alternatively, you can run individual commands within the Poetry environment without activating the shell:
+
+```bash
+poetry run python main.py
+```
+
+### Final Setup Step
+
 5. Create a `.env` file following the `.env.example` file
 
 ## Tests
@@ -39,13 +65,21 @@ pip install -r requirements.txt
 - Unit tests: tests that are deterministic and can be run in any machine.
 
 ```bash
+# Using pip/virtual environment
 pytest -v
+
+# Using Poetry
+poetry run pytest -v
 ```
 
 - Food extraction service: To get the component performance metrics, run the following command.
 
 ```bash
+# Using pip/virtual environment
 python -m tests.food_extraction.execute_performance_metrics
+
+# Using Poetry
+poetry run python -m tests.food_extraction.execute_performance_metrics
 ```
 
 Unit tests cannot be write for this component because the results are not completely deterministic as its using LLMs.
@@ -55,7 +89,11 @@ A folder in `tests/data/fe_results` will be created with the results of the perf
 - Speech 2 Text: To get the component performance metrics, run the following command.
 
 ```bash
+# Using pip/virtual environment
 python -m tests.speech2text.execute_performance_metrics
+
+# Using Poetry
+poetry run python -m tests.speech2text.execute_performance_metrics
 ```
 
 A folder in `tests/data/s2t_results` will be created with the results of the performance metrics for each test set. Test sets are located in `tests/speech2text/test_sets`
@@ -67,7 +105,11 @@ You can execute this service in different ways:
 Using the `main.py` will create a consumer that will listen to a queue and process the messages. It's up to you to decide with the environment variable `MESSAGE_QUEUE_SERVICE` whether to use AWS SQS or RabbitMQ
 
 ```bash
+# Using pip/virtual environment
 python main.py
+
+# Using Poetry
+poetry run python main.py
 ```
 
 Or using the Dockerfile
